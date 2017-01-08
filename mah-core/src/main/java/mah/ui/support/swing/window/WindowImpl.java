@@ -26,19 +26,27 @@ public class WindowImpl implements Window{
     @Override
     public void init() {
         initWindow();
+        initLayout();
+    }
+
+    private void initLayout() {
         if (properties.getLayoutType() == LayoutType.DEFAULT) {
             this.defaultLayout = new DefaultLayout();
+            addLayout(defaultLayout);
+            currentLayout = defaultLayout;
         }
     }
 
     private void initWindow() {
         frame = new JFrame();
-        frame.setSize(800,75);
+//        frame.setPreferredSize(new Dimension(600,200));
         frame.setUndecorated(false);
         frame.setAlwaysOnTop(true);
         frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo( null );
         frame.setType(java.awt.Window.Type.UTILITY);
+        frame.pack();
     }
 
     @Override
@@ -56,6 +64,7 @@ public class WindowImpl implements Window{
     }
 
     private void removeLayout() {
+        if(currentLayout!=null)
         frame.remove(currentLayout.getPanel());
     }
 
@@ -64,6 +73,8 @@ public class WindowImpl implements Window{
         if (layout instanceof SwingLayout) {
             SwingLayout swingLayout = (SwingLayout) layout;
             updateLayout(swingLayout);
+            currentLayout = swingLayout;
+            frame.pack();
         }
     }
 }

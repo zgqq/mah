@@ -1,5 +1,7 @@
 package mah.ui.support.swing.layout;
 
+import mah.ui.theme.LayoutTheme;
+
 import javax.swing.*;
 
 /**
@@ -16,5 +18,10 @@ public class DefaultLayout implements SwingLayout{
     @Override
     public JPanel getPanel() {
         return abstractClassicLayout.getPanel();
+    }
+
+    @Override
+    public void apply(LayoutTheme theme) {
+        abstractClassicLayout.apply(theme);
     }
 }

@@ -6,6 +6,8 @@ import mah.ui.support.swing.FactoryHelper;
 import mah.ui.window.WindowFactory;
 import mah.ui.window.WindowManager;
 
+import javax.swing.*;
+
 /**
  * Created by zgq on 2017-01-08 11:38
  */
@@ -23,15 +25,23 @@ public class UIManager implements ApplicationListener{
 
     @Override
     public void start(ApplicationEvent applicationEvent) {
-        WindowManager.getInstance().start(applicationEvent);
+        runLater(()->{
+            WindowManager.getInstance().start(applicationEvent);
+        });
     }
 
     @Override
     public void afterStart(ApplicationEvent applicationEvent) {
-        WindowManager.getInstance().showWindow();
+        runLater(()->{
+            WindowManager.getInstance().showWindow();
+        });
     }
 
     public WindowFactory getWindowFactory() {
         return helper.createWindowFactory();
+    }
+
+    public void runLater(Runnable runnable) {
+        SwingUtilities.invokeLater(runnable);
     }
 }

@@ -24,6 +24,10 @@ public class WindowManager {
         currentWindow = this.windowFactory.createWindow(new WindowProperties.Builder(LayoutType.DEFAULT).build());
     }
 
+    public Window getCurrentWindow() {
+        return currentWindow;
+    }
+
     public void showWindow() {
         currentWindow.show();
     }

@@ -5,4 +5,8 @@ package mah.ui.layout;
  */
 public interface Layout {
 
+    default String getName(){
+        throw new UnsupportedOperationException("Unable to get layout name");
+    }
+
 }
