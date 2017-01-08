@@ -1,0 +1,4 @@
+rootProject.name = "mah"
+
+include "mah-core"
+include "mah-plugin"
