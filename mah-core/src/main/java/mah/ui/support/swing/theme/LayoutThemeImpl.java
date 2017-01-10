@@ -21,7 +21,7 @@ public class LayoutThemeImpl implements LayoutTheme{
     public String findProperty(String key) {
         String property = properties.get(key);
         if (property == null) {
-            throw new UIException("Not found css " + key);
+            throw new UIException("Not found property " + key);
         }
         return property;
     }

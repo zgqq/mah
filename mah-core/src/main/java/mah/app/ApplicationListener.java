@@ -5,11 +5,11 @@ package mah.app;
  */
 public interface ApplicationListener {
 
-    default void start(ApplicationEvent applicationEvent){
+    default void start(ApplicationEvent applicationEvent) throws Exception{
 
     }
 
-    default void afterStart(ApplicationEvent applicationEvent) {
+    default void afterStart(ApplicationEvent applicationEvent) throws Exception{
 
     }
 

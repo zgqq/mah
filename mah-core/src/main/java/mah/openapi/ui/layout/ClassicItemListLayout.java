@@ -1,12 +1,14 @@
 package mah.openapi.ui.layout;
 
+import mah.command.Command;
+import mah.command.CommandManager;
+import mah.ui.UIManager;
 import mah.ui.layout.ClassicItemListLayoutWrapper;
 import mah.ui.pane.item.Item;
 import mah.ui.support.swing.layout.ClassicItemListLayoutImpl;
 import mah.ui.window.Window;
 import mah.ui.window.WindowManager;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -14,27 +16,46 @@ import java.util.List;
  */
 public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
 
-    public ClassicItemListLayout() {
+    private final Command command;
+    private final Object lock = CommandManager.getInstance();
+
+    public ClassicItemListLayout(Command command) {
         super(new ClassicItemListLayoutImpl());
+        this.command = command;
     }
 
 
     private boolean allowUpdateLayout() {
-        return true;
+        Command currentCommand = CommandManager.getInstance().getCurrentCommand();
+        return (currentCommand != null && currentCommand.equals(command));
     }
 
-    private void updateLayout() {
+    private void updateWindowLayout() {
         Window currentWindow = WindowManager.getInstance().getCurrentWindow();
-        currentWindow.update(getLayout());
+        currentWindow.setCurrentLayout(getLayout());
+    }
+
+    private void updateLayout(Runnable runnable) {
+        synchronized (lock) {
+            if (allowUpdateLayout()) {
+                UIManager.getInstance().runLater(runnable);
+            }
+        }
     }
 
     @Override
     public void updateItems(List<? extends Item> items) {
-        if (allowUpdateLayout()) {
-            SwingUtilities.invokeLater(() -> {
-                getLayout().updateItems(items);
-                updateLayout();
-            });
-        }
+        updateLayout(() -> {
+            getLayout().updateItems(items);
+            updateWindowLayout();
+        });
+    }
+
+    @Override
+    public void updateItems(Item... items) {
+        updateLayout(() -> {
+            getLayout().updateItems(items);
+            updateWindowLayout();
+        });
     }
 }

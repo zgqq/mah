@@ -1,6 +1,5 @@
 package mah.ui.window;
 
-import mah.app.ApplicationEvent;
 import mah.ui.UIManager;
 import mah.ui.layout.LayoutType;
 
@@ -19,7 +18,7 @@ public class WindowManager {
     private WindowManager() {
     }
 
-    public void start(ApplicationEvent applicationEvent) {
+    public void createWindow() {
         this.windowFactory = UIManager.getInstance().getWindowFactory();
         currentWindow = this.windowFactory.createWindow(new WindowProperties.Builder(LayoutType.DEFAULT).build());
     }

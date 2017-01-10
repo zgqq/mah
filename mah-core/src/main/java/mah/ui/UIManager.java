@@ -2,9 +2,12 @@ package mah.ui;
 
 import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
+import mah.mode.ModeManager;
+import mah.ui.input.InputMode;
 import mah.ui.support.swing.FactoryHelper;
 import mah.ui.window.WindowFactory;
 import mah.ui.window.WindowManager;
+import mah.ui.window.WindowMode;
 
 import javax.swing.*;
 
@@ -23,16 +26,20 @@ public class UIManager implements ApplicationListener{
     private UIManager() {
     }
 
+    private void registerMode() {
+        ModeManager.getInstance().registerMode(new WindowMode());
+        ModeManager.getInstance().registerMode(new InputMode(ModeManager.getInstance().getMode(WindowMode.NAME)));
+    }
+
     @Override
     public void start(ApplicationEvent applicationEvent) {
-        runLater(()->{
-            WindowManager.getInstance().start(applicationEvent);
-        });
+        registerMode();
     }
 
     @Override
     public void afterStart(ApplicationEvent applicationEvent) {
         runLater(()->{
+            WindowManager.getInstance().createWindow();
             WindowManager.getInstance().showWindow();
         });
     }

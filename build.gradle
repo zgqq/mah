@@ -4,7 +4,6 @@ buildscript {
     }
 }
 
-
 wrapper.gradleVersion = '2.13'
 
 configure(allprojects) { project ->

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugins>
+    <plugin>
+        <name>translation</name>
+        <author>zgq</author>
+        <description>Translation</description>
+        <class>mah.plugin.support.translation.TranslationPlugin</class>
+    </plugin>
+</plugins>

@@ -39,8 +39,8 @@ public class ThemeManager {
 
     public void applyTheme(Layout layout) {
         LayoutTheme layoutTheme = getLayoutTheme(layout.getName());
-        if (layoutTheme instanceof Themeable) {
-            Themeable themeable = (Themeable) layoutTheme;
+        if (layout instanceof Themeable) {
+            Themeable themeable = (Themeable) layout;
             themeable.apply(layoutTheme);
         }
     }

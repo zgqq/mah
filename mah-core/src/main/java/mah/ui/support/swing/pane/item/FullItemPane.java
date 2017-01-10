@@ -5,6 +5,7 @@ import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.ItemPane;
 import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.util.StringUtils;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.Themeable;
@@ -71,11 +72,12 @@ public final class FullItemPane implements ItemPane<FullItem>,SwingPane,Themeabl
     }
 
     private void setDescription(FullItem item) {
-        description.setText(item.getDescription());
+        String descriptionStr = item.getDescription();
+        description.setText(StringUtils.getStrBySpecificLength(descriptionStr,40));
     }
 
     private void setContent(FullItem item) {
-        content.setText(item.getContent());
+        content.setText(StringUtils.getStrBySpecificLength(item.getContent(),40));
     }
 
     @Override

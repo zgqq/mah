@@ -11,6 +11,23 @@ public interface Window {
 
     void show();
 
-    void update(Layout layout);
+    boolean isShowing();
 
+    boolean isFocused();
+
+    void hide();
+
+    void moveToRight();
+
+    void centerOnScreen();
+
+    void moveToLeft();
+
+    void useDefaultLayoutAsCurrentLayout();
+
+    void setCurrentLayout(Layout layout);
+
+    Layout getCurrentLayout();
+
+    Layout getDefaultLayout();
 }

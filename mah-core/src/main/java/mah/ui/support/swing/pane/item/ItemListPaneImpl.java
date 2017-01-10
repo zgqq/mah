@@ -25,7 +25,7 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
     private void init() {
         if (itemList == null) {
             itemList = SwingUtils.createPanelWithYBoxLayout();
-            itemList.setBorder(BorderFactory.createEmptyBorder(5, 30, 0, 30));
+            itemList.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 30));
         }
     }
 

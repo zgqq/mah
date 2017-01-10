@@ -4,19 +4,20 @@ import mah.ui.layout.Layout;
 import mah.ui.layout.LayoutType;
 import mah.ui.support.swing.layout.DefaultLayout;
 import mah.ui.support.swing.layout.SwingLayout;
-import mah.ui.window.Window;
+import mah.ui.theme.ThemeManager;
 import mah.ui.window.WindowProperties;
+import mah.ui.window.WindowSupport;
 
 import javax.swing.*;
 
 /**
  * Created by zgq on 17-1-8 11:25.
  */
-public class WindowImpl implements Window{
+public class WindowImpl extends WindowSupport {
 
     private final WindowProperties properties;
     private JFrame frame;
-    private SwingLayout defaultLayout;
+    private DefaultLayout defaultLayout;
     private SwingLayout currentLayout;
 
     public WindowImpl(WindowProperties properties) {
@@ -29,24 +30,27 @@ public class WindowImpl implements Window{
         initLayout();
     }
 
+
     private void initLayout() {
         if (properties.getLayoutType() == LayoutType.DEFAULT) {
-            this.defaultLayout = new DefaultLayout();
+            defaultLayout = new DefaultLayout();
+            defaultLayout.init();
+            defaultLayout.setDefaultMode();
             addLayout(defaultLayout);
+            ThemeManager.getInstance().applyTheme(defaultLayout);
             currentLayout = defaultLayout;
         }
+        frame.pack();
+        frame.setLocationRelativeTo(null);
     }
 
     private void initWindow() {
         frame = new JFrame();
-//        frame.setPreferredSize(new Dimension(600,200));
-        frame.setUndecorated(false);
+        frame.setUndecorated(true);
         frame.setAlwaysOnTop(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo( null );
         frame.setType(java.awt.Window.Type.UTILITY);
-        frame.pack();
     }
 
     @Override
@@ -55,8 +59,14 @@ public class WindowImpl implements Window{
     }
 
     private void updateLayout(SwingLayout layout) {
+        JPanel currentPanel = currentLayout.getPanel();
+        JPanel panel = layout.getPanel();
+        if (currentPanel.equals(panel)) {
+            return;
+        }
         removeLayout();
         addLayout(layout);
+        layout.onSetCurrentLayout();
     }
 
     private void addLayout(SwingLayout layout) {
@@ -64,17 +74,64 @@ public class WindowImpl implements Window{
     }
 
     private void removeLayout() {
-        if(currentLayout!=null)
-        frame.remove(currentLayout.getPanel());
+        if (currentLayout != null)
+            frame.remove(currentLayout.getPanel());
     }
 
     @Override
-    public void update(Layout layout) {
+    public boolean isShowing() {
+        return frame.isShowing();
+    }
+
+    @Override
+    public boolean isFocused() {
+        return frame.isFocused();
+    }
+
+    @Override
+    public void hide() {
+        frame.setVisible(false);
+    }
+
+    @Override
+    public void moveToRight() {
+        //
+    }
+
+    @Override
+    public void centerOnScreen() {
+
+    }
+
+    @Override
+    public void moveToLeft() {
+
+    }
+
+    @Override
+    public void useDefaultLayoutAsCurrentLayout() {
+        defaultLayout.use();
+        frame.pack();
+    }
+
+    @Override
+    public void setCurrentLayout(Layout layout) {
+
         if (layout instanceof SwingLayout) {
             SwingLayout swingLayout = (SwingLayout) layout;
             updateLayout(swingLayout);
             currentLayout = swingLayout;
             frame.pack();
         }
+    }
+
+    @Override
+    public Layout getCurrentLayout() {
+        return currentLayout;
+    }
+
+    @Override
+    public Layout getDefaultLayout() {
+        return defaultLayout;
     }
 }

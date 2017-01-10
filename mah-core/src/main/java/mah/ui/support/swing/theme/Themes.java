@@ -11,18 +11,23 @@ import java.util.Map;
  */
 public enum Themes {
 
-    DARK("#333333","#ffffff");
+    DARK("#333333","#616161","#ffffff");
 
     private Theme theme;
 
-    Themes(String color,String fontColor) {
+    Themes(String color,String inputBackgroundColor,String fontColor) {
+
+        Map<String, String> inputProperties = new HashMap<>();
+        inputProperties.put("input-field-font-color",fontColor);
+        inputProperties.put("input-pane-background-color",color);
+        inputProperties.put("input-field-background-color",inputBackgroundColor);
+        inputProperties.put("layout-background-color", color);
+
+
         Map<String, LayoutTheme> layoutThemes = new HashMap<>();
         Map<String, String> properties = new HashMap<>();
 
-
-        properties.put("input-field-font-color",fontColor);
-        properties.put("input-pane-background-color",color);
-        properties.put("input-field-background-color",color);
+        properties.putAll(inputProperties);
 
         properties.put("item-list-background-color",color);
 
@@ -33,10 +38,12 @@ public enum Themes {
         properties.put("description-font-color",fontColor);
         properties.put("num-font-color", fontColor);
 
-        properties.put("layout-background-color", color);
-
         LayoutTheme layoutTheme = new LayoutThemeImpl("classic_item_list_layout",properties);
         layoutThemes.put(layoutTheme.getName(),layoutTheme);
+
+        LayoutTheme defaultLayoutTheme = new LayoutThemeImpl("default_layout",inputProperties);
+        layoutThemes.put(defaultLayoutTheme.getName(),defaultLayoutTheme);
+
         theme = new Theme("dark",layoutThemes);
     }
 
