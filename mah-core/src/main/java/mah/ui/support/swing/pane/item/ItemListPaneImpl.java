@@ -20,6 +20,7 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
 
     public ItemListPaneImpl(List<? extends Item> items) {
         super(items);
+        init();
     }
 
     private void init() {
@@ -34,7 +35,9 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
         if (theme instanceof LayoutThemeImpl) {
             LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
             String itemListBackgroundColor = layoutTheme.findProperty("item-list-background-color");
-            this.itemList.setBackground(Color.decode(itemListBackgroundColor));
+            if (itemList != null) {
+                this.itemList.setBackground(Color.decode(itemListBackgroundColor));
+            }
         }
         super.apply(theme);
     }
@@ -44,16 +47,16 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
         itemList.add(Box.createVerticalStrut(itemGap));
     }
 
-    @Override
-    protected void computerSize() {
-        this.itemList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
-    }
+//    @Override
+//    protected void computerSize() {
+//        this.itemList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+//    }
 
     @Override
     protected ItemPane createItemPane(Item item) {
         init();
-        if (item instanceof FullItem) {
-            FullItem fullItem = (FullItem) item;
+        if (item instanceof FullItemImpl) {
+            FullItemImpl fullItem = (FullItemImpl) item;
             FullItemPane fullItemPane = new FullItemPane(fullItem);
             addItemPane(fullItemPane);
             return fullItemPane;
@@ -65,5 +68,6 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
     public JPanel getPanel() {
         return itemList;
     }
+
 
 }

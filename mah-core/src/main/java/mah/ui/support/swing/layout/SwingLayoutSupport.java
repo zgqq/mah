@@ -1,5 +1,6 @@
 package mah.ui.support.swing.layout;
 
+import mah.ui.UIException;
 import mah.ui.event.EventHandler;
 import mah.ui.key.KeyEvent;
 import mah.ui.layout.LayoutSupport;
@@ -24,7 +25,11 @@ public abstract class SwingLayoutSupport extends LayoutSupport implements SwingL
         public void keyPressed(java.awt.event.KeyEvent e) {
             KeyEvent keyEvent = convertEvent(e);
             for (EventHandler eventHandler : getKeyPressedHandlers()) {
-                eventHandler.handle(keyEvent);
+                try {
+                    eventHandler.handle(keyEvent);
+                } catch (Exception e1) {
+                    throw new UIException(e1);
+                }
             }
         }
 
@@ -32,7 +37,11 @@ public abstract class SwingLayoutSupport extends LayoutSupport implements SwingL
         public void keyReleased(java.awt.event.KeyEvent e) {
             KeyEvent keyEvent = convertEvent(e);
             for (EventHandler eventHandler : getKeyReleasedHandlers()) {
-                eventHandler.handle(keyEvent);
+                try {
+                    eventHandler.handle(keyEvent);
+                } catch (Exception e1) {
+                    throw new UIException(e1);
+                }
             }
         }
     }

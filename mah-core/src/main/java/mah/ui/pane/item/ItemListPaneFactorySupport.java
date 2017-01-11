@@ -1,6 +1,7 @@
 package mah.ui.pane.item;
 
 import mah.ui.UIException;
+import mah.ui.event.EventHandler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,15 @@ public abstract class ItemListPaneFactorySupport implements ItemListPaneFactory{
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock.ReadLock readLock = readWriteLock.readLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = readWriteLock.writeLock();
+
+    @Override
+    public ItemListPane createItemListPane(List<? extends Item> items, List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers) {
+        ItemListPane itemListPane = createItemListPane(items);
+        for (EventHandler<? extends ItemSelectedEvent> itemSelectedEventHandler : itemSelectedEventHandlers) {
+            itemListPane.setOnItemSelected(itemSelectedEventHandler);
+        }
+        return itemListPane;
+    }
 
     @Override
     public ItemListPane createItemListPane(List<? extends Item> items) {
@@ -47,6 +57,8 @@ public abstract class ItemListPaneFactorySupport implements ItemListPaneFactory{
     }
 
     protected abstract ItemListPane createItemsPane(List<? extends Item> items);
+
+
 
     static class CacheKey {
         private List<? extends Item> items;

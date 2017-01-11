@@ -5,8 +5,11 @@ package mah.ui.pane.item;
  */
 public interface Item {
 
+    @Deprecated
     int getNum();
 
+    @Deprecated
     void setNum(int num);
 
+    Object getAttachment();
 }

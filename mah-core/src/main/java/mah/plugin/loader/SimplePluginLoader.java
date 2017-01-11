@@ -107,7 +107,7 @@ public class SimplePluginLoader {
                     long end = System.nanoTime();
                     logger.info("Loading plugin {} took {} nanoseconds", plugin, end - start);
                 } catch (Exception e) {
-                    logger.error("Plugin {} failed to start", plugin);
+                    logger.error("Plugin failed to start {}",e);
                 }
             });
             scheduledExecutor.schedule(() -> {

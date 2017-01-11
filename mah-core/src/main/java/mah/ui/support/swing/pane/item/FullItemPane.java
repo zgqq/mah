@@ -1,7 +1,7 @@
 package mah.ui.support.swing.pane.item;
 
 import mah.ui.UIException;
-import mah.ui.pane.item.FullItem;
+import mah.ui.pane.item.FullItemImpl;
 import mah.ui.pane.item.ItemPane;
 import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.theme.LayoutThemeImpl;
@@ -15,11 +15,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by zgq on 2017-01-08 14:16
  */
-public final class FullItemPane implements ItemPane<FullItem>,SwingPane,Themeable{
+public final class FullItemPane implements ItemPane<FullItemImpl>, SwingPane, Themeable {
 
     private JPanel panel;
     private JLabel iconLabel;
@@ -28,14 +29,15 @@ public final class FullItemPane implements ItemPane<FullItem>,SwingPane,Themeabl
     private JTextPane description;
     private JLabel numLabel;
 
-    public FullItemPane(FullItem fullItem) {
+    public FullItemPane(FullItemImpl fullItem) {
         init(fullItem);
     }
 
-    private void init(FullItem item) {
+    private void init(FullItemImpl item) {
         try {
             this.panel = SwingUtils.createPanelWithXBoxLayout();
             this.middlePanel = SwingUtils.createPanelWithYBoxLayout();
+            this.middlePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
             iconLabel = new JLabel();
             this.panel.add(iconLabel);
             this.panel.add(middlePanel);
@@ -65,23 +67,40 @@ public final class FullItemPane implements ItemPane<FullItem>,SwingPane,Themeabl
         this.middlePanel.add(this.content);
     }
 
-    private void setIcon(FullItem item) throws IOException {
-        BufferedImage icon = null;
-        icon = ImageIO.read(item.getIconInputItem());
-        iconLabel.setIcon(new ImageIcon(icon));
+
+    private void setIcon(FullItemImpl item) throws IOException {
+        InputStream iconInputStream = item.getIconInputStream();
+        BufferedImage icon = ImageIO.read(iconInputStream);
+        ImageIcon imageIcon = new ImageIcon(icon); // load the image to a imageIcon
+        Image image = imageIcon.getImage(); // transform it
+        Image newimg = image.getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        imageIcon = new ImageIcon(newimg);  // transform it back
+        iconLabel.setIcon(imageIcon);
     }
 
-    private void setDescription(FullItem item) {
-        String descriptionStr = item.getDescription();
-        description.setText(StringUtils.getStrBySpecificLength(descriptionStr,40));
+    private void setDescription(FullItemImpl item) {
+        String descriptionStr = item.getDescription().getText();
+        description.setText(StringUtils.getStrBySpecificLength(descriptionStr, 40));
     }
 
-    private void setContent(FullItem item) {
-        content.setText(StringUtils.getStrBySpecificLength(item.getContent(),40));
+    private void setContent(FullItemImpl item) {
+        content.setText(StringUtils.getStrBySpecificLength(item.getContent().getText(), 40));
     }
 
     @Override
-    public void reset(FullItem item) {
+    public void reset(FullItemImpl item, int num) {
+        try {
+            setIcon(item);
+            setContent(item);
+            setDescription(item);
+            setNum(num);
+        } catch (Exception e) {
+            throw new UIException(e);
+        }
+    }
+
+    @Override
+    public void reset(FullItemImpl item) {
         try {
             setIcon(item);
             setContent(item);
@@ -92,9 +111,15 @@ public final class FullItemPane implements ItemPane<FullItem>,SwingPane,Themeabl
         }
     }
 
-    private void setNum(FullItem item) {
+    @Deprecated
+    private void setNum(FullItemImpl item) {
         this.numLabel.setText(String.valueOf(item.getNum()));
     }
+
+    private void setNum(int num) {
+        this.numLabel.setText(String.valueOf(num));
+    }
+
 
     @Override
     public JPanel getPanel() {
@@ -107,10 +132,16 @@ public final class FullItemPane implements ItemPane<FullItem>,SwingPane,Themeabl
         if (theme instanceof LayoutThemeImpl) {
             LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
             decorateContent(layoutTheme);
+            decorateMiddleContainer(layoutTheme);
             decorateDescription(layoutTheme);
             decorateNum(layoutTheme);
             decoratePane(layoutTheme);
         }
+    }
+
+    private void decorateMiddleContainer(LayoutThemeImpl layoutTheme) {
+        String numFontColor = layoutTheme.findProperty("middle-container-background-color");
+        this.middlePanel.setBackground(Color.decode(numFontColor));
     }
 
     private void decorateNum(LayoutThemeImpl layoutTheme) {

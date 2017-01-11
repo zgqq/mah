@@ -114,10 +114,11 @@ public abstract class AbstractInput implements Input{
     protected int backwardWord2() {
         String text = getText();
         int caretPosition = getCaretPosition();
+        int caret = caretPosition;
         boolean hasLetter = false;
-        for (int i = caretPosition - 1; i >= 0; i--) {
+        for (int i = caret - 1; i >= 0; i--) {
             char c = text.charAt(i);
-            if (c == ' ' && i != caretPosition - 1) {
+            if (c == ' ' && i != caret - 1) {
                 break;
             }
 

@@ -146,7 +146,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
                                 for (EventHandler eventHandler : getInputTextChangedHandlers()) {
                                     eventHandler.handle(inputTextChangedEvent);
                                 }
-                            } catch (BadLocationException e) {
+                            } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
                         });

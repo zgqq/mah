@@ -52,6 +52,14 @@ public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
     }
 
     @Override
+    public void updateItem(Item item, int num) {
+        updateLayout(()->{
+            getLayout().updateItem(item,num);
+            updateWindowLayout();
+        });
+    }
+
+    @Override
     public void updateItems(Item... items) {
         updateLayout(() -> {
             getLayout().updateItems(items);

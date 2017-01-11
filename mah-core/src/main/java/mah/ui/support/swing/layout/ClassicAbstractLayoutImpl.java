@@ -11,6 +11,8 @@ import mah.ui.support.swing.pane.input.InputPaneImpl;
 import mah.ui.support.swing.theme.LayoutThemeImpl;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.Themeable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -22,6 +24,7 @@ import java.awt.*;
 public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements ClassicAbstractLayout {
 
     private static ClassicAbstractLayoutImpl instance;
+    private static final Logger logger = LoggerFactory.getLogger(ClassicAbstractLayoutImpl.class);
     private JPanel panel;
     private InputPaneImpl inputPane;
     private SwingPane bottomPane;
@@ -34,6 +37,10 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
 
     @Override
     public void init() {
+        if (init == true) {
+            logger.warn("The layout has already been initialized");
+            return;
+        }
         this.panel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         this.panel.setLayout(boxLayout);
@@ -60,7 +67,10 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     }
 
     private void addBottomPane(SwingPane swingPane) {
-        this.panel.add(swingPane.getPanel());
+        JPanel panel = swingPane.getPanel();
+        if (panel != null) {
+            this.panel.add(panel);
+        }
     }
 
     private void removeBottomPane() {
@@ -132,7 +142,7 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
         return inputPane;
     }
 
-    public static ClassicAbstractLayoutImpl instance() {
+    public static  ClassicAbstractLayoutImpl instance() {
         if (instance == null) {
             instance = newInstance();
         }

@@ -7,7 +7,7 @@ import java.util.EventListener;
  */
 public interface EventHandler<T> extends EventListener {
 
-    void handle(T event);
+    void handle(T event) throws Exception;
 
 }
 

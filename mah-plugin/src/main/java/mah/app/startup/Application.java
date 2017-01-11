@@ -15,11 +15,11 @@ public class Application {
         ThemeManager.getInstance().setCurrentTheme("dark");
         ApplicationManager.getInstance().start();
 //        ClassicItemListLayout classicItemListLayout = new ClassicItemListLayout();
-//        List<FullItem> itemList = new ArrayList<>();
-//        itemList.add(new FullItem.Builder("ok").description("ss").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
-//        itemList.add(new FullItem.Builder("ok").description("ss").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
-//        itemList.add(new FullItem.Builder("ok").description("ss").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
-//        itemList.add(new FullItem.Builder("ok2").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
+//        List<FullItemImpl> itemList = new ArrayList<>();
+//        itemList.add(new FullItemImpl.Builder("ok").description("ss").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
+//        itemList.add(new FullItemImpl.Builder("ok").description("ss").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
+//        itemList.add(new FullItemImpl.Builder("ok").description("ss").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
+//        itemList.add(new FullItemImpl.Builder("ok2").iconInputStream(Application.class.getResourceAsStream("/translation/translate.png")).build());
 //        classicItemListLayout.updateItems(itemList);
     }
 

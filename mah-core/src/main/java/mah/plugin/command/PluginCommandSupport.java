@@ -5,13 +5,14 @@ import mah.openapi.ui.layout.LayoutFactory;
 import mah.openapi.ui.layout.SwingLayoutFactory;
 import mah.plugin.Plugin;
 import mah.plugin.PluginMetainfo;
+import mah.ui.window.WindowManager;
 
 import java.io.File;
 
 /**
  * Created by zgq on 2017-01-09 16:57
  */
-public abstract class PluginCommandSupport extends CommandSupport implements PluginCommand  {
+public abstract class PluginCommandSupport extends CommandSupport implements PluginCommand {
 
     private Plugin plugin;
     private LayoutFactory layoutFactory;
@@ -26,6 +27,11 @@ public abstract class PluginCommandSupport extends CommandSupport implements Plu
         return plugin;
     }
 
+
+    protected final String getFileStoredInPluginDataDir(String file) {
+        return getPluginDataDir(file);
+    }
+
     protected final String getPluginDataDir(String dir) {
         PluginMetainfo pluginMetainfo = getPlugin().getPluginMetainfo();
         return pluginMetainfo.getPluginDataDir() + File.separator + dir;
@@ -35,6 +41,10 @@ public abstract class PluginCommandSupport extends CommandSupport implements Plu
     protected LayoutFactory getLayoutFactory() {
         layoutFactory = new SwingLayoutFactory(this);
         return layoutFactory;
+    }
+
+    protected final void hideWindow() {
+        WindowManager.getInstance().getCurrentWindow().hide();
     }
 
 }

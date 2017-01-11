@@ -35,6 +35,9 @@ public class StringUtils {
     }
 
     public static int getIndexBySpecificLength(String text,int len) {
+        if (text == null) {
+            return -1;
+        }
         int length = 0;
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);

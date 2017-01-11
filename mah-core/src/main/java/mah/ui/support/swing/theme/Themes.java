@@ -15,13 +15,13 @@ public enum Themes {
 
     private Theme theme;
 
-    Themes(String color,String inputBackgroundColor,String fontColor) {
+    Themes(String backgroundColor,String inputBackgroundColor,String fontColor) {
 
         Map<String, String> inputProperties = new HashMap<>();
         inputProperties.put("input-field-font-color",fontColor);
-        inputProperties.put("input-pane-background-color",color);
+        inputProperties.put("input-pane-background-color",backgroundColor);
         inputProperties.put("input-field-background-color",inputBackgroundColor);
-        inputProperties.put("layout-background-color", color);
+        inputProperties.put("layout-background-color", backgroundColor);
 
 
         Map<String, LayoutTheme> layoutThemes = new HashMap<>();
@@ -29,12 +29,13 @@ public enum Themes {
 
         properties.putAll(inputProperties);
 
-        properties.put("item-list-background-color",color);
+        properties.put("item-list-background-color",backgroundColor);
 
-        properties.put("item-pane-background-color",color);
-        properties.put("content-background-color",color);
+        properties.put("item-pane-background-color",backgroundColor);
+        properties.put("middle-container-background-color",backgroundColor);
+        properties.put("content-background-color",backgroundColor);
         properties.put("content-font-color",fontColor);
-        properties.put("description-background-color",color);
+        properties.put("description-background-color",backgroundColor);
         properties.put("description-font-color",fontColor);
         properties.put("num-font-color", fontColor);
 

@@ -2,7 +2,6 @@ package mah.plugin.support.translation.repo;
 
 import com.alibaba.fastjson.JSON;
 import mah.common.json.JSONArr;
-import mah.common.json.JSONFactory;
 import mah.common.json.JSONObj;
 import mah.common.util.IOUtils;
 import mah.common.util.StringUtils;
@@ -39,8 +38,7 @@ public class WordRepository {
     }
 
     public void init() {
-        JSONFactory jsonFactory = JSONUtils.getJSONFactory();
-        JSONArr map = jsonFactory.parseArrFromLocalFile(localFile);
+        JSONArr map = mah.common.json.JSONUtils.parseArrFromLocalFile(localFile);
         map.forEach(entry -> {
             JSONObj wordObj = (JSONObj) entry;
             Word word = new Word();

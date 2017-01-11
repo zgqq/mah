@@ -6,4 +6,16 @@
         <description>Translation</description>
         <class>mah.plugin.support.translation.TranslationPlugin</class>
     </plugin>
+    <plugin>
+        <name>github</name>
+        <author>zgq</author>
+        <description>Github</description>
+        <class>mah.plugin.support.github.GithubPlugin</class>
+    </plugin>
+    <plugin>
+        <name>weather</name>
+        <author>zgq</author>
+        <description>Query weather tools</description>
+        <class>mah.plugin.support.weather.WeatherPlugin</class>
+    </plugin>
 </plugins>

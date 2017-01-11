@@ -59,9 +59,9 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
         return triggerEventHandlers;
     }
 
-    protected void triggerHook(CommandEvent event) throws Exception {
-
-    }
+//    protected void triggerHook(CommandEvent event) throws Exception {
+//
+//    }
 
     @Override
     public void registerMode(ModeManager modeManager) {

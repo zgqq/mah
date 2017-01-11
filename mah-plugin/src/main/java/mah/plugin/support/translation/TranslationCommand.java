@@ -10,7 +10,7 @@ import mah.plugin.support.translation.repo.JSONUtils;
 import mah.plugin.support.translation.repo.WordRepository;
 import mah.ui.annnotation.Layout;
 import mah.ui.layout.ClassicItemListLayout;
-import mah.ui.pane.item.FullItem;
+import mah.ui.pane.item.FullItemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,14 +77,14 @@ public class TranslationCommand extends PluginCommandSupport {
     }
 
 
-    private FullItem createTranslationResult(String name, String description) {
+    private FullItemImpl createTranslationResult(String name, String description) {
         this.translationIcon = getInputStreamFromClasspath("translation/translate.png");
-        FullItem fullItem = new FullItem.Builder(name).description(description).iconInputStream(translationIcon).build();
+        FullItemImpl fullItem = new FullItemImpl.Builder(name).description(description).iconInputStream(translationIcon).build();
         return fullItem;
     }
 
-    private FullItem createTriggerResult() {
-        return createTranslationResult("中汉互译", "Thanks to youdao api");
+    private FullItemImpl createTriggerResult() {
+        return createTranslationResult("英汉互译", "Thanks to youdao api");
     }
 
     public void triggerHook() throws Exception {
@@ -131,7 +131,7 @@ public class TranslationCommand extends PluginCommandSupport {
             explainStr.deleteCharAt(explainStr.length() - 1);
             description = explainStr.toString();
         }
-        List<FullItem> items = new ArrayList<>();
+        List<FullItemImpl> items = new ArrayList<>();
         items.add(createTranslationResult(buildDescription(translations), description));
         List<Word.MeaningPair> meaningPairs = word.getMeaningPairs();
         if (meaningPairs != null) {
