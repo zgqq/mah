@@ -8,7 +8,6 @@ import mah.command.event.EventHandler;
 import mah.command.event.TriggerEvent;
 import mah.command.listener.InputTextListener;
 import mah.plugin.PluginException;
-import mah.plugin.command.PluginCommand;
 import mah.ui.input.InputPaneFactoryBean;
 import mah.ui.input.InputTextChangedEvent;
 import mah.ui.input.TextState;
@@ -18,8 +17,7 @@ import mah.ui.window.WindowManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +34,33 @@ public class CommandManager implements ApplicationListener {
     private final Map<String, Map<String, Command>> PLUGIN_COMMAND = new HashMap<>();
     private final Map<String, Command> commands = new HashMap<>();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private volatile Command lockedCommand;
     private Command currentCommand;
 
     private CommandManager() {
 
     }
+
+    public List<String> findCommandMaps(Command command) {
+        List<String> maps = new ArrayList<>();
+        for (Map.Entry<String, Command> entry : commands.entrySet()) {
+            String key = entry.getKey();
+            Command value = entry.getValue();
+            if (value == command) {
+                maps.add(key);
+            }
+        }
+        return maps;
+    }
+
+    public Command getLockedCommand() {
+        return lockedCommand;
+    }
+
+    public void setLockedCommand(Command command) {
+        lockedCommand = command;
+    }
+
 
     public static CommandManager getInstance() {
         return INSTANCE;
@@ -68,22 +88,6 @@ public class CommandManager implements ApplicationListener {
         InputPaneFactoryBean.getInstance().setOnInputTextChanged(new InputTextListener());
     }
 
-    private Layout getLayout(PluginCommand command) {
-        for (Field field : command.getClass().getDeclaredFields()) {
-            Annotation annotation = field.getAnnotation(mah.ui.annnotation.Layout.class);
-            if (annotation != null) {
-                try {
-                    field.setAccessible(true);
-                    Layout o = (Layout) field.get(command);
-                    return o;
-                } catch (IllegalAccessException e) {
-                    throw new CommandException(e);
-                }
-            }
-        }
-        return null;
-    }
-
     public void mapCommand(String key, Command command) {
         synchronized (this) {
             Command prevCommand = commands.get(key);
@@ -94,32 +98,8 @@ public class CommandManager implements ApplicationListener {
         }
     }
 
-//    private void sychInput(TextState textState, Layout newLayout) {
-//        if (newLayout instanceof InputPaneProvider) {
-//            InputPaneProvider inputPaneProvider = (InputPaneProvider) newLayout;
-//            InputPane inputPane = inputPaneProvider.getInputPane();
-//            UIManager.getInstance().runLater(() -> {
-//                inputPane.setTextStateQuietly(textState);
-//            });
-//        }
-//        newLayout.setDefaultMode();
-//    }
-
-//    private void sychInput(Command command, TextState textState) {
-//        if (command instanceof PluginCommand) {
-//            Layout layout = getLayout((PluginCommand) command);
-//            if (layout != null) {
-//                sychInput(textState, layout);
-//            } else {
-//                Window currentWindow = WindowManager.getInstance().getCurrentWindow();
-//                currentWindow.getCurrentLayout().setDefaultMode();
-//            }
-//        }
-//    }
 
     private void executeCommand(Command command, String triggerKey) {
-//        sychInput(command, textState);
-//        CommandEvent commandEvent = new CommandEvent(triggerKey);
         executorService.submit(new TriggerCommandTask(command, triggerKey));
     }
 
@@ -131,11 +111,6 @@ public class CommandManager implements ApplicationListener {
             return;
         } else {
             if (input.charAt(triggerKey.length()) == ' ') {
-//                if (input.length() == triggerKey.length() + 1) {
-//                    executeCommand(command, triggerKey);
-//                    currentCommand = command;
-//                    return;
-//                }
                 filterCommand(command, triggerKey, input);
                 currentCommand = command;
                 return;
@@ -189,6 +164,11 @@ public class CommandManager implements ApplicationListener {
 
     private void setDefaultLayout() {
         WindowManager.getInstance().getCurrentWindow().useDefaultLayoutAsCurrentLayout();
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+        executorService.shutdownNow();
     }
 
     public Command getCurrentCommand() {

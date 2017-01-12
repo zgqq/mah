@@ -10,7 +10,7 @@ public interface Action {
 
     Class<?> getHandler();
 
-    void actionPerformed(ActionEvent actionEvent);
+    void actionPerformed(ActionEvent actionEvent) throws Exception;
 
 
 }

@@ -3,11 +3,18 @@ package mah.ui.window;
 import mah.action.AbstractAction;
 import mah.action.ActionEvent;
 import mah.action.GlobalAction;
+import mah.command.Command;
+import mah.command.CommandManager;
 import mah.mode.AbstractMode;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.UIManager;
+import mah.ui.input.TextState;
 import mah.ui.key.KeystateManager;
+import mah.ui.pane.input.InputPane;
+import mah.ui.util.UIUtils;
+
+import java.util.List;
 
 /**
  * Created by zgq on 2017-01-09 09:49
@@ -16,8 +23,8 @@ public class WindowMode extends AbstractMode {
 
     public static final String NAME = "window_mode";
 
-    public WindowMode() {
-        this(NAME);
+    public WindowMode(Mode parent) {
+        super(NAME,parent);
     }
 
     public WindowMode(String name) {
@@ -132,6 +139,18 @@ public class WindowMode extends AbstractMode {
 
         @Override
         protected void actionPerformed(Window window) {
+            Command lockedCommand = CommandManager.getInstance().getLockedCommand();
+            if (lockedCommand != null) {
+                List<String> maps = CommandManager.getInstance().findCommandMaps(lockedCommand);
+                if (!maps.isEmpty()) {
+                    String triggerKey = maps.get(0);
+                    InputPane inputPane = UIUtils.getInputPane();
+                    if (inputPane != null) {
+                        TextState.Builder builder = new TextState.Builder(triggerKey, triggerKey.length());
+                        inputPane.setTextState(builder.build());
+                    }
+                }
+            }
             window.show();
         }
     }

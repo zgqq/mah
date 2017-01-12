@@ -13,7 +13,7 @@ public abstract class FilterableCommandSupport extends PluginCommandSupport impl
 
     @Override
     public void filter(CommandEvent commandEvent, String content) throws Exception {
-        triggerMode();
+//        triggerMode();
         filterHook(commandEvent, content);
     }
 

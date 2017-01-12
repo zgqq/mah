@@ -94,4 +94,9 @@ public abstract class ClassicItemListLayoutWrapper extends LayoutWrapper impleme
         return layout.getMode();
     }
 
+
+    @Override
+    public <T extends Item> T getPendingItem() {
+        return layout.getPendingItem();
+    }
 }

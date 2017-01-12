@@ -5,10 +5,12 @@ import mah.ui.layout.LayoutType;
 import mah.ui.support.swing.layout.DefaultLayout;
 import mah.ui.support.swing.layout.SwingLayout;
 import mah.ui.theme.ThemeManager;
+import mah.ui.util.ScreenUtils;
 import mah.ui.window.WindowProperties;
 import mah.ui.window.WindowSupport;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by zgq on 17-1-8 11:25.
@@ -19,6 +21,7 @@ public class WindowImpl extends WindowSupport {
     private JFrame frame;
     private DefaultLayout defaultLayout;
     private SwingLayout currentLayout;
+    private int width=600;
 
     public WindowImpl(WindowProperties properties) {
         this.properties = properties;
@@ -41,7 +44,7 @@ public class WindowImpl extends WindowSupport {
             currentLayout = defaultLayout;
         }
         frame.pack();
-        frame.setLocationRelativeTo(null);
+        centerOnScreen();
     }
 
     private void initWindow() {
@@ -49,7 +52,7 @@ public class WindowImpl extends WindowSupport {
         frame.setUndecorated(true);
         frame.setAlwaysOnTop(true);
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setType(java.awt.Window.Type.UTILITY);
     }
 
@@ -59,6 +62,8 @@ public class WindowImpl extends WindowSupport {
     }
 
     private void updateLayout(SwingLayout layout) {
+
+
         JPanel currentPanel = currentLayout.getPanel();
         JPanel panel = layout.getPanel();
         if (currentPanel.equals(panel)) {
@@ -95,17 +100,40 @@ public class WindowImpl extends WindowSupport {
 
     @Override
     public void moveToRight() {
-        //
+        Rectangle currentScreen = getCurrentScreen();
+        int y = getY(currentScreen.getHeight());
+        frame.setLocation((int) currentScreen.getWidth()-getWidth(), y);
     }
 
     @Override
     public void centerOnScreen() {
-
+        Rectangle currentScreen = getCurrentScreen();
+        double width = currentScreen.getWidth();
+        int x = (int) (currentScreen.getX() + ((width - 600) / 2));
+        int y = getY(currentScreen.getHeight());
+        frame.setLocation(x, y);
     }
+
+    private int getY(double screenHeight) {
+        return (int) ((screenHeight - 600) / 2) + 130;
+    }
+
+    private Rectangle getCurrentScreen() {
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        Rectangle curRect = ScreenUtils.getScreenBoundsAt(pointerInfo.getLocation());
+        return curRect;
+    }
+
+    private int getWidth() {
+        return width;
+    }
+
 
     @Override
     public void moveToLeft() {
-
+        Rectangle currentScreen = getCurrentScreen();
+        int y = getY(currentScreen.getHeight());
+        frame.setLocation((int) currentScreen.getX(), y);
     }
 
     @Override
@@ -116,7 +144,6 @@ public class WindowImpl extends WindowSupport {
 
     @Override
     public void setCurrentLayout(Layout layout) {
-
         if (layout instanceof SwingLayout) {
             SwingLayout swingLayout = (SwingLayout) layout;
             updateLayout(swingLayout);

@@ -35,4 +35,6 @@ public final class SwingUtils {
         return boxLayout;
 
     }
+
+
 }

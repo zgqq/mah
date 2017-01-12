@@ -1,10 +1,11 @@
 package mah.command;
 
 import mah.action.ActionHandler;
-import mah.command.event.*;
+import mah.command.event.CommonFilterEvent;
+import mah.command.event.EventHandler;
+import mah.command.event.InitializeEvent;
+import mah.command.event.TriggerEvent;
 import mah.mode.EnableMode;
-import mah.mode.Mode;
-import mah.mode.ModeManager;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -24,7 +25,7 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
     private final List<EventHandler<? extends InitializeEvent>> initializeHandlers = new ArrayList<>(3);
     private final List<EventHandler<? extends TriggerEvent>> triggerEventHandlers = new ArrayList<>(3);
     private final List<EventHandler<? extends CommonFilterEvent>> commonFilterEventHandlers = new ArrayList<>(3);
-    private Mode mode;
+//    private Mode mode;
 
 //    @Override
 //    public void triggerMode(CommandEvent event) throws Exception {
@@ -34,15 +35,15 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
 //        triggerHook(event);
 //    }
 
-    protected final void triggerMode() {
-        if (mode != null) {
-            triggerMode(mode.getName());
-        }
-    }
+//    protected final void triggerMode() {
+//        if (mode != null) {
+//            triggerMode(mode.getName());
+//        }
+//    }
 
-    protected void triggerMode(String mode) {
-        ModeManager.getInstance().triggerMode(mode);
-    }
+//    protected void triggerMode(String mode) {
+//        ModeManager.getInstance().triggerMode(mode);
+//    }
 
     @Override
     public List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers() {
@@ -63,20 +64,20 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
 //
 //    }
 
-    @Override
-    public void registerMode(ModeManager modeManager) {
-        Mode mode = registerModeHook(modeManager);
-        if (mode == null) {
-            return;
-        }
-        this.mode = mode;
-        modeManager.registerMode(mode, this);
-    }
+//    @Override
+//    public void registerMode(ModeManager modeManager) {
+//        Mode mode = registerModeHook(modeManager);
+//        if (mode == null) {
+//            return;
+//        }
+//        this.mode = mode;
+//        modeManager.registerMode(mode, this);
+//    }
 
-    protected Mode registerModeHook(ModeManager modeManager) {
-        return null;
-
-    }
+//    protected Mode registerModeHook(ModeManager modeManager) {
+//        return null;
+//
+//    }
 
     protected final <T> Future<T> submit(Callable<T> task) {
         return getExecutor().submit(task);
@@ -113,7 +114,6 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
     @Override
     public String toString() {
         return "CommandSupport{" +
-                "mode=" + mode +
                 ",name=" + getName() + "}";
     }
 }

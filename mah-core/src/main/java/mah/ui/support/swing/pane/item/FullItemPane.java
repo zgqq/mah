@@ -34,7 +34,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private JLabel numLabel;
     private FullItem item;
     private LayoutThemeImpl theme;
-    private static final int ITEM_HEIGHT = 70;
+    private static final int ITEM_HEIGHT = 58;
     private static final int TEXT_LEN = 40;
 
     public FullItemPane(FullItem fullItem) {
@@ -45,16 +45,16 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         try {
             this.panel = new JPanel();
             this.panel.setLayout(new BorderLayout());
-            this.panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 25));
+            this.panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
             this.container = SwingUtils.createPanelWithXBoxLayout();
             this.container.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 5));
             this.middlePanel = SwingUtils.createPanelWithYBoxLayout();
-            this.middlePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            this.middlePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
             iconLabel = new JLabel();
             this.container.add(iconLabel);
             this.container.add(middlePanel);
             this.panel.add(container);
-            this.panel.setPreferredSize(new Dimension(600, ITEM_HEIGHT));
+            this.panel.setPreferredSize(new Dimension(580, ITEM_HEIGHT));
             initContent();
             initDescription();
             initNum();
@@ -202,17 +202,10 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         }
     }
 
+
     @Override
     public void reset(FullItem item) {
-        try {
-            setIcon(item);
-            setContent(item);
-            setDescription(item);
-            setNum(item);
-            this.item = item;
-        } catch (Exception e) {
-            throw new UIException(e);
-        }
+        reset(item,item.getNum());
     }
 
     @Override

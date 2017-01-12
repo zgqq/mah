@@ -23,6 +23,14 @@ public class ActionManager {
     public void handleAction(Action action) {
         ActionHandler actionHandler = ACTION_HANDLERS.get(action);
         if (actionHandler == null) {
+            if (action instanceof NoSourceAction) {
+                try {
+                    action.actionPerformed(ActionEvent.newActionEvent(null));
+                } catch (Exception e) {
+                    throw new ActionException(e);
+                }
+                return;
+            }
             throw new ActionException("Not found action handler for " + action);
         }
         actionHandler.handle(action);

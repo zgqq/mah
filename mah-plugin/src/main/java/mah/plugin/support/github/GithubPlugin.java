@@ -8,8 +8,11 @@ import mah.plugin.support.github.starred.GithubStarredCommand;
  */
 public class GithubPlugin extends PluginSupport{
 
+
+
     @Override
     public void init() {
         registerCommand(new GithubStarredCommand());
     }
+
 }

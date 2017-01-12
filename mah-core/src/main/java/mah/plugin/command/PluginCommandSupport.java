@@ -5,7 +5,7 @@ import mah.openapi.ui.layout.LayoutFactory;
 import mah.openapi.ui.layout.SwingLayoutFactory;
 import mah.plugin.Plugin;
 import mah.plugin.PluginMetainfo;
-import mah.ui.window.WindowManager;
+import mah.ui.util.UIUtils;
 
 import java.io.File;
 
@@ -44,7 +44,7 @@ public abstract class PluginCommandSupport extends CommandSupport implements Plu
     }
 
     protected final void hideWindow() {
-        WindowManager.getInstance().getCurrentWindow().hide();
+        UIUtils.hideWindow();
     }
 
 }

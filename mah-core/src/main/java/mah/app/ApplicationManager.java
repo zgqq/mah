@@ -8,6 +8,8 @@ import mah.keybind.KeybindManager;
 import mah.mode.ModeManager;
 import mah.plugin.PluginManager;
 import mah.ui.UIManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class ApplicationManager {
 
     private static final ApplicationManager INSTANCE = new ApplicationManager();
     private static final List<ApplicationListener> APPLICATION_LISTENER = new ArrayList<>();
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationManager.class);
 
     static {
         APPLICATION_LISTENER.add(PluginManager.getInstance());
@@ -109,5 +112,17 @@ public class ApplicationManager {
 
     public static ApplicationManager getInstance() {
         return INSTANCE;
+    }
+
+    public void shutdown() {
+        try {
+            for (ApplicationListener applicationListener : APPLICATION_LISTENER) {
+                applicationListener.shutdown();
+            }
+            System.exit(0);
+        } catch (Exception e) {
+            logger.error("fail to shutdown", e);
+            System.exit(-1);
+        }
     }
 }

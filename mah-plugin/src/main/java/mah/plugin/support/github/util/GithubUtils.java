@@ -11,9 +11,16 @@ public final class GithubUtils {
     private GithubUtils() {
 
     }
+
     public static void openRepository(GithubRepository repository) {
         String name = repository.getName();
         String url = "https://github.com/" + name;
+        DesktopUtils.openBrowser(url);
+    }
+
+    public static void openRepositoryIssues(GithubRepository repository) {
+        String name = repository.getName();
+        String url = "https://github.com/" + name+"/issues";
         DesktopUtils.openBrowser(url);
     }
 

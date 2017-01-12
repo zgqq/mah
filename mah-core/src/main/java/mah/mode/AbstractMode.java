@@ -1,9 +1,6 @@
 package mah.mode;
 
-import mah.action.Action;
-import mah.action.ActionException;
-import mah.action.ActionHandler;
-import mah.action.ActionManager;
+import mah.action.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,19 +41,21 @@ public abstract class AbstractMode implements Mode {
 
     public final void registerAction(Action action) {
         Class<?> handler = action.getHandler();
-        if (handler == null) {
-            throw new ActionException("actions must have a handler");
-        }
-        List<Action> actions = HANDLERS_ACTIONS.get(handler);
-        if (actions == null) {
-            actions = new ArrayList<>();
-            HANDLERS_ACTIONS.put(handler, actions);
-        } else {
-            if (actions.contains(action)) {
-                throw new ActionException("Action should be registered once");
+        if (!(action instanceof NoSourceAction)) {
+            if (handler == null) {
+                throw new ActionException("actions must have a handler");
             }
+            List<Action> actions = HANDLERS_ACTIONS.get(handler);
+            if (actions == null) {
+                actions = new ArrayList<>();
+                HANDLERS_ACTIONS.put(handler, actions);
+            } else {
+                if (actions.contains(action)) {
+                    throw new ActionException("Action should be registered once");
+                }
+            }
+            actions.add(action);
         }
-        actions.add(action);
         addNamedAction(action);
     }
 

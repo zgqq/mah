@@ -7,7 +7,11 @@ public interface ActionHandler {
 
     default void handle(Action action) {
         ActionEvent actionEvent = new ActionEvent(this);
-        action.actionPerformed(actionEvent);
+        try {
+            action.actionPerformed(actionEvent);
+        } catch (Exception e) {
+            throw new ActionException(e);
+        }
     }
 
 }

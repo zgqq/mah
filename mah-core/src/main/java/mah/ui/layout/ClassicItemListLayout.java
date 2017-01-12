@@ -21,4 +21,5 @@ public interface ClassicItemListLayout extends ItemList,Layout,InputPaneProvider
 
     void updateItems(Item... items);
 
+    void clear();
 }

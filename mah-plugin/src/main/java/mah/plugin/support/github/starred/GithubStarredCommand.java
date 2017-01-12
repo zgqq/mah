@@ -10,12 +10,12 @@ import mah.common.search.MatchedResult;
 import mah.common.search.SearchResult;
 import mah.common.util.IOUtils;
 import mah.common.util.StringUtils;
-import mah.mode.Mode;
-import mah.mode.ModeManager;
 import mah.openapi.search.CacheSearcher;
 import mah.plugin.PluginException;
 import mah.plugin.command.PluginCommandSupport;
 import mah.plugin.config.XMLConfigurable;
+import mah.plugin.support.github.GithubMode;
+import mah.plugin.support.github.GithubModeHandler;
 import mah.plugin.support.github.entity.GithubRepositories;
 import mah.plugin.support.github.entity.GithubRepositories.Listener;
 import mah.plugin.support.github.entity.GithubRepository;
@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by zgq on 16-12-24.
  */
-public class GithubStarredCommand extends PluginCommandSupport implements XMLConfigurable {
+public class GithubStarredCommand extends PluginCommandSupport implements XMLConfigurable, GithubModeHandler {
 
     private ClassicItemListLayout layout;
     private String localRepositoryFile;
@@ -68,12 +69,14 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
         hideWindow();
     }
 
+
     public void init() throws CommandException {
 
         addInitializeHandler();
 
         addCommonFilterEventHandler(event -> {
             if (updating || StringUtils.isEmpty(event.getContent())) {
+                layout.clear();
                 return;
             }
             List<SearchResult> searchResults = searcher.smartFuzzySearch(event.getContent());
@@ -86,6 +89,10 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
 
             @Override
             public void handle(TriggerEvent event) throws Exception {
+                trigger();
+            }
+
+            private void trigger() throws ExecutionException, InterruptedException {
                 if (repositoryData == null || repositoryData.size() <= 0) {
                     showUpdating();
                     updating = true;
@@ -157,8 +164,8 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     private FullItemImpl convertToSearchItem(SearchResult searchResult) {
         GithubRepository githubRepository = (GithubRepository) searchResult.getDataRow();
         MatchedResult matchedResult = searchResult.getMatchedResult();
-        FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName(),matchedResult.findMatchedIndex(0))//
-                .description(githubRepository.getDescription(),matchedResult.findMatchedIndex(1)) //
+        FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName(), matchedResult.findMatchedIndex(0))//
+                .description(githubRepository.getDescription(), matchedResult.findMatchedIndex(1)) //
                 .attachment(githubRepository) //
                 .iconInputStream(getIconInputStream())
                 .build();
@@ -209,7 +216,6 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     }
 
 
-    private static final String MODE = "github_starred";
 
 
     private void updateRepositories() {
@@ -253,6 +259,9 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
                     GithubRepository attachment = (GithubRepository) item.getAttachment();
                     openRepository(attachment);
                 });
+                layout.registerMode(GithubMode.getInstance(), event -> {
+                    GithubMode.getInstance().updateActionHandler(GithubStarredCommand.this);
+                });
             }
 
             @Override
@@ -275,9 +284,14 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     }
 
     @Override
-    protected Mode registerModeHook(ModeManager modeManager) {
-        return new GithubStarredMode(MODE, modeManager.getMode("input_mode"));
+    public void onGoGithubIssues(Item item) throws Exception{
+        Runtime.getRuntime().exec(this.command);
+        hideWindow();
     }
 
+    @Override
+    public ClassicItemListLayout getLayout() {
+        return layout;
+    }
 }
 

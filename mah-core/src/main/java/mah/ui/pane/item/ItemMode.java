@@ -28,9 +28,9 @@ public class ItemMode extends AbstractMode {
         registerAction(new PreviousItem(PREVIOUS_ITEM));
         registerAction(new NextItem(NEXT_ITEM));
         registerAction(new DefaultSelectItem(DEFAULT_SELECT_ITEM));
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i < 10; i++) {
             String name = SELECT_ITEM + i;
-            registerAction(new SelectItem(name, i));
+            registerAction(new SelectItem(name, i-1));
         }
     }
 

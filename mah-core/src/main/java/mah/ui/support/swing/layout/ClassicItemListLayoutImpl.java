@@ -1,6 +1,7 @@
 package mah.ui.support.swing.layout;
 
 import mah.mode.Mode;
+import mah.mode.ModeManager;
 import mah.ui.UIException;
 import mah.ui.event.EventHandler;
 import mah.ui.layout.ClassicItemListLayout;
@@ -56,6 +57,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         mode.setParent(ItemMode.getAndRegisterMode());
         this.mode = mode;
         modeListeners.add(modeListener);
+        ModeManager.getInstance().registerMode(mode);
     }
 
     @Override
@@ -92,6 +94,11 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     }
 
     @Override
+    public void clear() {
+        getLayout().updatePane(null);
+    }
+
+    @Override
     public void updateItem(Item item, int num) {
         if (this.itemListPane == null) {
             throw new UIException("Unable to update item");
@@ -109,6 +116,11 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         return itemListPane;
     }
 
+
+    @Override
+    public <T extends Item> T getPendingItem() {
+        return itemListPane.getPendingItem();
+    }
 
     @Override
     public void selectItem(int index) {

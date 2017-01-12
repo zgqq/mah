@@ -106,6 +106,12 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
     }
 
     @Override
+    public <T extends Item> T getPendingItem() {
+        ItemPane itemPane = itemPanes.get(pendingIndex);
+        return (T) itemPane.getItem();
+    }
+
+    @Override
     public void unpendingItemIndex(int pendingItemIndex) {
         itemPanes.get(pendingItemIndex).unpending();
     }
