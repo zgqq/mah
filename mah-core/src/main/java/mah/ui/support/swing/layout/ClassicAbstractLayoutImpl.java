@@ -93,7 +93,7 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     }
 
     private void applyToLayout() {
-        String layoutColor = currentTheme.findProperty("layout-background-color");
+        String layoutColor = currentTheme.findProperty("background-color");
         this.panel.setBackground(Color.decode(layoutColor));
     }
 
@@ -128,7 +128,7 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     @Override
     public void setDefaultMode() {
         check();
-        InputMode inputMode = InputMode.trigger();
+        InputMode inputMode = InputMode.triggerMode();
         inputMode.updateActionHandler(inputPane);
     }
 

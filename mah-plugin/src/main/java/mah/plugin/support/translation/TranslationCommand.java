@@ -88,7 +88,7 @@ public class TranslationCommand extends PluginCommandSupport {
     }
 
     public void triggerHook() throws Exception {
-        System.out.println("trigger translation command");
+        System.out.println("triggerMode translation command");
         layout.updateItems(createTriggerResult());
     }
 

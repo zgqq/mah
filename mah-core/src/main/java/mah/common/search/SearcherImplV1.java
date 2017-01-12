@@ -11,11 +11,12 @@ import java.util.Map;
 /**
  * Created by zgq on 16-11-24.
  */
-public class SearcherImplV2 implements Searcher {
+@Deprecated
+public class SearcherImplV1 implements Searcher {
 
     private SearchResultComparator comparator;
 
-    public SearcherImplV2() {
+    public SearcherImplV1() {
         this.comparator = new SearchResultComparator();
     }
 
@@ -29,7 +30,7 @@ public class SearcherImplV2 implements Searcher {
         }
 
         public void addPrority(int pror) {
-            this.prority =prority+ pror;
+            this.prority = prority + pror;
         }
 
         public void addMatchedIndex(int index) {
@@ -83,7 +84,6 @@ public class SearcherImplV2 implements Searcher {
     static class Node {
         int prority;
         List<Integer> matchedIndexs;
-        List<Integer> realIndexs;
 
         public Node(int prority, List<Integer> matchedIndexs) {
             this.prority = prority;
@@ -196,11 +196,15 @@ public class SearcherImplV2 implements Searcher {
             Node node = matchedNodes.get(j);
             List<Integer> matchedIndexs = node.matchedIndexs;
             int q = 0;
+            int succ = 0;
             for (int i = matchedIndexs.size() - 1; i >= 1; i--) {
                 int ind1 = matchedIndexs.get(i - 1);
                 int ind2 = matchedIndexs.get(i);
                 if ((ind2 - ind1) == 1) {
-                    q += 10;
+                    ++succ;
+                    q += (succ * 10);
+                } else {
+                    succ = 0;
                 }
             }
             if (q > prop) {

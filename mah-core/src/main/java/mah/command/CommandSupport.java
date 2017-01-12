@@ -27,7 +27,7 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
     private Mode mode;
 
 //    @Override
-//    public void trigger(CommandEvent event) throws Exception {
+//    public void triggerMode(CommandEvent event) throws Exception {
 //        if (mode != null) {
 //            triggerMode(mode.getName());
 //        }

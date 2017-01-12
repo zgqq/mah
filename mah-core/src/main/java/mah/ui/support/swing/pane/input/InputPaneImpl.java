@@ -189,7 +189,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
     public void apply(LayoutTheme theme) {
         if (theme instanceof LayoutThemeImpl) {
             LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
-            String panelBackgroundColor = layoutTheme.findProperty("input-pane-background-color");
+            String panelBackgroundColor = layoutTheme.findProperty("background-color");
             panel.setBackground(Color.decode(panelBackgroundColor));
             String inputFieldBackgroundColor = layoutTheme.findProperty("input-field-background-color");
             input.setBackground(Color.decode(inputFieldBackgroundColor));

@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by zgq on 2017-01-08 17:26
  */
-public class Theme {
+public final class Theme {
 
     private final String name;
     private final Map<String, LayoutTheme> nameToLayout;

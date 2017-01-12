@@ -26,7 +26,6 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
     private void init() {
         if (itemList == null) {
             itemList = SwingUtils.createPanelWithYBoxLayout();
-            itemList.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 30));
         }
     }
 
@@ -34,7 +33,7 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
     public void apply(LayoutTheme theme) {
         if (theme instanceof LayoutThemeImpl) {
             LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
-            String itemListBackgroundColor = layoutTheme.findProperty("item-list-background-color");
+            String itemListBackgroundColor = layoutTheme.findProperty("background-color");
             if (itemList != null) {
                 this.itemList.setBackground(Color.decode(itemListBackgroundColor));
             }
@@ -47,10 +46,6 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
         itemList.add(Box.createVerticalStrut(itemGap));
     }
 
-//    @Override
-//    protected void computerSize() {
-//        this.itemList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
-//    }
 
     @Override
     protected ItemPane createItemPane(Item item) {

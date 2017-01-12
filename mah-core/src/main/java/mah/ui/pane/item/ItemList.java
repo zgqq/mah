@@ -7,8 +7,20 @@ import mah.ui.event.EventHandler;
  */
 public interface ItemList {
 
+
+    void selectItem(int index);
+
+    boolean hasPendingItem();
+
+    int getPendingItemIndex();
+
+    void setPendingItemIndex(int i);
+
     void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> eventHandler);
 
     void updateItem(Item item, int num);
 
+    int getItemCount();
+
+    void unpendingItemIndex(int pendingItemIndex);
 }

@@ -21,4 +21,6 @@ public interface Layout {
     void setOnKeyReleased(EventHandler<? extends KeyEvent> keyReleasedHandler);
 
     void onSetCurrentLayout();
+
+
 }

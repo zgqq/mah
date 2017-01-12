@@ -14,22 +14,22 @@ import java.util.Map;
 public class SearcherImplTest {
 
     private Searcher createSearcher() {
-        SearcherImplV2 searcherImplV2 = new SearcherImplV2();
+        SearcherImplV4 searcherImplV2 = new SearcherImplV4();
         return searcherImplV2;
     }
 
 //    @Test
 //    public void testComputerNode() {
-//        SearcherImplV2 searcher = createSearcher2();
+//        SearcherImplV4 searcher = createSearcher2();
 //        List<Integer> matchedIndexs = new ArrayList<>();
-//        SearcherImplV2.Node node = new SearcherImplV2.Node(0, matchedIndexs);
+//        SearcherImplV4.Node node = new SearcherImplV4.Node(0, matchedIndexs);
 //        node.matchedIndexs.add(0);
 //        node.matchedIndexs.add(1);
 //        node.matchedIndexs.add(3);
 //        node.matchedIndexs.add(7);
 //        node.matchedIndexs.add(8);
 //        node.matchedIndexs.add(9);
-//        SearcherImplV2.Node node1 = searcher.computerProrityNode("emacs-china", "emchin", node);
+//        SearcherImplV4.Node node1 = searcher.computerProrityNode("emacs-china", "emchin", node);
 //        List<Integer> matchedIndexs2 = node1.matchedIndexs;
 //        Assert.assertEquals((Integer) 0, matchedIndexs2.get(0));
 //        Assert.assertEquals((Integer) 1, matchedIndexs2.get(1));
@@ -39,13 +39,13 @@ public class SearcherImplTest {
 //        Assert.assertEquals((Integer) 9, matchedIndexs2.get(5));
 //    }
 
-    private SearcherImplV2 createSearcher2() {
-        return new SearcherImplV2();
+    private SearcherImplV4 createSearcher2() {
+        return new SearcherImplV4();
     }
 
 //    @Test
 //    public void testMatch() {
-//        SearcherImplV2 searcher = (SearcherImplV2) createSearcher();
+//        SearcherImplV4 searcher = (SearcherImplV4) createSearcher();
 //        Assert.assertEquals(true, searcher.testMatch("aa", "aaa"));
 //        Assert.assertEquals(false, searcher.testMatch("ab", "aaa"));
 //        Assert.assertEquals(true, searcher.testMatch("abc", "aabc"));
@@ -55,9 +55,9 @@ public class SearcherImplTest {
 
     @Test
     public void testPerformance() {
-        SearcherImplV2 searcher = createSearcher2();
+        SearcherImplV4 searcher = createSearcher2();
         List<DataRow> totalData = new ArrayList<>();
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 5000; i++) {
             List<String> data = new ArrayList<>();
             data.add("fusssscssssck your methodussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
             data.add("fuckyourfuck  sssfussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
@@ -74,7 +74,7 @@ public class SearcherImplTest {
 //
 //    @Test
 //    public void testMatchedIndex() {
-//        SearcherImplV2 searcher = (SearcherImplV2) createSearcher();
+//        SearcherImplV4 searcher = (SearcherImplV4) createSearcher();
 //        int[] index = searcher.getMatchedIndex("emacs-chi", "emchi");
 //        for (int i : index) {
 //            System.out.println(i);

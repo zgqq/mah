@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
 
+
     private final Command command;
     private final Object lock = CommandManager.getInstance();
 
@@ -44,6 +45,13 @@ public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
     }
 
     @Override
+    public void unpendingItemIndex(int pendingItemIndex) {
+        updateLayout(() -> {
+            getLayout().unpendingItemIndex(pendingItemIndex);
+        });
+    }
+
+    @Override
     public void updateItems(List<? extends Item> items) {
         updateLayout(() -> {
             getLayout().updateItems(items);
@@ -58,6 +66,7 @@ public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
             updateWindowLayout();
         });
     }
+
 
     @Override
     public void updateItems(Item... items) {

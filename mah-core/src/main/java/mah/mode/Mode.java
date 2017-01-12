@@ -12,11 +12,13 @@ public interface Mode {
 
     }
 
+    void setParent(Mode mode);
+
     Action findAction(String actionName);
 
     void updateActionHandler(ActionHandler actionHandler);
 
     String getName();
 
-
+    void trigger();
 }

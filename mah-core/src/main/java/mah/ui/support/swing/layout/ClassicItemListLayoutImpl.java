@@ -1,10 +1,14 @@
 package mah.ui.support.swing.layout;
 
+import mah.mode.Mode;
 import mah.ui.UIException;
 import mah.ui.event.EventHandler;
 import mah.ui.layout.ClassicItemListLayout;
+import mah.ui.layout.ModeEvent;
+import mah.ui.layout.ModeListener;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemListPane;
+import mah.ui.pane.item.ItemMode;
 import mah.ui.pane.item.ItemSelectedEvent;
 import mah.ui.support.swing.pane.item.ItemListPaneFactoryImpl;
 import mah.ui.theme.LayoutTheme;
@@ -23,6 +27,8 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     private List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
     private final ItemListPaneFactoryImpl factory;
     private ItemListPane itemListPane;
+    private List<ModeListener> modeListeners = new ArrayList<>();
+    private Mode mode;
 
     public ClassicItemListLayoutImpl() {
         super(ClassicAbstractLayoutImpl.instance());
@@ -41,10 +47,39 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     }
 
     @Override
+    public Mode getMode() {
+        return mode;
+    }
+
+    @Override
+    public void registerMode(Mode mode, ModeListener modeListener) {
+        mode.setParent(ItemMode.getAndRegisterMode());
+        this.mode = mode;
+        modeListeners.add(modeListener);
+    }
+
+    @Override
     public void updateItems(List<? extends Item> items) {
+        triggerMode();
         applyTheme();
-        this.itemListPane = factory.createItemListPane(items,itemSelectedEventHandlers);
+        this.itemListPane = factory.createItemListPane(items, itemSelectedEventHandlers);
         getLayout().updatePane(this.itemListPane);
+        if (items != null && items.size() > 0) {
+            this.itemListPane.setPendingItemIndex(0);
+        }
+    }
+
+    private void triggerMode() {
+        ItemMode itemMode = ItemMode.triggerMode();
+        itemMode.updateActionHandler(this);
+        if (mode != null) {
+            mode.trigger();
+            ModeEvent modeEvent = new ModeEvent();
+            modeEvent.setMode(mode);
+            for (ModeListener modeListener : modeListeners) {
+                modeListener.modeTriggered(modeEvent);
+            }
+        }
     }
 
     @Override
@@ -61,6 +96,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         if (this.itemListPane == null) {
             throw new UIException("Unable to update item");
         }
+        triggerMode();
         this.itemListPane.updateItem(item, num);
     }
 
@@ -69,9 +105,45 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         return NAME;
     }
 
+    private ItemListPane getItemListPane() {
+        return itemListPane;
+    }
+
 
     @Override
-    public void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> event) {
-
+    public void selectItem(int index) {
+        getItemListPane().selectItem(index);
     }
+
+    @Override
+    public boolean hasPendingItem() {
+        return itemListPane.hasPendingItem();
+    }
+
+    @Override
+    public int getPendingItemIndex() {
+        return itemListPane.getPendingItemIndex();
+    }
+
+    @Override
+    public void setPendingItemIndex(int i) {
+        itemListPane.setPendingItemIndex(i);
+    }
+
+    @Override
+    public void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> handler) {
+        itemSelectedEventHandlers.add(handler);
+    }
+
+    @Override
+    public int getItemCount() {
+        return itemListPane.getItemCount();
+    }
+
+    @Override
+    public void unpendingItemIndex(int pendingItemIndex) {
+        getItemListPane().unpendingItemIndex(pendingItemIndex);
+    }
+
+
 }

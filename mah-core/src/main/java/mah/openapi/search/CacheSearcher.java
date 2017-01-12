@@ -3,7 +3,7 @@ package mah.openapi.search;
 import mah.common.search.SearchResult;
 import mah.common.search.Searchable;
 import mah.common.search.Searcher;
-import mah.common.search.SearcherImplV2;
+import mah.common.search.SearcherImplV4;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class CacheSearcher<V> {
     private final List<Searchable> data;
 
     public CacheSearcher(List<Searchable> data) {
-        this.searcher = new SearcherImplV2();
+        this.searcher = new SearcherImplV4();
         this.data = data;
     }
 

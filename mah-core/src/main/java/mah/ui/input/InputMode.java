@@ -52,7 +52,7 @@ public class InputMode extends AbstractMode {
         registerAction(new Redo("Redo"));
     }
 
-    public static InputMode trigger() {
+    public static InputMode triggerMode() {
         InputMode inputMode = getAndRegisterMode();
         ModeManager.getInstance().triggerMode(inputMode);
         return inputMode;

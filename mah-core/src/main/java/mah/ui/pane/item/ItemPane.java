@@ -5,9 +5,14 @@ package mah.ui.pane.item;
  */
 public interface ItemPane<T extends Item>{
 
+    T getItem();
+
+    void pending();
+
     void reset(T item,int num);
 
     @Deprecated
     void reset(T item);
 
+    void unpending();
 }

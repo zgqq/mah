@@ -270,7 +270,6 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
                 scheduledExecutorService.scheduleAtFixedRate(() -> {
                     updateRepositories();
                 }, 0, 5, TimeUnit.MINUTES);
-                initUI();
             }
         });
     }

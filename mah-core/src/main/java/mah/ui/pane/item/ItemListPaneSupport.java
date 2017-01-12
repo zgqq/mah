@@ -1,5 +1,6 @@
 package mah.ui.pane.item;
 
+import mah.ui.UIException;
 import mah.ui.event.EventHandler;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.Themeable;
@@ -14,6 +15,7 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
 
     private List<EventHandler<? extends ItemSelectedEvent>> itemSelectedHandlers = new ArrayList<>();
     private final List<ItemPane> itemPanes;
+    private int pendingIndex = -1;
 
     public ItemListPaneSupport(List<? extends Item> items) {
         itemPanes = new ArrayList<>(items.size());
@@ -30,10 +32,8 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
             ItemPane itemPane = createItemPane(items.get(i));
             itemPanes.add(itemPane);
         }
-//        computerSize();
     }
 
-//    protected abstract void computerSize();
 
     protected abstract ItemPane createItemPane(Item item);
 
@@ -46,7 +46,8 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
             item.setNum(i + 1);
             itemPanes.get(i).reset(item);
         }
-//        computerSize();
+        pendingIndex = -1;
+        itemSelectedHandlers.clear();
     }
 
     @Override
@@ -54,7 +55,7 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
         itemSelectedHandlers.add(eventHandler);
     }
 
-    protected final int getItemCount() {
+    public final int getItemCount() {
         return itemPanes.size();
     }
 
@@ -76,4 +77,36 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
         itemPanes.get(num - 1).reset(item, num);
     }
 
+    @Override
+    public void setPendingItemIndex(int i) {
+        itemPanes.get(i).pending();
+        pendingIndex = i;
+    }
+
+    @Override
+    public int getPendingItemIndex() {
+        return pendingIndex;
+    }
+
+    @Override
+    public boolean hasPendingItem() {
+        return pendingIndex >= 0;
+    }
+
+    @Override
+    public void selectItem(int index) {
+        ItemSelectedEvent itemSelectedEvent = new ItemSelectedEvent(itemPanes.get(index).getItem());
+        for (EventHandler itemSelectedHandler : itemSelectedHandlers) {
+            try {
+                itemSelectedHandler.handle(itemSelectedEvent);
+            } catch (Exception e) {
+                throw new UIException(e);
+            }
+        }
+    }
+
+    @Override
+    public void unpendingItemIndex(int pendingItemIndex) {
+        itemPanes.get(pendingItemIndex).unpending();
+    }
 }

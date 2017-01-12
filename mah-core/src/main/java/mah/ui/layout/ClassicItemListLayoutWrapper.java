@@ -1,5 +1,6 @@
 package mah.ui.layout;
 
+import mah.mode.Mode;
 import mah.ui.event.EventHandler;
 import mah.ui.pane.input.InputPane;
 import mah.ui.pane.item.Item;
@@ -57,4 +58,40 @@ public abstract class ClassicItemListLayoutWrapper extends LayoutWrapper impleme
     public void updateItem(Item item, int num) {
         layout.updateItem(item, num);
     }
+
+    @Override
+    public boolean hasPendingItem() {
+        return layout.hasPendingItem();
+    }
+
+    @Override
+    public int getPendingItemIndex() {
+        return layout.getPendingItemIndex();
+    }
+
+    @Override
+    public void setPendingItemIndex(int i) {
+        layout.setPendingItemIndex(i);
+    }
+
+    @Override
+    public int getItemCount() {
+        return layout.getItemCount();
+    }
+
+    @Override
+    public void selectItem(int index) {
+        layout.selectItem(index);
+    }
+
+    @Override
+    public void registerMode(Mode mode, ModeListener modeListener) {
+        layout.registerMode(mode, modeListener);
+    }
+
+    @Override
+    public Mode getMode() {
+        return layout.getMode();
+    }
+
 }

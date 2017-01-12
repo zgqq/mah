@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by zgq on 2017-01-09 09:50
  */
-public class AbstractMode implements Mode {
+public abstract class AbstractMode implements Mode {
 
     private final Map<String, Action> NAMED_ACTIONS = new HashMap<>();
     private final Map<Class<?>, List<Action>> HANDLERS_ACTIONS = new HashMap<>();
@@ -74,6 +74,11 @@ public class AbstractMode implements Mode {
     }
 
     @Override
+    public void setParent(Mode mode) {
+        this.parent = mode;
+    }
+
+    @Override
     public final Action findAction(String actionName) {
         Action action = NAMED_ACTIONS.get(actionName);
         if (action == null && parent != null) {
@@ -83,6 +88,11 @@ public class AbstractMode implements Mode {
             throw new ActionException("Not found action " + actionName + " in mode " + getName());
         }
         return action;
+    }
+
+    @Override
+    public void trigger() {
+        ModeManager.getInstance().triggerMode(this);
     }
 
 }

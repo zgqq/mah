@@ -4,6 +4,7 @@ import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
 import mah.mode.ModeManager;
 import mah.ui.input.InputMode;
+import mah.ui.pane.item.ItemMode;
 import mah.ui.support.swing.FactoryHelper;
 import mah.ui.window.WindowFactory;
 import mah.ui.window.WindowManager;
@@ -29,6 +30,7 @@ public class UIManager implements ApplicationListener{
     private void registerMode() {
         ModeManager.getInstance().registerMode(new WindowMode());
         ModeManager.getInstance().registerMode(new InputMode(ModeManager.getInstance().getMode(WindowMode.NAME)));
+        ModeManager.getInstance().registerMode(new ItemMode(ModeManager.getInstance().getMode(InputMode.NAME)));
     }
 
     @Override
