@@ -6,7 +6,6 @@ import mah.common.search.Searcher;
 import mah.common.search.SearcherImplV4;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -17,13 +16,17 @@ import java.util.concurrent.FutureTask;
  */
 public class CacheSearcher<V> {
 
-    private final Map<String, Future<V>> SEARCH_CACHE = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Future<V>> SEARCH_CACHE = new ConcurrentHashMap<>();
     private final Searcher searcher;
     private final List<Searchable> data;
 
     public CacheSearcher(List<Searchable> data) {
         this.searcher = new SearcherImplV4();
         this.data = data;
+    }
+
+    public void clear() {
+        SEARCH_CACHE.clear();
     }
 
     public V smartFuzzySearch(String keyword) {

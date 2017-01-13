@@ -46,6 +46,7 @@ public class InputMode extends AbstractMode {
 
         registerAction(new BeginningOfLine(BEGINNING_OF_LINE));
         registerAction(new EndOfLine(END_OF_LINE));
+        registerAction(new KillWholeLine("KillWholeLine"));
         registerAction(new KillLine(KILL_LINE));
 
         registerAction(new Undo("Undo"));
@@ -74,6 +75,18 @@ public class InputMode extends AbstractMode {
         }
 
         protected abstract void actionPerformed(Input source);
+    }
+
+    static class KillWholeLine extends InputAction {
+
+        public KillWholeLine(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void actionPerformed(Input source) {
+            source.killWholeLine();
+        }
     }
 
     static class KillLine extends InputAction {

@@ -25,6 +25,8 @@ public interface Input {
 
     void killWord();
 
+    void killWholeLine();
+
     void killLine();
 
     void setText(String currentKey);

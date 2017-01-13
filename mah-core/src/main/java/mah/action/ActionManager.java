@@ -1,5 +1,7 @@
 package mah.action;
 
+import mah.app.ExecutorServices;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +12,6 @@ public class ActionManager {
 
     private static final ActionManager INSTANCE = new ActionManager();
     private final Map<Action, ActionHandler> ACTION_HANDLERS = new HashMap<>();
-
 
     public static ActionManager getInstance() {
         return INSTANCE;
@@ -33,7 +34,7 @@ public class ActionManager {
             }
             throw new ActionException("Not found action handler for " + action);
         }
-        actionHandler.handle(action);
+        ExecutorServices.submit(() -> actionHandler.handle(action));
     }
 
 

@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 public class RepositoryUpdater {
 
     private Logger logger = LoggerFactory.getLogger(RepositoryUpdater.class);
-    private Future<UpdateResult> synchronizeFuture;
+    private volatile Future<UpdateResult> synchronizeFuture;
 
     private String synchURL;
     private String localStoreFile;
@@ -37,7 +37,10 @@ public class RepositoryUpdater {
             logger.warn("Could not update local store due to remote check unavaible!");
             return null;
         }
-        return synchronizeFuture.get();
+        UpdateResult updateResult = synchronizeFuture.get();
+        return updateResult;
     }
+
+
 }
 

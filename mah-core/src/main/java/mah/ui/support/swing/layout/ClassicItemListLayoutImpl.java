@@ -98,6 +98,15 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         getLayout().updatePane(null);
     }
 
+    private void updateBottomPane() {
+        getLayout().updatePane(itemListPane);
+    }
+
+    @Override
+    public void refresh() {
+        updateBottomPane();
+    }
+
     @Override
     public void updateItem(Item item, int num) {
         if (this.itemListPane == null) {
@@ -105,6 +114,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         }
         triggerMode();
         this.itemListPane.updateItem(item, num);
+        getLayout().updatePane(this.itemListPane);
     }
 
     @Override
@@ -149,6 +159,9 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
     @Override
     public int getItemCount() {
+        if (itemListPane == null) {
+            return 0;
+        }
         return itemListPane.getItemCount();
     }
 

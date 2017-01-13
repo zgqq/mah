@@ -89,6 +89,19 @@ public class WindowMode extends AbstractMode {
 
         @Override
         protected void actionPerformed(Window window) {
+            window.hide();
+            Command lockedCommand = CommandManager.getInstance().getLockedCommand();
+            if (lockedCommand != null) {
+                List<String> maps = CommandManager.getInstance().findCommandMaps(lockedCommand);
+                if (!maps.isEmpty()) {
+                    String triggerKey = maps.get(0)+" ";
+                    InputPane inputPane = UIUtils.getInputPane();
+                    if (inputPane != null) {
+                        TextState.Builder builder = new TextState.Builder(triggerKey, triggerKey.length());
+                        inputPane.setTextState(builder.build());
+                    }
+                }
+            }
             window.show();
         }
     }
@@ -139,18 +152,6 @@ public class WindowMode extends AbstractMode {
 
         @Override
         protected void actionPerformed(Window window) {
-            Command lockedCommand = CommandManager.getInstance().getLockedCommand();
-            if (lockedCommand != null) {
-                List<String> maps = CommandManager.getInstance().findCommandMaps(lockedCommand);
-                if (!maps.isEmpty()) {
-                    String triggerKey = maps.get(0);
-                    InputPane inputPane = UIUtils.getInputPane();
-                    if (inputPane != null) {
-                        TextState.Builder builder = new TextState.Builder(triggerKey, triggerKey.length());
-                        inputPane.setTextState(builder.build());
-                    }
-                }
-            }
             window.show();
         }
     }

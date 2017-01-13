@@ -98,6 +98,9 @@ public class TranslationCommand extends PluginCommandSupport {
     }
 
     public void filterHook(String content) throws Exception {
+        if (content.equals(" ")) {
+            triggerHook();
+        }
         String word = content;
         if (word.equals(this.lastWord)) {
             return;

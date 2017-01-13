@@ -27,11 +27,12 @@ public class GithubMode extends AbstractMode {
     @Override
     public void init() {
         registerAction(new GoGithubIssues("GoGithubIssues"));
+        registerAction(new ClearCache("ClearCache"));
     }
 
-    static class GithubStarred extends AbstractAction {
+    static class GithubAction extends AbstractAction {
 
-        public GithubStarred(String name) {
+        public GithubAction(String name) {
             super(name, GithubModeHandler.class);
         }
 
@@ -46,7 +47,19 @@ public class GithubMode extends AbstractMode {
     }
 
 
-    static class GoGithubIssues extends GithubStarred {
+    static class ClearCache extends GithubAction{
+
+        public ClearCache(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void actionPerformed(GithubModeHandler command) throws Exception {
+            command.onClearCache();
+        }
+    }
+
+    static class GoGithubIssues extends GithubAction {
 
         public GoGithubIssues(String name) {
             super(name);

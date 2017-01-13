@@ -10,7 +10,6 @@ public abstract class AbstractInput implements Input{
     private final LinkedList<TextState> undoStack = new LinkedList<>();
     private final LinkedList<TextState> redoStack = new LinkedList<>();
     private boolean fireEvent=true;
-    private boolean selectable=true;
     private TextState textState;
 
 
@@ -147,7 +146,15 @@ public abstract class AbstractInput implements Input{
             remove(origin,forward-origin);
             push();
         }
-//        setCaretPosition(origin);
+    }
+
+    @Override
+    public void killWholeLine() {
+        String text = getText();
+        if (text != null && text.length() > 0) {
+            push();
+            remove(0, text.length());
+        }
     }
 
     @Override
@@ -158,7 +165,6 @@ public abstract class AbstractInput implements Input{
             push();
             remove(caret,text.length()-caret);
         }
-//        setCaretPosition(caret);
     }
 
     @Override
@@ -166,7 +172,6 @@ public abstract class AbstractInput implements Input{
         if (!canBackward()) {
             return;
         }
-        String text = getText();
         int origin = getCaretPosition();
         int backwardWord = backwardWord2();
         if (backwardWord == origin) {
@@ -174,7 +179,6 @@ public abstract class AbstractInput implements Input{
         }
         push();
         remove(backwardWord,origin-backwardWord);
-//        setCaretPosition(backwardWord);
     }
 
     @Override
@@ -184,9 +188,7 @@ public abstract class AbstractInput implements Input{
         }
         push();
         int caret = getCaretPosition();
-//        setText(before + after);
         remove(caret-1,1);
-//        setCaretPosition(origin - 1);
     }
 
     @Override
@@ -199,16 +201,8 @@ public abstract class AbstractInput implements Input{
         }
     }
 
-    protected boolean isSelectable() {
-        return this.selectable;
-    }
-
-    public void setSelectable(boolean selectable) {
-        this.selectable = selectable;
-    }
 
     public void setTextState(TextState textState) {
-        this.selectable = false;
         this.textState = textState;
         setText(textState.getText());
         setCaretPosition(textState.getPosition());
@@ -251,8 +245,5 @@ public abstract class AbstractInput implements Input{
         fireEvent = true;
     }
 
-    public boolean isFireEvent() {
-        return fireEvent;
-    }
 }
 

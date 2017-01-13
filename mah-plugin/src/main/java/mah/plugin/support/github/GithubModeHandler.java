@@ -9,8 +9,10 @@ import mah.ui.pane.item.Item;
  */
 public interface GithubModeHandler {
 
+
     void onGoGithubIssues(Item item) throws Exception;
 
     ClassicItemListLayout getLayout();
 
+    void onClearCache();
 }

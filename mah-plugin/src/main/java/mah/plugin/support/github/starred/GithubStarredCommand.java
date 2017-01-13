@@ -9,17 +9,15 @@ import mah.common.json.JSONUtils;
 import mah.common.search.MatchedResult;
 import mah.common.search.SearchResult;
 import mah.common.util.IOUtils;
-import mah.common.util.StringUtils;
 import mah.openapi.search.CacheSearcher;
 import mah.plugin.PluginException;
 import mah.plugin.command.PluginCommandSupport;
 import mah.plugin.config.XMLConfigurable;
 import mah.plugin.support.github.GithubMode;
 import mah.plugin.support.github.GithubModeHandler;
-import mah.plugin.support.github.entity.GithubRepositories;
-import mah.plugin.support.github.entity.GithubRepositories.Listener;
 import mah.plugin.support.github.entity.GithubRepository;
-import mah.plugin.support.github.starred.sync.RepositoryUpdater;
+import mah.plugin.support.github.starred.sync.RepositorySynchronizer;
+import mah.plugin.support.github.starred.sync.SynchronizerListener;
 import mah.plugin.support.github.starred.sync.UpdateResult;
 import mah.plugin.support.github.util.GithubUtils;
 import mah.ui.layout.ClassicItemListLayout;
@@ -36,9 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -52,16 +47,12 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     private String username;
     private String token;
     private String command;
-    private volatile List<GithubRepository> repositoryData;
     private Logger logger = LoggerFactory.getLogger(GithubStarredCommand.class);
-    private volatile boolean updating;
-    private volatile CacheSearcher<List<SearchResult>> searcher;
-    private RepositoryUpdater repositoryUpdater;
+    private RepositorySynchronizer synchronizer;
 
     public GithubStarredCommand() {
         init();
     }
-
 
     private void openRepository(GithubRepository repository) throws IOException {
         GithubUtils.openRepository(repository);
@@ -75,10 +66,10 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
         addInitializeHandler();
 
         addCommonFilterEventHandler(event -> {
-            if (updating || StringUtils.isEmpty(event.getContent())) {
-                layout.clear();
+            if (mah.common.util.StringUtils.isEmpty(event.getContent())) {
                 return;
             }
+            CacheSearcher<List<SearchResult>> searcher = synchronizer.getSearcher();
             List<SearchResult> searchResults = searcher.smartFuzzySearch(event.getContent());
             logger.info("searched {} results", searchResults.size());
             updateSearchView(searchResults);
@@ -86,80 +77,20 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
 
 
         addTriggerEventHandler(new EventHandler<TriggerEvent>() {
-
             @Override
             public void handle(TriggerEvent event) throws Exception {
                 trigger();
             }
 
             private void trigger() throws ExecutionException, InterruptedException {
-                if (repositoryData == null || repositoryData.size() <= 0) {
+                if (synchronizer.isInit()) {
                     showUpdating();
-                    updating = true;
-                    UpdateResult updateResult = repositoryUpdater.getUpdateResult();
-                    updating = false;
-                    if (updateResult == null || updateResult.getAddRepositoryCount() == 0) {
-                        showNoRepositoryTips();
-                    } else {
-                        updateTriggerView(updateResult.getRepositories());
-                    }
-                } else {
-                    updateTriggerView(repositoryData);
                 }
-            }
-
-            private void showUpdating() {
-                layout.updateItems(Arrays.asList(createUpdatingItem(), createBlankItem()));
-            }
-
-            private FullItemImpl createBlankItem() {
-                FullItemImpl item = new FullItemImpl.Builder("Waiting data ")//
-                        .description("Fetching data from github...") //
-                        .iconInputStream(getIconInputStream()) //
-                        .build();
-                return item;
-            }
-
-            private FullItemImpl createUpdatingItem() {
-                FullItemImpl item = new FullItemImpl.Builder("Please waiting!")//
-                        .description("Synchronizing repositories...") //
-                        .iconInputStream(getIconInputStream()) //
-                        .build();
-                return item;
-            }
-
-            private void showNoRepositoryTips() {
-                layout.updateItems(createNoRepositoryTips());
-            }
-
-            private FullItemImpl createNoRepositoryTips() {
-                FullItemImpl item = new FullItemImpl.Builder("No repository added!") //
-                        .description("Is the github token configured?") //
-                        .iconInputStream(getIconInputStream()) //
-                        .build();
-                return item;
-            }
-
-
-            private void updateTriggerView(List<GithubRepository> githubRepositories) {
-                List<FullItemImpl> fullItems = new ArrayList<>();
-                for (int i = 0; i < getItemSize(githubRepositories); i++) {
-                    GithubRepository githubRepository = githubRepositories.get(i);
-                    fullItems.add(convertToItem(githubRepository));
-                }
-                layout.updateItems(fullItems);
+                synchronizer.fetchRepositories(9);
             }
         });
     }
 
-    private FullItemImpl convertToItem(GithubRepository githubRepository) {
-        FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName())//
-                .description(githubRepository.getDescription()) //
-                .attachment(githubRepository) //
-                .iconInputStream(getIconInputStream())
-                .build();
-        return item;
-    }
 
     private FullItemImpl convertToSearchItem(SearchResult searchResult) {
         GithubRepository githubRepository = (GithubRepository) searchResult.getDataRow();
@@ -173,6 +104,9 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     }
 
     private int getItemSize(List<?> list) {
+        if (list == null) {
+            return 0;
+        }
         int size = list.size();
         return size > 9 ? 9 : size;
     }
@@ -216,39 +150,6 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     }
 
 
-
-
-    private void updateRepositories() {
-        List<GithubRepository> prevData = this.repositoryData;
-        List<GithubRepository> data;
-        if (this.repositoryData == null) {
-            data = new ArrayList<>();
-        } else {
-            data = new ArrayList<>(prevData);
-        }
-        GithubRepositories githubRepositories = new GithubRepositories(data);
-        githubRepositories.addListener(new Listener() {
-            @Override
-            public void onRepositoryAdded(GithubRepository repository) {
-                if (updating) {
-                    layout.updateItem(convertToItem(repository), 2);
-                }
-            }
-        });
-        sychronizeRepositories(githubRepositories);
-        try {
-            repositoryData = repositoryUpdater.getUpdateResult().getRepositories();
-            searcher = new CacheSearcher(repositoryData);
-        } catch (Exception e) {
-            throw new PluginException(e);
-        }
-    }
-
-    private void sychronizeRepositories(GithubRepositories githubRepositories) {
-        repositoryUpdater.checkRemote(githubRepositories);
-        repositoryUpdater.updateLocal();
-    }
-
     private void addInitializeHandler() {
         addInitializeEventHandler(new EventHandler<InitializeEvent>() {
 
@@ -269,22 +170,16 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
                 initUI();
                 localRepositoryFile = getFileStoredInPluginDataDir("starred_repositories.json");
                 starredRepositoryAPI = "https://api.github.com/users/" + username + "/starred?access_token=" + token;
-                repositoryUpdater = new RepositoryUpdater(getExecutor(), localRepositoryFile, starredRepositoryAPI);
                 IOUtils.createFileIfNotExists(localRepositoryFile);
-                repositoryData = JSONUtils.parseArrFromLocalFile(localRepositoryFile, GithubRepository.class);
-                if (repositoryData != null) {
-                    searcher = new CacheSearcher(repositoryData);
-                }
-                ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-                scheduledExecutorService.scheduleAtFixedRate(() -> {
-                    updateRepositories();
-                }, 0, 5, TimeUnit.MINUTES);
+                List<GithubRepository> repositoryData = JSONUtils.parseArrFromLocalFile(localRepositoryFile, GithubRepository.class);
+                synchronizer = new RepositorySynchronizer(repositoryData, getExecutor(), localRepositoryFile, starredRepositoryAPI, new UpdatingUI());
             }
         });
     }
 
+
     @Override
-    public void onGoGithubIssues(Item item) throws Exception{
+    public void onGoGithubIssues(Item item) throws Exception {
         Runtime.getRuntime().exec(this.command);
         hideWindow();
     }
@@ -292,6 +187,94 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     @Override
     public ClassicItemListLayout getLayout() {
         return layout;
+    }
+
+    @Override
+    public void onClearCache() {
+        synchronizer.clear();
+    }
+
+    private void showUpdating() {
+        layout.updateItems(Arrays.asList(createUpdatingItem(), createBlankItem()));
+    }
+
+    private FullItemImpl createBlankItem() {
+        FullItemImpl item = new FullItemImpl.Builder("Waiting data ")//
+                .description("Fetching data from github...") //
+                .iconInputStream(getIconInputStream()) //
+                .build();
+        return item;
+    }
+
+    private FullItemImpl createUpdatingItem() {
+        FullItemImpl item = new FullItemImpl.Builder("Please waiting!")//
+                .description("Synchronizing repositories...") //
+                .iconInputStream(getIconInputStream()) //
+                .build();
+        return item;
+    }
+
+
+    /**
+     * Created by zgq on 2017-01-13 13:28
+     */
+    public class UpdatingUI implements SynchronizerListener {
+
+
+        private void showNoRepositoryTips() {
+            layout.updateItems(createNoRepositoryTips());
+        }
+
+        private FullItemImpl createNoRepositoryTips() {
+            FullItemImpl item = new FullItemImpl.Builder("No repository added!") //
+                    .description("Is the github token configured?") //
+                    .iconInputStream(getIconInputStream()) //
+                    .build();
+            return item;
+        }
+
+        private FullItemImpl convertToItem(GithubRepository githubRepository) {
+            FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName())//
+                    .description(githubRepository.getDescription()) //
+                    .attachment(githubRepository) //
+                    .iconInputStream(getIconInputStream())
+                    .build();
+            return item;
+        }
+
+        @Override
+        public void fetchRepositories(List<GithubRepository> repositories) {
+            List<FullItemImpl> fullItems = new ArrayList<>();
+            for (int i = 0; i < getItemSize(repositories); i++) {
+                GithubRepository githubRepository = repositories.get(i);
+                fullItems.add(convertToItem(githubRepository));
+            }
+            layout.updateItems(fullItems);
+        }
+
+        @Override
+        public void repositoryAdded(GithubRepository repository) {
+            if (synchronizer.isInit()) {
+                if (layout.getItemCount() == 0) {
+                    logger.info("layout has no any item");
+                    showUpdating();
+                }
+                layout.updateItem(convertToItem(repository), 2);
+            }
+        }
+
+        @Override
+        public void startInitialization() {
+            showUpdating();
+        }
+
+        @Override
+        public void endInitialization(UpdateResult result) {
+            int count = result.getAddRepositoryCount();
+            if (count == 0) {
+                showNoRepositoryTips();
+            }
+        }
     }
 }
 
