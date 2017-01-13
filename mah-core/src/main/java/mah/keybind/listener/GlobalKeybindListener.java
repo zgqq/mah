@@ -76,6 +76,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
             mask |= KeyEvent.META_MASK;
         }
         KeyStroke keyStroke = KeyStroke.getKeyStroke(javaKeyCode, mask);
+        logger.info("press " + keyStroke);
         KeybindManager.getInstance().tryExecuteGlobalAction(keyStroke);
     }
 

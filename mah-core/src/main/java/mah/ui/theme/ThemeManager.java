@@ -1,6 +1,10 @@
 package mah.ui.theme;
 
+import mah.app.ApplicationEvent;
+import mah.app.config.Config;
+import mah.app.config.XMLConfig;
 import mah.ui.layout.Layout;
+import mah.ui.support.swing.theme.Themes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -18,6 +22,15 @@ public class ThemeManager {
 
     private ThemeManager() {
 
+    }
+
+    public final void start(ApplicationEvent event) {
+        Config config = event.getConfig();
+        if (config instanceof XMLConfig) {
+            XMLThemeConfigParser parser = new XMLThemeConfigParser(((XMLConfig) config).getDocument());
+            this.currentTheme = parser.parseTheme();
+        }
+        addTheme(Themes.DARK.getTheme());
     }
 
     public void addTheme(Theme theme) {

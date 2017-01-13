@@ -1,4 +1,5 @@
 rootProject.name = "mah"
 
+include "mah-app"
 include "mah-core"
 include "mah-plugin"

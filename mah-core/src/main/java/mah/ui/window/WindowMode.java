@@ -24,7 +24,7 @@ public class WindowMode extends AbstractMode {
     public static final String NAME = "window_mode";
 
     public WindowMode(Mode parent) {
-        super(NAME,parent);
+        super(NAME, parent);
     }
 
     public WindowMode(String name) {
@@ -39,6 +39,7 @@ public class WindowMode extends AbstractMode {
         registerAction(new MoveWindowToRight("MoveWindowToRight"));
         registerAction(new MoveWindowToCenter("MoveWindowToCenter"));
         registerAction(new FocusWindow("FocusWindow"));
+        registerAction(new CenterWindowInSceenWithCursor("CenterWindowInSceenWithCursor"));
         registerAction(new FocusWindowAndClearInput("FocusWindowAndClearInput"));
     }
 
@@ -94,7 +95,7 @@ public class WindowMode extends AbstractMode {
             if (lockedCommand != null) {
                 List<String> maps = CommandManager.getInstance().findCommandMaps(lockedCommand);
                 if (!maps.isEmpty()) {
-                    String triggerKey = maps.get(0)+" ";
+                    String triggerKey = maps.get(0) + " ";
                     InputPane inputPane = UIUtils.getInputPane();
                     if (inputPane != null) {
                         TextState.Builder builder = new TextState.Builder(triggerKey, triggerKey.length());
@@ -156,4 +157,18 @@ public class WindowMode extends AbstractMode {
         }
     }
 
+
+    static class CenterWindowInSceenWithCursor extends WindowAction implements GlobalAction {
+
+        public CenterWindowInSceenWithCursor(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void actionPerformed(Window window) {
+            window.hide();
+            window.moveToCusorScreen();
+            window.show();
+        }
+    }
 }

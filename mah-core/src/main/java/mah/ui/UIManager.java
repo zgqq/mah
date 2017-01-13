@@ -2,11 +2,12 @@ package mah.ui;
 
 import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
-import mah.mode.ModeManager;
 import mah.app.system.SystemMode;
+import mah.mode.ModeManager;
 import mah.ui.input.InputMode;
 import mah.ui.pane.item.ItemMode;
 import mah.ui.support.swing.FactoryHelper;
+import mah.ui.theme.ThemeManager;
 import mah.ui.window.WindowFactory;
 import mah.ui.window.WindowManager;
 import mah.ui.window.WindowMode;
@@ -38,6 +39,7 @@ public class UIManager implements ApplicationListener{
     @Override
     public void start(ApplicationEvent applicationEvent) {
         registerMode();
+        ThemeManager.getInstance().start(applicationEvent);
     }
 
     @Override

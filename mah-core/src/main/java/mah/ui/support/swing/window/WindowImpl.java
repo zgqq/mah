@@ -21,7 +21,6 @@ public class WindowImpl extends WindowSupport {
     private JFrame frame;
     private DefaultLayout defaultLayout;
     private SwingLayout currentLayout;
-    private int width=600;
 
     public WindowImpl(WindowProperties properties) {
         this.properties = properties;
@@ -52,7 +51,6 @@ public class WindowImpl extends WindowSupport {
         frame.setUndecorated(true);
         frame.setAlwaysOnTop(true);
         frame.setResizable(false);
-//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setType(java.awt.Window.Type.UTILITY);
     }
 
@@ -102,20 +100,20 @@ public class WindowImpl extends WindowSupport {
     public void moveToRight() {
         Rectangle currentScreen = getCurrentScreen();
         int y = getY(currentScreen.getHeight());
-        frame.setLocation((int) currentScreen.getWidth()-getWidth(), y);
+        frame.setLocation((int) (currentScreen.getX()+ currentScreen.getWidth()- getWindowWidth()), y);
     }
 
     @Override
     public void centerOnScreen() {
         Rectangle currentScreen = getCurrentScreen();
         double width = currentScreen.getWidth();
-        int x = (int) (currentScreen.getX() + ((width - 600) / 2));
+        int x = (int) (currentScreen.getX() + ((width - getWindowWidth()) / 2));
         int y = getY(currentScreen.getHeight());
         frame.setLocation(x, y);
     }
 
     private int getY(double screenHeight) {
-        return (int) ((screenHeight - 600) / 2) + 130;
+        return (int) ((screenHeight - getWindowWidth()) / 2) + 130;
     }
 
     private Rectangle getCurrentScreen() {
@@ -124,10 +122,9 @@ public class WindowImpl extends WindowSupport {
         return curRect;
     }
 
-    private int getWidth() {
-        return width;
+    private int getWindowWidth() {
+        return frame.getWidth();
     }
-
 
     @Override
     public void moveToLeft() {
@@ -161,4 +158,11 @@ public class WindowImpl extends WindowSupport {
     public Layout getDefaultLayout() {
         return defaultLayout;
     }
+
+    @Override
+    public void moveToCusorScreen() {
+        centerOnScreen();
+    }
+
+
 }

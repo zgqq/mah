@@ -25,7 +25,6 @@ configure(allprojects) { project ->
     dependencies {
         compile group: 'org.jetbrains', name: 'annotations', version: '13.0'
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        compile 'com.1stleg:jnativehook:2.0.3'
         compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
         compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.2'
         compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.6.2'

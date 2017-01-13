@@ -30,4 +30,6 @@ public interface Window {
     Layout getCurrentLayout();
 
     Layout getDefaultLayout();
+
+    void moveToCusorScreen();
 }
