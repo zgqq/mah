@@ -1,4 +1,4 @@
-package mah.ui.pane.item;
+package mah.ui.pane;
 
 import org.jetbrains.annotations.Nullable;
 
