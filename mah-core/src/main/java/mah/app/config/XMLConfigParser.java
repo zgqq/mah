@@ -11,7 +11,7 @@ import java.io.File;
  */
 public class XMLConfigParser {
 
-    private String path;
+    private final String path;
 
     public XMLConfigParser(String path) {
         this.path = path;
@@ -28,5 +28,4 @@ public class XMLConfigParser {
             throw new ParserConfigException(e);
         }
     }
-
 }

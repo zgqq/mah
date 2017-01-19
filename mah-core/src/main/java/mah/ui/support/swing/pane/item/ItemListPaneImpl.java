@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
+ *
  * Created by zgq on 2017-01-08 14:01
  */
 public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPane, SwingPane {
@@ -48,13 +49,18 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
 
 
     @Override
-    protected ItemPane createItemPane(Item item) {
+    protected ItemPane createItemPane(Item item,int num) {
         init();
-        if (item instanceof FullItemImpl) {
-            FullItemImpl fullItem = (FullItemImpl) item;
-            FullItemPane fullItemPane = new FullItemPane(fullItem);
+        if (item instanceof FullItem) {
+            FullItem fullItem = (FullItem) item;
+            FullItemPane fullItemPane = new FullItemPane(fullItem,num);
             addItemPane(fullItemPane);
             return fullItemPane;
+        } else if (item instanceof TextItem) {
+            TextItem textItem = (TextItem) item;
+            TextItemPane textItemPane = new TextItemPane(textItem,num);
+            addItemPane(textItemPane);
+            return textItemPane;
         }
         throw new IllegalStateException("Unsupport this kind of item " + item);
     }

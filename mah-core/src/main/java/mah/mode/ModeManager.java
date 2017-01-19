@@ -27,9 +27,7 @@ public class ModeManager implements ApplicationListener {
     private static final ModeManager INSTANCE = new ModeManager();
     private final Map<String, Mode> MODES = new HashMap<>();
 
-    private ModeManager() {
-
-    }
+    private ModeManager() {}
 
     public static ModeManager getInstance() {
         return INSTANCE;
@@ -44,7 +42,7 @@ public class ModeManager implements ApplicationListener {
         if (mode == null) {
             throw new ModeException("Not found mode " + mod);
         }
-        KeybindManager.getInstance().setCurrentMode(mod);
+        KeybindManager.getInstance().setCurrentMode(mode);
     }
 
     public Mode getMode(String mod) {
@@ -126,5 +124,4 @@ public class ModeManager implements ApplicationListener {
             }
         });
     }
-
 }

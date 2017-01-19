@@ -5,16 +5,10 @@ package mah.app;
  */
 public interface ApplicationListener {
 
-    default void shutdown() throws Exception{
+    default void shutdown() throws Exception{}
 
-    }
+    default void start(ApplicationEvent applicationEvent) throws Exception{}
 
-    default void start(ApplicationEvent applicationEvent) throws Exception{
-
-    }
-
-    default void afterStart(ApplicationEvent applicationEvent) throws Exception{
-
-    }
+    default void afterStart(ApplicationEvent applicationEvent) throws Exception{}
 
 }

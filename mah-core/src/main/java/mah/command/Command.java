@@ -12,23 +12,16 @@ import java.util.List;
  */
 public interface Command {
 
-
     List<EventHandler<? extends InitializeEvent>> getInitializeHandlers();
 
     List<EventHandler<? extends TriggerEvent>> getTriggerEventHandlers();
 
     List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers();
 
-//    default void initialize() throws Exception{
-//    }
-
-    default void idle() throws Exception {
-
-    }
-
+    default void idle() throws Exception {}
 
     String getName();
 
-
-
 }
+
+

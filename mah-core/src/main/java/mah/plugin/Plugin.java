@@ -5,17 +5,14 @@ package mah.plugin;
  */
 public interface Plugin {
 
-    default void init() throws Exception{
+    default void init() throws Exception{}
 
-    }
-
-    default void prepare() throws Exception{
-
-    }
-
-    String getName();
+    default void prepare() throws Exception{}
 
     void setPluginMetainfo(PluginMetainfo pluginMetainfo);
 
     PluginMetainfo getPluginMetainfo();
+
+    String getName();
+
 }

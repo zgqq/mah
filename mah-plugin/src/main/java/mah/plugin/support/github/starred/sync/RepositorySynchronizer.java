@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,7 +27,6 @@ public class RepositorySynchronizer implements GithubRepositories.Listener {
     private Lock lock = new ReentrantLock();
     private volatile boolean init;
     private Lock initLock = new ReentrantLock();
-    private Condition initilizing = initLock.newCondition();
     private volatile CacheSearcher<List<SearchResult>> searcher;
 
     public RepositorySynchronizer(List<GithubRepository> githubRepositories, ExecutorService executor, String localRepositoryFile, String starredRepositoryAPI, SynchronizerListener listener) {

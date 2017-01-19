@@ -15,7 +15,7 @@ public interface ItemList {
 
     int getPendingItemIndex();
 
-    void setPendingItemIndex(int i);
+    void setPendingItemIndex(int index);
 
     void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> eventHandler);
 
@@ -23,5 +23,5 @@ public interface ItemList {
 
     int getItemCount();
 
-    void unpendingItemIndex(int pendingItemIndex);
+    void unpendingItemIndex(int index);
 }

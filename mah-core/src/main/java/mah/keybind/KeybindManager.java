@@ -13,6 +13,7 @@ import mah.keybind.config.XMLGlobalKeybindParser;
 import mah.keybind.listener.GlobalKeybindListener;
 import mah.keybind.listener.KeyPressedHandler;
 import mah.keybind.util.SimpleParser;
+import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.layout.LayoutFactoryBean;
 import org.w3c.dom.Document;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class KeybindManager implements ApplicationListener {
 
     private final Map<String, List<Keybind>> KEYBINDS = new HashMap<>();
-    private String currentMode;
+    private Mode currentMode;
     private int keyIndex;
     private final List<Keybind> GLOBAL_KEYBINDS = new ArrayList<>();
     private static final KeybindManager INSTANCE = new KeybindManager();
@@ -85,8 +86,17 @@ public class KeybindManager implements ApplicationListener {
     }
 
     private Action findAction(KeyStroke pressedKeyStroke) {
-        String mod = currentMode;
+        String mod = currentMode.getName();
         List<Keybind> keybinds = KEYBINDS.get(mod);
+        Mode curMod = currentMode;
+        while (keybinds == null) {
+            Mode parent = curMod.getParent();
+            if (parent == null) {
+                break;
+            }
+            curMod = parent;
+            keybinds = KEYBINDS.get(parent.getName());
+        }
         if (keybinds == null) {
             return null;
         }
@@ -154,7 +164,7 @@ public class KeybindManager implements ApplicationListener {
         keyIndex = 0;
     }
 
-    public void setCurrentMode(String currentMode) {
+    public void setCurrentMode(Mode currentMode) {
         this.currentMode = currentMode;
     }
 

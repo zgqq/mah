@@ -2,6 +2,7 @@ package mah.openapi.ui.layout;
 
 import mah.command.Command;
 import mah.ui.UIException;
+import mah.ui.layout.ClassicPostLayout;
 
 import javax.swing.*;
 
@@ -16,22 +17,48 @@ public class SwingLayoutFactory implements LayoutFactory {
         this.command = command;
     }
 
-    private ClassicItemListLayout classicItemListLayout;
+    private interface Creator {
+        void create();
+    }
 
-    @Override
-    public mah.ui.layout.ClassicItemListLayout createClassicItemListLayout() {
+    private ClassicItemListLayout classicItemListLayout;
+    private ClassicPostLayout classicPostLayout;
+
+    private void createLayout(Creator creator) {
         try {
-            if (classicItemListLayout != null) {
-                return classicItemListLayout;
+            if (SwingUtilities.isEventDispatchThread()) {
+                creator.create();
+            } else {
+                SwingUtilities.invokeAndWait(() -> {
+                    creator.create();
+                });
             }
-            SwingUtilities.invokeAndWait(() -> {
-                classicItemListLayout = new ClassicItemListLayout(command);
-                classicItemListLayout.init();
-            });
-            return classicItemListLayout;
         } catch (Exception e) {
             throw new UIException(e);
         }
     }
 
+    @Override
+    public mah.ui.layout.ClassicItemListLayout createClassicItemListLayout() {
+        if (classicItemListLayout != null) {
+            return classicItemListLayout;
+        }
+        createLayout(() -> {
+            classicItemListLayout = new ClassicItemListLayout(command);
+            classicItemListLayout.init();
+        });
+        return classicItemListLayout;
+    }
+
+    @Override
+    public ClassicPostLayout createClassicPostLayout() {
+        if (classicPostLayout != null) {
+            return classicPostLayout;
+        }
+        createLayout(() -> {
+            classicPostLayout = new mah.openapi.ui.layout.ClassicPostLayout(command);
+            classicPostLayout.init();
+        });
+        return classicPostLayout;
+    }
 }

@@ -9,8 +9,8 @@ import mah.common.json.JSONUtils;
 import mah.common.search.MatchedResult;
 import mah.common.search.SearchResult;
 import mah.common.util.IOUtils;
+import mah.common.util.StringUtils;
 import mah.openapi.search.CacheSearcher;
-import mah.plugin.PluginException;
 import mah.plugin.command.PluginCommandSupport;
 import mah.plugin.config.XMLConfigurable;
 import mah.plugin.support.github.GithubMode;
@@ -23,6 +23,7 @@ import mah.plugin.support.github.util.GithubUtils;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
 import mah.ui.pane.item.Item;
+import mah.ui.pane.item.TextItemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
@@ -61,6 +62,15 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     }
 
 
+    private boolean checkConfig(){
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(token)) {
+            TextItemImpl textItem = new TextItemImpl.Builder("Are username and token provided in config?").build();
+            layout.updateItems(textItem);
+            return false;
+        }
+        return true;
+    }
+
     public void init() throws CommandException {
 
         addInitializeHandler();
@@ -69,10 +79,12 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
             if (mah.common.util.StringUtils.isEmpty(event.getContent())) {
                 return;
             }
-            CacheSearcher<List<SearchResult>> searcher = synchronizer.getSearcher();
-            List<SearchResult> searchResults = searcher.smartFuzzySearch(event.getContent());
-            logger.info("searched {} results", searchResults.size());
-            updateSearchView(searchResults);
+            if (checkConfig()) {
+                CacheSearcher<List<SearchResult>> searcher = synchronizer.getSearcher();
+                List<SearchResult> searchResults = searcher.smartFuzzySearch(event.getContent());
+                logger.info("searched {} results", searchResults.size());
+                updateSearchView(searchResults);
+            }
         });
 
 
@@ -83,10 +95,12 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
             }
 
             private void trigger() throws ExecutionException, InterruptedException {
-                if (synchronizer.isInit()) {
-                    showUpdating();
+                if(checkConfig()){
+                    if (synchronizer.isInit()) {
+                        showUpdating();
+                    }
+                    synchronizer.fetchRepositories(9);
                 }
-                synchronizer.fetchRepositories(9);
             }
         });
     }
@@ -129,7 +143,8 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     @Override
     public void configure(Node node) throws Exception {
         if (node == null) {
-            throw new PluginException("Are username and token provided in config?");
+//            throw new PluginException("Are username and token provided in config?");
+            return;
         }
         NodeList childNodes = node.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {

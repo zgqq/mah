@@ -18,40 +18,9 @@ public class SearcherImplTest {
         return searcherImplV2;
     }
 
-//    @Test
-//    public void testComputerNode() {
-//        SearcherImplV4 searcher = createSearcher2();
-//        List<Integer> matchedIndexs = new ArrayList<>();
-//        SearcherImplV4.Node node = new SearcherImplV4.Node(0, matchedIndexs);
-//        node.matchedIndexs.add(0);
-//        node.matchedIndexs.add(1);
-//        node.matchedIndexs.add(3);
-//        node.matchedIndexs.add(7);
-//        node.matchedIndexs.add(8);
-//        node.matchedIndexs.add(9);
-//        SearcherImplV4.Node node1 = searcher.computerProrityNode("emacs-china", "emchin", node);
-//        List<Integer> matchedIndexs2 = node1.matchedIndexs;
-//        Assert.assertEquals((Integer) 0, matchedIndexs2.get(0));
-//        Assert.assertEquals((Integer) 1, matchedIndexs2.get(1));
-//        Assert.assertEquals((Integer) 6, matchedIndexs2.get(2));
-//        Assert.assertEquals((Integer) 7, matchedIndexs2.get(3));
-//        Assert.assertEquals((Integer) 8, matchedIndexs2.get(4));
-//        Assert.assertEquals((Integer) 9, matchedIndexs2.get(5));
-//    }
-
     private SearcherImplV4 createSearcher2() {
         return new SearcherImplV4();
     }
-
-//    @Test
-//    public void testMatch() {
-//        SearcherImplV4 searcher = (SearcherImplV4) createSearcher();
-//        Assert.assertEquals(true, searcher.testMatch("aa", "aaa"));
-//        Assert.assertEquals(false, searcher.testMatch("ab", "aaa"));
-//        Assert.assertEquals(true, searcher.testMatch("abc", "aabc"));
-//        Assert.assertEquals(true, searcher.testMatch("abcc", "ababcc"));
-//        Assert.assertEquals(true, searcher.testMatch("b", "ab"));
-//    }
 
     @Test
     public void testPerformance() {
@@ -70,42 +39,6 @@ public class SearcherImplTest {
         System.out.println(end - start);
     }
 
-//
-//
-//    @Test
-//    public void testMatchedIndex() {
-//        SearcherImplV4 searcher = (SearcherImplV4) createSearcher();
-//        int[] index = searcher.getMatchedIndex("emacs-chi", "emchi");
-//        for (int i : index) {
-//            System.out.println(i);
-//        }
-//        Assert.assertEquals(5, index.length);
-//        Assert.assertEquals(0, index[0]);
-//        Assert.assertEquals(1, index[1]);
-//        Assert.assertEquals(6, index[2]);
-//
-//        int[] index2 = searcher.getMatchedIndex("emuaaaaaaauc", "emuc");
-//        Assert.assertEquals(4, index2.length);
-//        Assert.assertEquals(1, index2[1]);
-//        Assert.assertEquals(2, index2[2]);
-//
-//        int[] index3 = searcher.getMatchedIndex("youtube", "yoube");
-//        Assert.assertEquals(5, index3.length);
-//        Assert.assertEquals(1, index3[1]);
-//        Assert.assertEquals(2, index3[2]);
-//        Assert.assertEquals(5, index3[3]);
-//        Assert.assertEquals(6, index3[4]);
-//
-//        int[] index4 = searcher.getMatchedIndex("aaa", "aaa");
-//        Assert.assertEquals(3, index4.length);
-//        Assert.assertEquals(1, index4[1]);
-//        Assert.assertEquals(2, index4[2]);
-//
-//        int[] index5 = searcher.getMatchedIndex("abbc", "abc");
-//        Assert.assertEquals(3, index5.length);
-//        Assert.assertEquals(1, index5[1]);
-//        Assert.assertEquals(3, index5[2]);
-//    }
 
     private DataRow produceData(String... texts) {
         List<String> data = new ArrayList<>();
@@ -128,7 +61,6 @@ public class SearcherImplTest {
 
         List<SearchResult> searchResults = searcher.smartFuzzyMatch(totalData, "fuck");
         SearchResult searchResult = searchResults.get(0);
-//        List<List<Integer>> matchedIndexs = searchResult.getMatchedIndexs();
         Map<Integer, List<Integer>> matchedIndexs = searchResult.getMatchedResult().getMatchedIndexs();
         Assert.assertNotNull(matchedIndexs);
 
@@ -151,7 +83,6 @@ public class SearcherImplTest {
         DataRow dataRow = produceData("chaaaichnaina", "ch china");
         List<SearchResult> searchResults2 = searcher.smartFuzzyMatch(Arrays.asList(dataRow), "china");
         SearchResult searchResult2 = searchResults2.get(0);
-//        List<List<Integer>> matchedIndexs2 = searchResult2.getMatchedIndexs();
         MatchedResult matchedResult2 = searchResult2.getMatchedResult();
         Map<Integer, List<Integer>> matchedIndexs2 = matchedResult2.getMatchedIndexs();
 
@@ -174,7 +105,6 @@ public class SearcherImplTest {
         List<SearchResult> searchResults3 = searcher.smartFuzzyMatch(Arrays.asList(dataRow1), "china");
         SearchResult searchResult3 = searchResults3.get(0);
         Map<Integer, List<Integer>> matchedIndexs3 = searchResult3.getMatchedResult().getMatchedIndexs();
-//        List<List<Integer>> matchedIndexs3 = searchResult3.getMatchedIndexs();
 
         List<Integer> desIndexs3 = matchedIndexs3.get(1);
         Assert.assertEquals(2, (int) desIndexs3.get(0));
@@ -203,7 +133,6 @@ public class SearcherImplTest {
         Assert.assertEquals(13, (int) desIndexs4.get(3));
         Assert.assertEquals(14, (int) desIndexs4.get(4));
 
-//Mrs4s/BaiduPanDownload
 
         DataRow dataRow3 = produceData("Mrs4s/BaiduPanDownload");
         List<SearchResult> searchResults5 = searcher.smartFuzzyMatch(Arrays.asList(dataRow3), "Baidupan");

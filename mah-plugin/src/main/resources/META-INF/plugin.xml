@@ -18,4 +18,10 @@
         <description>Query weather tools</description>
         <class>mah.plugin.support.weather.WeatherPlugin</class>
     </plugin>
+    <plugin>
+        <name>orgnote</name>
+        <author>zgq</author>
+        <description>Review note for orgmode</description>
+        <class>mah.plugin.support.orgnote.OrgnotePlugin</class>
+    </plugin>
 </plugins>

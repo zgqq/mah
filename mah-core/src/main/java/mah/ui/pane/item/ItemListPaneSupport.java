@@ -28,14 +28,13 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
         }
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            item.setNum(i + 1);
-            ItemPane itemPane = createItemPane(items.get(i));
+            ItemPane itemPane = createItemPane(item,i+1);
             itemPanes.add(itemPane);
         }
     }
 
 
-    protected abstract ItemPane createItemPane(Item item);
+    protected abstract ItemPane createItemPane(Item item,int num);
 
     public void reset(List<? extends Item> items) {
         if (items.size() != itemPanes.size()) {
@@ -43,8 +42,7 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
         }
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            item.setNum(i + 1);
-            itemPanes.get(i).reset(item);
+            itemPanes.get(i).reset(item,i+1);
         }
         pendingIndex = -1;
         itemSelectedHandlers.clear();

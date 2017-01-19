@@ -2,17 +2,20 @@ package mah.plugin.support.translation;
 
 import mah.common.util.IOUtils;
 import mah.common.util.StringUtils;
+import mah.common.util.XMLUtils;
 import mah.plugin.PluginException;
 import mah.plugin.command.PluginCommandSupport;
+import mah.plugin.config.XMLConfigurable;
 import mah.plugin.support.translation.parser.WordParser;
 import mah.plugin.support.translation.parser.YoudaoParser;
 import mah.plugin.support.translation.repo.JSONUtils;
 import mah.plugin.support.translation.repo.WordRepository;
-import mah.ui.annnotation.Layout;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
+import mah.ui.pane.item.TextItemImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -28,13 +31,12 @@ import java.util.Map;
 /**
  * Created by zgq on 16-12-24.
  */
-public class TranslationCommand extends PluginCommandSupport {
+public class TranslationCommand extends PluginCommandSupport implements XMLConfigurable {
 
-    @Layout
     private ClassicItemListLayout layout;
     private InputStream translationIcon;
-    private String keyfrom = "youdao-cli";
-    private String apiKey = "1879868570";
+    private String keyfrom ;
+    private String apiKey;
     private static final Logger logger = LoggerFactory.getLogger(TranslationCommand.class);
     private volatile WordRepository repository;
     private final WordParser parser = new YoudaoParser(JSONUtils.getJSONFactory());
@@ -87,9 +89,29 @@ public class TranslationCommand extends PluginCommandSupport {
         return createTranslationResult("英汉互译", "Thanks to youdao api");
     }
 
+    private void showConfigError() {
+        TextItemImpl tip = new TextItemImpl.Builder("To use translation command," +
+                "you are expected to provide own keyfrom and apikey "
+        ).build();
+
+        TextItemImpl tips2 = new TextItemImpl.Builder("You can go to http://fanyi.youdao.com/openapi.do to apply for them"
+        ).build();
+
+        layout.updateItems(tip,tips2);
+    }
+
+    private boolean checkConfig() {
+        if (StringUtils.isEmpty(this.apiKey) || StringUtils.isEmpty(this.keyfrom)) {
+            showConfigError();
+            return false;
+        }
+        return true;
+    }
+
     public void triggerHook() throws Exception {
-        System.out.println("triggerMode translation command");
-        layout.updateItems(createTriggerResult());
+        if(checkConfig()){
+            layout.updateItems(createTriggerResult());
+        }
     }
 
     @Override
@@ -98,15 +120,17 @@ public class TranslationCommand extends PluginCommandSupport {
     }
 
     public void filterHook(String content) throws Exception {
-        if (content.equals(" ")) {
-            triggerHook();
+        if(checkConfig()){
+            if (content.equals(" ")) {
+                triggerHook();
+            }
+            String word = content;
+            if (word.equals(this.lastWord)) {
+                return;
+            }
+            this.lastWord = word;
+            submit(new Queryer(keyfrom, apiKey, word));
         }
-        String word = content;
-        if (word.equals(this.lastWord)) {
-            return;
-        }
-        this.lastWord = word;
-        submit(new Queryer(keyfrom, apiKey, word));
     }
 
     private Word parseWord(String content) {
@@ -159,6 +183,17 @@ public class TranslationCommand extends PluginCommandSupport {
 
     private Word getWord(String word) {
         return repository.findWord(word);
+    }
+
+    @Override
+    public void configure(Node node) throws Exception {
+        if (node == null) {
+            return;
+        }
+        String keyfrom = XMLUtils.getChildNodeText(node, "keyfrom");
+        String apikey = XMLUtils.getChildNodeText(node, "apikey");
+        this.keyfrom = keyfrom;
+        this.apiKey = apikey;
     }
 
 
@@ -262,8 +297,13 @@ public class TranslationCommand extends PluginCommandSupport {
                     }
                 }
             } catch (Exception e) {
+                showFailure();
                 logger.error("query fail", e);
             }
+        }
+
+        private void showFailure() {
+            layout.updateItems(new FullItemImpl.Builder("查询失败，请检查网络是否连接").build());
         }
     }
 

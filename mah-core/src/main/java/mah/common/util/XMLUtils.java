@@ -2,6 +2,7 @@ package mah.common.util;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,7 +13,22 @@ import java.io.InputStream;
 /**
  * Created by zgq on 2017-01-08 20:04
  */
-public class XMLUtils {
+public final class XMLUtils {
+
+    private XMLUtils() {
+
+    }
+
+    public static String getChildNodeText(Node parent, String tag) {
+        NodeList childNodes = parent.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+            if (item.getNodeName().equals(tag)) {
+                return item.getTextContent();
+            }
+        }
+        return "";
+    }
 
     public static Document getDocument(InputStream inputStream) {
         try {

@@ -37,8 +37,7 @@ public class XMLModeParser extends XMLKeybindParser {
         for (int j = 0; j < actionLen; j++) {
             Node keybindNode = keybinds.item(j);
             if (keybindNode.getNodeName().equals("keybind")) {
-                KeybindConfig keybind = parseKeybind(keybindNode);
-                keybind.setMode(mode);
+                KeybindConfig keybind = parseKeybind(keybindNode,mode);
                 keybindConfigs.add(keybind);
             }
         }
@@ -75,5 +74,4 @@ public class XMLModeParser extends XMLKeybindParser {
         setParent(modeConfigs, modeNameToConfig);
         return modeConfigs;
     }
-
 }

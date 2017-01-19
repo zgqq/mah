@@ -30,5 +30,4 @@ public abstract class PluginSupport implements Plugin {
     protected final void registerCommand(Command command) {
         CommandManager.getInstance().registerCommand(getName(), command);
     }
-
 }

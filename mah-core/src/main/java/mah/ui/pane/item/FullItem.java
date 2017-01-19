@@ -1,5 +1,7 @@
 package mah.ui.pane.item;
 
+import mah.ui.pane.Text;
+
 import java.io.InputStream;
 
 /**

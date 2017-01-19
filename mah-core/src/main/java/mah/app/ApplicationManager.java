@@ -33,17 +33,14 @@ public class ApplicationManager {
         APPLICATION_LISTENER.add(UIManager.getInstance());
     }
 
-    private ApplicationManager() {
-
-    }
+    private ApplicationManager() {}
 
     public void start() {
         try {
             init();
-            ApplicationEvent applicationEvent = new ApplicationEvent();
             XMLConfigParser configParser = new XMLConfigParser(configPath);
             Config config = configParser.parse();
-            applicationEvent.setConfig(config);
+            ApplicationEvent applicationEvent = new ApplicationEvent(config);
             for (ApplicationListener applicationListener : APPLICATION_LISTENER) {
                 applicationListener.start(applicationEvent);
             }
@@ -93,7 +90,7 @@ public class ApplicationManager {
     }
 
     private void initApplicationDir() {
-        applicationDir = System.getProperty("user.home") + File.separator + ".config" + File.separator + "hfe";
+        applicationDir = System.getProperty("user.home") + File.separator + ".config" + File.separator + "mah";
         File file = new File(applicationDir);
         if (!file.exists()) {
             file.mkdirs();

@@ -8,13 +8,15 @@ import org.w3c.dom.Node;
 public class XMLKeybindParser {
 
     protected KeybindConfig parseKeybind(Node item) {
-        KeybindConfig keybind = new KeybindConfig();
+        return parseKeybind(item, null);
+    }
+
+    protected KeybindConfig parseKeybind(Node item,String mode) {
         Node bindAttr = item.getAttributes().getNamedItem("bind");
         String keys = bindAttr.getNodeValue();
         Node actionAttr = item.getAttributes().getNamedItem("action");
         String action = actionAttr.getNodeValue();
-        keybind.setBind(keys);
-        keybind.setAction(action);
+        KeybindConfig keybind = new KeybindConfig(mode,keys,action);
         return keybind;
     }
 

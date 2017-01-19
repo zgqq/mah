@@ -8,9 +8,9 @@ import mah.action.ActionHandler;
  */
 public interface Mode {
 
-    default void init(){
+    default void init(){};
 
-    }
+    Mode getParent();
 
     void setParent(Mode mode);
 
@@ -21,4 +21,5 @@ public interface Mode {
     String getName();
 
     void trigger();
+
 }

@@ -4,10 +4,17 @@ import mah.common.json.JSONArr;
 import mah.common.json.JSONObj;
 import mah.common.json.JSONUtils;
 import mah.common.util.HttpUtils;
+import mah.common.util.StringUtils;
+import mah.common.util.XMLUtils;
 import mah.plugin.command.PluginCommandSupport;
-import mah.ui.annnotation.Layout;
+import mah.plugin.config.XMLConfigurable;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
+import mah.ui.pane.item.TextItem;
+import mah.ui.pane.item.TextItemImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,11 +23,12 @@ import java.util.List;
 /**
  * Created by zgq on 16-1-02.
  */
-public class QueryWeatherCommand extends PluginCommandSupport {
+public class QueryWeatherCommand extends PluginCommandSupport implements XMLConfigurable{
 
+    private Logger logger = LoggerFactory.getLogger(QueryWeatherCommand.class);
     private String url = "http://api.map.baidu.com/telematics/v3/weather?output=json&ak=Gy7SGUigZ4HxGYDaq9azWy09&location=";
-    @Layout
     private ClassicItemListLayout layout;
+    private String defaultCity;
 
     public QueryWeatherCommand() {
         init();
@@ -33,7 +41,6 @@ public class QueryWeatherCommand extends PluginCommandSupport {
             filterHook(event.getContent());
         });
     }
-
 
     private InputStream downloadImage(String url) {
         InputStream inputStream = HttpUtils.getInputStream(url);
@@ -69,12 +76,23 @@ public class QueryWeatherCommand extends PluginCommandSupport {
     }
 
     protected void triggerHook() throws Exception {
-        queryWeather("河源");
+        if(StringUtils.isNotEmpty(defaultCity)){
+            queryWeather(defaultCity);
+        }
     }
 
     private void queryWeather(String city) {
         showQuerying();
-        JSONObj json = JSONUtils.getJSON(url + city);
+        JSONObj json;
+        String api="";
+        try {
+            api = url + city;
+            json = JSONUtils.getJSON(api);
+        } catch (Exception e) {
+            showQueryError();
+            logger.error("Unable to fetch url "+api,e);
+            return;
+        }
         int code = json.getInt("error");
         if (code == 0) {
             JSONArr results = json.getJSONArr("results");
@@ -93,6 +111,11 @@ public class QueryWeatherCommand extends PluginCommandSupport {
         }
     }
 
+    private void showQueryError() {
+        TextItem network = new TextItemImpl.Builder("无法查询天气,请检查网络").build();
+        layout.updateItems(network);
+    }
+
     protected void filterHook(String content) throws Exception {
         if (content != null && content.trim().length() > 0) {
             queryWeather(content);
@@ -104,5 +127,11 @@ public class QueryWeatherCommand extends PluginCommandSupport {
         return "QueryWeather";
     }
 
+    @Override
+    public void configure(Node node) throws Exception {
+        if (node != null) {
+            this.defaultCity = XMLUtils.getChildNodeText(node, "defaultCity");
+        }
+    }
 }
 

@@ -3,8 +3,9 @@ package mah.ui.support.swing.pane.item;
 import mah.common.util.CollectionUtils;
 import mah.ui.UIException;
 import mah.ui.pane.item.FullItem;
+import mah.ui.pane.item.ItemListPane;
 import mah.ui.pane.item.ItemPane;
-import mah.ui.pane.item.Text;
+import mah.ui.pane.Text;
 import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.theme.LayoutThemeImpl;
 import mah.ui.support.swing.util.StringUtils;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * @see ItemListPane
+ * @see ItemPane
  * Created by zgq on 2017-01-08 14:16
  */
 public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themeable {
@@ -35,13 +38,13 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private FullItem item;
     private LayoutThemeImpl theme;
     private static final int ITEM_HEIGHT = 58;
-    private static final int TEXT_LEN = 40;
+    private static final int TEXT_LEN = 60;
 
-    public FullItemPane(FullItem fullItem) {
-        init(fullItem);
+    public FullItemPane(FullItem fullItem,int num) {
+        init(fullItem,num);
     }
 
-    private void init(FullItem item) {
+    private void init(FullItem item,int num) {
         try {
             this.panel = new JPanel();
             this.panel.setLayout(new BorderLayout());
@@ -58,7 +61,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
             initContent();
             initDescription();
             initNum();
-            reset(item);
+            reset(item,num);
         } catch (Exception e) {
             throw new UIException(e);
         }
@@ -84,6 +87,10 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
 
     private void setIcon(FullItem item) throws IOException {
         InputStream iconInputStream = item.getIconInputStream();
+        if (iconInputStream == null) {
+            iconLabel.setIcon(null);
+            return;
+        }
         BufferedImage icon = ImageIO.read(iconInputStream);
         ImageIcon imageIcon = new ImageIcon(icon); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
@@ -93,7 +100,11 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     }
 
     private void setDescription(FullItem item) {
-        String descriptionStr = item.getDescription().getText();
+        Text description = item.getDescription();
+        String descriptionStr="";
+        if (description != null) {
+            descriptionStr = item.getDescription().getText();
+        }
         setNormalDescription(descriptionStr);
     }
 
@@ -155,15 +166,17 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
             this.content.setDocument(highlightText(highlightIndexs, content));
         }
         Text description = item.getDescription();
-        java.util.List<Integer> descriptionHighlightIndexs = description.getHighlightIndexs();
-        if (CollectionUtils.isNotEmpty(descriptionHighlightIndexs)) {
-            this.description.setDocument(highlightText(descriptionHighlightIndexs, description));
+        if (description != null) {
+            java.util.List<Integer> descriptionHighlightIndexs = description.getHighlightIndexs();
+            if (CollectionUtils.isNotEmpty(descriptionHighlightIndexs)) {
+                this.description.setDocument(highlightText(descriptionHighlightIndexs, description));
+            }
         }
     }
 
     private DefaultStyledDocument highlightText(java.util.List<Integer> highlightIndexs, Text textObj) {
         String text = textObj.getText();
-        String con = StringUtils.getStrBySpecificLength(text, 40);
+        String con = StringUtils.getStrBySpecificLength(text, TEXT_LEN);
         DefaultStyledDocument hightlightDocument = HightlightHelper.createHightlightDocument(con, highlightIndexs, matchedTextStyle, normalTextStyle);
         return hightlightDocument;
     }
@@ -204,21 +217,11 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
 
 
     @Override
-    public void reset(FullItem item) {
-        reset(item,item.getNum());
-    }
-
-    @Override
     public void unpending() {
         Color color = Color.decode(theme.findProperty("background-color"));
         applyBackground(color);
         setNormalContent();
         setNormalDescription();
-    }
-
-    @Deprecated
-    private void setNum(FullItem item) {
-        this.numLabel.setText(String.valueOf(item.getNum()));
     }
 
     private void setNum(int num) {

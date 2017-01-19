@@ -45,4 +45,6 @@ public interface Input {
 
     int getCaretPosition();
 
+    void clear();
+
 }

@@ -1,5 +1,6 @@
 package mah.ui.layout;
 
+import mah.mode.Mode;
 import mah.ui.event.EventHandler;
 import mah.ui.key.KeyEvent;
 
@@ -42,4 +43,17 @@ public abstract class LayoutWrapper implements Layout{
         layout.onSetCurrentLayout();
     }
 
+    @Override
+    public Mode getMode() {
+        return layout.getMode();
+    }
+
+    @Override
+    public void registerMode(Mode mode, ModeListener modeListener) {
+        layout.registerMode(mode, modeListener);
+    }
+
+    public Layout getLayout() {
+        return layout;
+    }
 }

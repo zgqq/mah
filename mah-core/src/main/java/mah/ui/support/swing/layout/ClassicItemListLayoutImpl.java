@@ -5,7 +5,6 @@ import mah.mode.ModeManager;
 import mah.ui.UIException;
 import mah.ui.event.EventHandler;
 import mah.ui.layout.ClassicItemListLayout;
-import mah.ui.layout.ModeEvent;
 import mah.ui.layout.ModeListener;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemListPane;
@@ -25,10 +24,10 @@ import java.util.List;
  */
 public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper implements ClassicItemListLayout, SwingLayout, Themeable {
     private static final String NAME = "classic_item_list_layout";
-    private List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
+    private final List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
     private final ItemListPaneFactoryImpl factory;
     private ItemListPane itemListPane;
-    private List<ModeListener> modeListeners = new ArrayList<>();
+    private final List<ModeListener> modeListeners = new ArrayList<>();
     private Mode mode;
 
     public ClassicItemListLayoutImpl() {
@@ -74,14 +73,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     private void triggerMode() {
         ItemMode itemMode = ItemMode.triggerMode();
         itemMode.updateActionHandler(this);
-        if (mode != null) {
-            mode.trigger();
-            ModeEvent modeEvent = new ModeEvent();
-            modeEvent.setMode(mode);
-            for (ModeListener modeListener : modeListeners) {
-                modeListener.modeTriggered(modeEvent);
-            }
-        }
+        LayoutUtils.triggerMode(mode, modeListeners);
     }
 
     @Override

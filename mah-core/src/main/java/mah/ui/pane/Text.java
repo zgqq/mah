@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-11 11:13
  */
-public class Text {
+public final class Text {
 
     private final String text;
     @Nullable

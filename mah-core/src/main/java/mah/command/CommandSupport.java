@@ -5,7 +5,6 @@ import mah.command.event.CommonFilterEvent;
 import mah.command.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.command.event.TriggerEvent;
-import mah.mode.EnableMode;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -19,31 +18,12 @@ import java.util.concurrent.Future;
 /**
  * Created by zgq on 2017-01-09 09:10
  */
-public abstract class CommandSupport implements EnableMode, ActionHandler, Command {
+public abstract class CommandSupport implements ActionHandler, Command {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
     private final List<EventHandler<? extends InitializeEvent>> initializeHandlers = new ArrayList<>(3);
     private final List<EventHandler<? extends TriggerEvent>> triggerEventHandlers = new ArrayList<>(3);
     private final List<EventHandler<? extends CommonFilterEvent>> commonFilterEventHandlers = new ArrayList<>(3);
-//    private Mode mode;
-
-//    @Override
-//    public void triggerMode(CommandEvent event) throws Exception {
-//        if (mode != null) {
-//            triggerMode(mode.getName());
-//        }
-//        triggerHook(event);
-//    }
-
-//    protected final void triggerMode() {
-//        if (mode != null) {
-//            triggerMode(mode.getName());
-//        }
-//    }
-
-//    protected void triggerMode(String mode) {
-//        ModeManager.getInstance().triggerMode(mode);
-//    }
 
     @Override
     public List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers() {
@@ -59,25 +39,6 @@ public abstract class CommandSupport implements EnableMode, ActionHandler, Comma
     public List<EventHandler<? extends TriggerEvent>> getTriggerEventHandlers() {
         return triggerEventHandlers;
     }
-
-//    protected void triggerHook(CommandEvent event) throws Exception {
-//
-//    }
-
-//    @Override
-//    public void registerMode(ModeManager modeManager) {
-//        Mode mode = registerModeHook(modeManager);
-//        if (mode == null) {
-//            return;
-//        }
-//        this.mode = mode;
-//        modeManager.registerMode(mode, this);
-//    }
-
-//    protected Mode registerModeHook(ModeManager modeManager) {
-//        return null;
-//
-//    }
 
     protected final <T> Future<T> submit(Callable<T> task) {
         return getExecutor().submit(task);

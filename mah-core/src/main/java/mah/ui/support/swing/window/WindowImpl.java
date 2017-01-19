@@ -60,8 +60,6 @@ public class WindowImpl extends WindowSupport {
     }
 
     private void updateLayout(SwingLayout layout) {
-
-
         JPanel currentPanel = currentLayout.getPanel();
         JPanel panel = layout.getPanel();
         if (currentPanel.equals(panel)) {
@@ -70,15 +68,16 @@ public class WindowImpl extends WindowSupport {
         removeLayout();
         addLayout(layout);
         layout.onSetCurrentLayout();
+        currentLayout = layout;
     }
 
     private void addLayout(SwingLayout layout) {
-        frame.add(layout.getPanel());
+        frame.getContentPane().add(layout.getPanel());
     }
 
     private void removeLayout() {
         if (currentLayout != null)
-            frame.remove(currentLayout.getPanel());
+            frame.getContentPane().remove(currentLayout.getPanel());
     }
 
     @Override
@@ -136,6 +135,7 @@ public class WindowImpl extends WindowSupport {
     @Override
     public void useDefaultLayoutAsCurrentLayout() {
         defaultLayout.use();
+        updateLayout(defaultLayout);
         frame.pack();
     }
 

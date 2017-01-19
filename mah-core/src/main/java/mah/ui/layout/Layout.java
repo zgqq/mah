@@ -1,5 +1,6 @@
 package mah.ui.layout;
 
+import mah.mode.Mode;
 import mah.ui.event.EventHandler;
 import mah.ui.key.KeyEvent;
 
@@ -10,17 +11,26 @@ public interface Layout {
 
     void init();
 
-    default String getName(){
-        throw new UnsupportedOperationException("Unable to get layout name");
-    }
-
-    void setDefaultMode();
-
     void setOnKeyPressed(EventHandler<? extends KeyEvent> keyPressedHandler);
 
     void setOnKeyReleased(EventHandler<? extends KeyEvent> keyReleasedHandler);
 
-    void onSetCurrentLayout();
+    default void onSetCurrentLayout() {}
 
+    default String getName() {
+        throw new UnsupportedOperationException("Unable to get layout name");
+    }
+
+    default void setDefaultMode() {
+        throw new UnsupportedOperationException("Unable to set default mode");
+    }
+
+    default Mode getMode(){
+        throw new UnsupportedOperationException("Unable to get mode");
+    }
+
+    default void registerMode(Mode mode,ModeListener modeListener){
+        throw new UnsupportedOperationException("Unsupport register mode");
+    }
 
 }

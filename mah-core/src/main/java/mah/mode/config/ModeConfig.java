@@ -57,5 +57,4 @@ public class ModeConfig {
     public void setParentMode(ModeConfig parentMode) {
         this.parentMode = parentMode;
     }
-
 }

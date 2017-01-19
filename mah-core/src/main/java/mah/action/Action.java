@@ -5,12 +5,10 @@ package mah.action;
  */
 public interface Action {
 
-
     String getName();
 
     Class<?> getHandler();
 
     void actionPerformed(ActionEvent actionEvent) throws Exception;
-
 
 }

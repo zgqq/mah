@@ -1,7 +1,9 @@
 package mah.ui.layout;
 
+import mah.mode.Mode;
 import mah.ui.event.EventHandler;
 import mah.ui.key.KeyEvent;
+import mah.ui.support.swing.layout.LayoutUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ public abstract class LayoutSupport implements Layout {
 
     private List<EventHandler<? extends KeyEvent>> keyReleasedHandlers = new ArrayList<>();
     private List<EventHandler<? extends KeyEvent>> keyPressedHandlers = new ArrayList<>();
+    private final List<ModeListener> modeListeners = new ArrayList<>();
+    private Mode mode;
 
     @Override
     public void setOnKeyReleased(EventHandler<? extends KeyEvent> eventHandler) {
@@ -32,6 +36,17 @@ public abstract class LayoutSupport implements Layout {
         return keyReleasedHandlers;
     }
 
+    protected final void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    protected final void addModeListener(ModeListener modeListener) {
+        modeListeners.add(modeListener);
+    }
+
+    protected final void triggerMode() {
+        LayoutUtils.triggerMode(mode, modeListeners);
+    }
 
 
 }

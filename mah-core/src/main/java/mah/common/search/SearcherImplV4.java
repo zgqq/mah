@@ -86,7 +86,7 @@ public class SearcherImplV4 implements Searcher {
         }
         char fkc = keyword.charAt(0);
         List<Node> matchedNode = new ArrayList<>();
-        List<Node> mis = new ArrayList<>();
+        List<Node> curNodes = new ArrayList<>();
         mat:
         for (int i1 = 0; i1 < content.length(); i1++) {
             char c = content.charAt(i1);
@@ -94,10 +94,10 @@ public class SearcherImplV4 implements Searcher {
             if (compare(fkc, c, smart)) {
                 ni = new ArrayList<>();
                 // add new node when encountering first char
-                mis.add(new Node(0, ni));
+                curNodes.add(new Node(0, ni));
             }
 
-            for (Node node : mis) {
+            for (Node node : curNodes) {
                 List<Integer> oi = node.matchedIndexs;
                 int os = oi.size();
                 if (os < keyword.length()) {
@@ -109,11 +109,11 @@ public class SearcherImplV4 implements Searcher {
                 }
             }
 
-            // select most node
+            // select longest node
             int ms = -1;
             int mms = -1;
-            for (int i2 = 0; i2 < mis.size(); i2++) {
-                Node node = mis.get(i2);
+            for (int i2 = 0; i2 < curNodes.size(); i2++) {
+                Node node = curNodes.get(i2);
                 List<Integer> mi = node.matchedIndexs;
                 int size = mi.size();
                 if (size >= mms) {
@@ -123,17 +123,21 @@ public class SearcherImplV4 implements Searcher {
             }
 
             if (ms != -1) {
-                Node node = mis.get(ms);
+                // remove those nodes that are prior to longest node
+                Node longestNode = curNodes.get(ms);
                 for (int k = ms - 1; k >= 0; k--) {
-                    mis.remove(k);
+                    curNodes.remove(k);
                 }
-                List<Integer> mmi = node.matchedIndexs;
+
+                // retrieving completes if there is only node
+                List<Integer> mmi = longestNode.matchedIndexs;
                 if (mmi.size() == keyword.length()) {
-                    matchedNode.add(node);
-                    if (mis.size() == 1) {
+                    matchedNode.add(longestNode);
+                    if (curNodes.size() == 1) {
                         break mat;
                     }
-                    mmi.remove(node);
+                    // remove matched node
+                    curNodes.remove(longestNode);
                 }
             }
         }

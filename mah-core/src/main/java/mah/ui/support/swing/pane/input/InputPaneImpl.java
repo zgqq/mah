@@ -2,6 +2,7 @@ package mah.ui.support.swing.pane.input;
 
 import mah.ui.UIException;
 import mah.ui.event.EventHandler;
+import mah.ui.input.InputPaneFactoryBean;
 import mah.ui.input.InputTextChangedEvent;
 import mah.ui.input.TextState;
 import mah.ui.pane.input.InputPane;
@@ -20,7 +21,6 @@ import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
 import java.awt.event.KeyEvent;
 import java.text.AttributedCharacterIterator;
-import java.util.Locale;
 
 /**
  * Created by zgq on 2017-01-08 12:00
@@ -29,8 +29,18 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
 
     private JTextComponent input;
     private JPanel panel;
+    private final int panelPrefWidth;
+    private final int panelPrefHeight;
+    private final int maxNumberOfCharacters;
 
-    InputPaneImpl() {
+    private InputPaneImpl() {
+        this(600, 70, 40);
+    }
+
+    private InputPaneImpl(int panelPrefWidth, int panelPrefHeight, int maxNumberOfCharacters) {
+        this.panelPrefWidth = panelPrefWidth;
+        this.panelPrefHeight = panelPrefHeight;
+        this.maxNumberOfCharacters = maxNumberOfCharacters;
     }
 
     public void init() {
@@ -45,77 +55,25 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
 
     private void initInput() {
         JTextPane input = new JTextPane();
-        input.setPreferredSize(new Dimension(550, 60));
+        int inputWidth = (int) (panelPrefWidth * 0.9);
+        int inputHeight = (int) (panelPrefHeight * 0.8);
+        input.setPreferredSize(new Dimension((inputWidth), inputHeight));
         input.setBorder(BorderFactory.createCompoundBorder(
                 input.getBorder(),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         input.setFont(new Font(null, Font.PLAIN, 25));
-        input.setCaretColor(Color.WHITE);
-        input.enableInputMethods(true);
 
-        sun.awt.im.InputContext.getInstance().selectInputMethod(Locale.CHINA);
-        input.addInputMethodListener(new InputMethodListener() {
-            @Override
-            public void inputMethodTextChanged(InputMethodEvent event) {
-                AttributedCharacterIterator text = event.getText();
-                int committedCharacterCount = event.getCommittedCharacterCount();
-                char c = text.first();
-                StringBuilder textBuffer = new StringBuilder();
-                boolean allLetter = true;
-                while (committedCharacterCount-- > 0) {
-                    textBuffer.append(c);
-                    c = text.next();
-                    if (!Character.isLetter(c)) {
-                        allLetter = false;
-                    }
-                }
-                if (event.getCommittedCharacterCount() > 0) {
-                    event.consume();
-                    if (allLetter) {
-                        return;
-                    }
-                    SwingUtilities.invokeLater(() -> {
-                        int caretPosition = input.getCaretPosition();
-                        input.setText(input.getText() + textBuffer);
-                        input.setCaretPosition(caretPosition + textBuffer.length());
-                    });
-                }
-            }
+        limitInputCharacterNum(input);
+        listenInputMethod(input);
+        listenInput(input);
+        disposeKeybinds(input);
 
-            @Override
-            public void caretPositionChanged(InputMethodEvent event) {
-                System.out.println("caret " + event.getCaret());
-            }
-        });
+        this.input = input;
+        this.panel.setPreferredSize(new Dimension(panelPrefWidth, panelPrefHeight));
+        this.panel.add(input);
+    }
 
-        final int maxNumberOfCharacters = 40;
-        input.setStyledDocument(new DefaultStyledDocument() {
-
-                                    @Override
-                                    public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-                                        String text = getText(0, getLength()) + str;
-                                        int length = StringUtils.getLength(text);
-                                        if (length <= maxNumberOfCharacters)
-
-                                        {
-//                    if (isFireEvent()) {
-//                        fireTextChangedEvent();
-//                    }
-                                            super.insertString(offs, str, a);
-                                        } else
-
-                                        {
-                                            Toolkit.getDefaultToolkit().beep();
-                                        }
-
-                                    }
-
-                                }
-
-        );
-
-//        input.getDocument().remove();
-
+    private void listenInput(final JTextPane input) {
         input.getDocument().
 
                 addDocumentListener(new DocumentListener() {
@@ -138,11 +96,14 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
                     }
 
                     private void fireTextChangedEvent(Document document) throws BadLocationException {
-                        TextState oldState = new TextState.Builder(document.getText(0, document.getLength()), input.getCaretPosition()).build();
+                        TextState oldState = new TextState.Builder(document.getText(0, document.getLength()),
+                                input.getCaretPosition()).build();
                         SwingUtilities.invokeLater(() -> {
                             try {
-                                TextState newState = new TextState.Builder(document.getText(0, document.getLength()), input.getCaretPosition()).build();
-                                InputTextChangedEvent inputTextChangedEvent = new InputTextChangedEvent(newState, oldState);
+                                TextState newState = new TextState.Builder(document.getText(0,
+                                        document.getLength()), input.getCaretPosition()).build();
+                                InputTextChangedEvent inputTextChangedEvent = new InputTextChangedEvent(newState,
+                                        oldState);
                                 for (EventHandler eventHandler : getInputTextChangedHandlers()) {
                                     eventHandler.handle(inputTextChangedEvent);
                                 }
@@ -152,18 +113,73 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
                         });
                     }
 
-
                     @Override
                     public void changedUpdate(DocumentEvent e) {
-                        System.out.println("change :" + e);
-//                System.out.println(e);
                     }
                 });
+    }
 
-        this.input = input;
-        disposeKeybinds(input);
-        this.panel.setPreferredSize(new Dimension(600, 70));
-        this.panel.add(input);
+    private void limitInputCharacterNum(JTextPane input) {
+        input.setStyledDocument(new DefaultStyledDocument() {
+
+                                    @Override
+                                    public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                                        String text = getText(0, getLength()) + str;
+                                        int length = StringUtils.getLength(text);
+                                        if (length <= maxNumberOfCharacters)
+
+                                        {
+                                            super.insertString(offs, str, a);
+                                        } else
+
+                                        {
+                                            Toolkit.getDefaultToolkit().beep();
+                                        }
+
+                                    }
+
+                                }
+
+        );
+    }
+
+    private void listenInputMethod(final JTextPane input) {
+        input.addInputMethodListener(new InputMethodListener() {
+            @Override
+            public void inputMethodTextChanged(InputMethodEvent event) {
+                AttributedCharacterIterator text = event.getText();
+                int committedCharacterCount = event.getCommittedCharacterCount();
+                char c = text.first();
+                StringBuilder textBuffer = new StringBuilder();
+                boolean allLetter = true;
+                while (committedCharacterCount-- > 0) {
+                    textBuffer.append(c);
+                    c = text.next();
+                    if (!Character.isLetter(c)) {
+                        allLetter = false;
+                    }
+                }
+                if (event.getCommittedCharacterCount() > 0) {
+                    event.consume();
+                    if (allLetter) {
+                        return;
+                    }
+                    SwingUtilities.invokeLater(() -> {
+                        int caretPosition = input.getCaretPosition();
+                        try {
+                            input.getDocument().insertString(caretPosition, textBuffer.toString(), null);
+                        } catch (BadLocationException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void caretPositionChanged(InputMethodEvent event) {
+            }
+
+        });
     }
 
     private void disposeKeybinds(JTextComponent input) {
@@ -195,7 +211,16 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
             input.setBackground(Color.decode(inputFieldBackgroundColor));
             String fontColor = layoutTheme.findProperty("input-field-font-color");
             input.setForeground(Color.decode(fontColor));
+            String cursorColor = layoutTheme.findProperty("input-cursor-color");
+            input.setCaretColor(Color.decode(cursorColor));
         }
+    }
+
+    public static InputPaneImpl newInstance() {
+        InputPaneImpl inputPane = new InputPaneImpl();
+        InputPaneFactoryBean.getInstance().initBean(inputPane);
+        inputPane.init();
+        return inputPane;
     }
 
     @Override

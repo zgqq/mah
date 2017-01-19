@@ -4,6 +4,7 @@ package mah.action;
  * Created by zgq on 2017-01-09 09:13
  */
 public class ActionEvent {
+
     private Object source;
 
     public ActionEvent(Object source) {

@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
  */
 public class XMLConfig implements Config {
 
-    private Document document;
+    private final Document document;
 
     public XMLConfig(Document document) {
         this.document = document;

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by zgq on 2017-01-09 09:50
@@ -14,7 +16,8 @@ public abstract class AbstractMode implements Mode {
 
     private final Map<String, Action> NAMED_ACTIONS = new HashMap<>();
     private final Map<Class<?>, List<Action>> HANDLERS_ACTIONS = new HashMap<>();
-    private String name;
+    private final String name;
+    private final Lock lock = new ReentrantLock();
     private Mode parent;
 
     public AbstractMode(String name, Mode parent) {
@@ -74,7 +77,15 @@ public abstract class AbstractMode implements Mode {
 
     @Override
     public void setParent(Mode mode) {
-        this.parent = mode;
+        lock.lock();
+        try {
+            if (this.parent != null) {
+                throw new IllegalStateException("Unable to change parent of mode");
+            }
+            this.parent = mode;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -94,4 +105,13 @@ public abstract class AbstractMode implements Mode {
         ModeManager.getInstance().triggerMode(this);
     }
 
+    @Override
+    public Mode getParent() {
+        lock.lock();
+        try {
+            return parent;
+        }finally {
+            lock.unlock();
+        }
+    }
 }

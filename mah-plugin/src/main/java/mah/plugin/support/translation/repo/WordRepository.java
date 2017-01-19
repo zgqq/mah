@@ -39,6 +39,9 @@ public class WordRepository {
 
     public void init() {
         JSONArr map = mah.common.json.JSONUtils.parseArrFromLocalFile(localFile);
+        if (map == null) {
+            return;
+        }
         map.forEach(entry -> {
             JSONObj wordObj = (JSONObj) entry;
             Word word = new Word();

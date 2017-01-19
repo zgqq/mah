@@ -10,6 +10,7 @@ public class DefaultLayout extends SwingAbstractClassicLayoutWrapper implements 
     }
 
     public void use() {
+        getLayout().setDefaultMode();
         getLayout().updatePane(null);
     }
 

@@ -189,6 +189,7 @@ public abstract class AbstractInput implements Input{
         push();
         int caret = getCaretPosition();
         remove(caret-1,1);
+        setCaretPosition(caret-1);
     }
 
     @Override
@@ -245,5 +246,12 @@ public abstract class AbstractInput implements Input{
         fireEvent = true;
     }
 
+    @Override
+    public void clear() {
+        String text = getText();
+        if (text != null && !text.isEmpty()) {
+            remove(0,text.length());
+        }
+    }
 }
 

@@ -1,5 +1,7 @@
 package mah.ui.pane.item;
 
+import mah.ui.pane.Text;
+
 import java.io.InputStream;
 import java.util.List;
 
@@ -21,10 +23,6 @@ public class FullItemImpl implements FullItem{
         this.attachment = builder.attachment;
     }
 
-    @Override
-    public void setNum(int num) {
-        this.num = num;
-    }
 
     @Override
     public Object getAttachment() {
@@ -45,11 +43,6 @@ public class FullItemImpl implements FullItem{
         return description;
     }
 
-
-    @Override
-    public int getNum() {
-        return num;
-    }
 
     public static class Builder {
         private InputStream iconInputStream;

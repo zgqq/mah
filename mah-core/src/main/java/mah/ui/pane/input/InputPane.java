@@ -10,6 +10,6 @@ import mah.ui.pane.Pane;
  */
 public interface InputPane extends Input,Pane{
 
-
     void setOnInputTextChanged(EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler);
+
 }

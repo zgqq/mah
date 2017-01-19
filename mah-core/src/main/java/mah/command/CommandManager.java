@@ -37,9 +37,7 @@ public class CommandManager implements ApplicationListener {
     private volatile Command lockedCommand;
     private Command currentCommand;
 
-    private CommandManager() {
-
-    }
+    private CommandManager() {}
 
     public List<String> findCommandMaps(Command command) {
         List<String> maps = new ArrayList<>();
@@ -177,7 +175,6 @@ public class CommandManager implements ApplicationListener {
         }
     }
 
-
     static class TriggerCommandTask implements Runnable {
 
         private final Command command;
@@ -227,5 +224,4 @@ public class CommandManager implements ApplicationListener {
             }
         }
     }
-
 }

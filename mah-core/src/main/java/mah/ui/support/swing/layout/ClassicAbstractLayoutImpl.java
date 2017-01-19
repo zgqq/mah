@@ -6,7 +6,6 @@ import mah.ui.layout.LayoutFactoryBean;
 import mah.ui.pane.Pane;
 import mah.ui.pane.input.InputPane;
 import mah.ui.support.swing.pane.SwingPane;
-import mah.ui.support.swing.pane.input.InputPaneFactory;
 import mah.ui.support.swing.pane.input.InputPaneImpl;
 import mah.ui.support.swing.theme.LayoutThemeImpl;
 import mah.ui.theme.LayoutTheme;
@@ -41,10 +40,11 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
             logger.warn("The layout has already been initialized");
             return;
         }
+        logger.info("Initializing classic abstract layout");
         this.panel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         this.panel.setLayout(boxLayout);
-        this.inputPane = InputPaneFactory.createInputPane();
+        this.inputPane = InputPaneImpl.newInstance();
         this.panel.add(inputPane.getPanel());
         initKeybind();
         init = true;
@@ -114,14 +114,10 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
         }
     }
 
-    @Override
-    public String getName() {
-        return "classic_abstract_layout";
-    }
 
     private void check() {
         if (!init) {
-            throw new IllegalStateException("This layout "+getName()+" has not been initialized");
+            throw new IllegalStateException("This layout " + getName() + " has not been initialized");
         }
     }
 
@@ -142,17 +138,21 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
         return inputPane;
     }
 
-    public static  ClassicAbstractLayoutImpl instance() {
+    public static ClassicAbstractLayoutImpl instance() {
         if (instance == null) {
             instance = newInstance();
         }
         return instance;
     }
 
-
     private static ClassicAbstractLayoutImpl newInstance() {
         ClassicAbstractLayoutImpl abstractClassicLayout = new ClassicAbstractLayoutImpl();
         LayoutFactoryBean.getInstance().initBean(abstractClassicLayout);
         return abstractClassicLayout;
+    }
+
+    @Override
+    public String getName() {
+        return "classic_abstract_layout";
     }
 }

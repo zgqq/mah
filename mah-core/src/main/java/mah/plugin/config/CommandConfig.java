@@ -8,9 +8,9 @@ import mah.plugin.PluginException;
  */
 public class CommandConfig {
 
-    private String pluginName;
-    private String commandName;
-    private String triggerKey;
+    private final String pluginName;
+    private final String commandName;
+    private final String triggerKey;
 
 
     public CommandConfig(String pluginName, String commandName, String triggerKey) {

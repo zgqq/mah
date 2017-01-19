@@ -5,8 +5,8 @@ package mah.action;
  */
 public abstract class AbstractAction implements Action {
 
-    private String name;
-    private Class<?> handler;
+    private final String name;
+    private final Class<?> handler;
 
     public AbstractAction(String name, Class<?> handler) {
         this.name = name;
@@ -22,7 +22,6 @@ public abstract class AbstractAction implements Action {
     public Class<?> getHandler() {
         return handler;
     }
-
 }
 
 

@@ -5,12 +5,14 @@ package mah.ui.support.swing.util;
  */
 public class StringUtils {
 
+    private static final int IDO_LEN= 3;
+
     public static int getLength(String text) {
         int length = 0;
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (Character.isIdeographic(c)) {
-                length += 2;
+                length += IDO_LEN;
             } else {
                 length += 1;
             }
@@ -24,6 +26,10 @@ public class StringUtils {
         }
         int index = getIndexBySpecificLength(text, len);
         if (index < 0) {
+            return "";
+        }
+
+        if(mah.common.util.StringUtils.isEmpty(text)){
             return "";
         }
 
@@ -42,7 +48,7 @@ public class StringUtils {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (Character.isIdeographic(c)) {
-                length += 2;
+                length += IDO_LEN;
             } else {
                 length += 1;
             }

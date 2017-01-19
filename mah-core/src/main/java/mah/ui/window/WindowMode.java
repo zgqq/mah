@@ -52,6 +52,12 @@ public class WindowMode extends AbstractMode {
         return window_mode;
     }
 
+    public static Mode triggerMode() {
+        Mode windowMode = getOrRegisterMode();
+        ModeManager.getInstance().triggerMode(windowMode);
+        return windowMode;
+    }
+
 
     static abstract class WindowAction extends AbstractAction {
 

@@ -5,8 +5,12 @@ package mah.common.util;
  */
 public class StringUtils {
 
-    public static boolean isEmpty(String content) {
-        return content==null || content.trim().length()==0;
+    public static boolean isNotEmpty(String text) {
+        return !isEmpty(text);
+    }
+
+    public static boolean isEmpty(String text) {
+        return text==null || text.trim().length()==0;
     }
 
 }

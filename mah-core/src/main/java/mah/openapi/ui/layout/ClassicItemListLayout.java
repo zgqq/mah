@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
 
-
     private final Command command;
     private final Object lock = CommandManager.getInstance();
 

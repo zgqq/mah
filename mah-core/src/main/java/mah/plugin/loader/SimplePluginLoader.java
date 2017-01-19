@@ -6,8 +6,6 @@ import mah.command.Command;
 import mah.command.CommandManager;
 import mah.command.event.EventHandler;
 import mah.command.event.InitializeEvent;
-import mah.mode.EnableMode;
-import mah.mode.ModeManager;
 import mah.plugin.Plugin;
 import mah.plugin.PluginException;
 import mah.plugin.PluginMetainfo;
@@ -127,7 +125,9 @@ public class SimplePluginLoader {
         }
     }
 
+
     private void startPlugin(Plugin plugin, List<CommandConfig> commandConfigs) throws Exception {
+        checkPluginDir(plugin);
         plugin.init();
         plugin.prepare();
         for (CommandConfig commandConfig : commandConfigs) {
@@ -137,12 +137,16 @@ public class SimplePluginLoader {
         }
     }
 
+    private void checkPluginDir(Plugin plugin) {
+        String pluginDataDir = plugin.getPluginMetainfo().getPluginDataDir();
+        File pluginData = new File(pluginDataDir);
+        if (!pluginData.exists()) {
+            pluginData.mkdirs();
+        }
+    }
+
     private void startCommand(Plugin plugin, Command command, CommandConfig commandConfig) {
         configureCommand(command, commandConfig);
-        if (command instanceof EnableMode) {
-            EnableMode mode = (EnableMode) command;
-            mode.registerMode(ModeManager.getInstance());
-        }
         try {
             if (command instanceof PluginCommand) {
                 PluginCommand pluginCommand = (PluginCommand) command;

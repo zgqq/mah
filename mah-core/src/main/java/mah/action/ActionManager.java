@@ -36,6 +36,4 @@ public class ActionManager {
         }
         ExecutorServices.submit(() -> actionHandler.handle(action));
     }
-
-
 }

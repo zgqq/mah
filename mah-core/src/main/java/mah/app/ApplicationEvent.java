@@ -7,13 +7,14 @@ import mah.app.config.Config;
  */
 public class ApplicationEvent {
 
-    private Config config;
+    private final Config config;
+
+    public ApplicationEvent(Config config) {
+        this.config = config;
+    }
 
     public Config getConfig() {
         return config;
     }
 
-    public void setConfig(Config config) {
-        this.config = config;
-    }
 }
