@@ -85,7 +85,7 @@ public class RepositorySynchronizer implements GithubRepositories.Listener {
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            initLock.lock();
+            initLock.unlock();
         }
     }
 

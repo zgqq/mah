@@ -58,16 +58,16 @@ public class SynchronizeRepositoryTask implements Callable<UpdateResult> {
                 JSONObject jsonObject = (JSONObject) rep;
                 String name = jsonObject.getString("full_name");
                 if (needInit) {
-                    logger.debug("Adding store {}", name);
+                    logger.debug("Add {}", name);
                     starredRepositories.addRepository(name, jsonObject.getString("description"));
                     addCount++;
                     continue;
                 }
                 if (starredRepositories.contains(name)) {
-                    logger.info("The latest store {}", name);
+                    logger.info("The latest {}", name);
                     break loop;
                 } else {
-                    logger.debug("Adding store {}", name);
+                    logger.debug("Add {}", name);
                     starredRepositories.updateNewRepository(name, jsonObject.getString("description"));
                     addCount++;
                 }

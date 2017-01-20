@@ -143,7 +143,6 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     @Override
     public void configure(Node node) throws Exception {
         if (node == null) {
-//            throw new PluginException("Are username and token provided in config?");
             return;
         }
         NodeList childNodes = node.getChildNodes();

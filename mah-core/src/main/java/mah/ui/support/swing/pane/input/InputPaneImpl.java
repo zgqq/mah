@@ -34,7 +34,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
     private final int maxNumberOfCharacters;
 
     private InputPaneImpl() {
-        this(600, 70, 40);
+        this(600, 70, 30);
     }
 
     private InputPaneImpl(int panelPrefWidth, int panelPrefHeight, int maxNumberOfCharacters) {
@@ -124,20 +124,12 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
 
                                     @Override
                                     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-                                        String text = getText(0, getLength()) + str;
-                                        int length = StringUtils.getLength(text);
-                                        if (length <= maxNumberOfCharacters)
-
-                                        {
-                                            super.insertString(offs, str, a);
-                                        } else
-
-                                        {
-                                            Toolkit.getDefaultToolkit().beep();
+                                        String origin = getText(0, getLength());
+                                        int index = StringUtils.getLen(origin, str, maxNumberOfCharacters);
+                                        if (index > 0) {
+                                            super.insertString(offs, str.substring(0, index), a);
                                         }
-
                                     }
-
                                 }
 
         );
@@ -148,30 +140,32 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
             @Override
             public void inputMethodTextChanged(InputMethodEvent event) {
                 AttributedCharacterIterator text = event.getText();
-                int committedCharacterCount = event.getCommittedCharacterCount();
-                char c = text.first();
-                StringBuilder textBuffer = new StringBuilder();
-                boolean allLetter = true;
-                while (committedCharacterCount-- > 0) {
-                    textBuffer.append(c);
-                    c = text.next();
-                    if (!Character.isLetter(c)) {
-                        allLetter = false;
-                    }
-                }
-                if (event.getCommittedCharacterCount() > 0) {
-                    event.consume();
-                    if (allLetter) {
-                        return;
-                    }
-                    SwingUtilities.invokeLater(() -> {
-                        int caretPosition = input.getCaretPosition();
-                        try {
-                            input.getDocument().insertString(caretPosition, textBuffer.toString(), null);
-                        } catch (BadLocationException e) {
-                            throw new RuntimeException(e);
+                if (text != null) {
+                    int committedCharacterCount = event.getCommittedCharacterCount();
+                    char c = text.first();
+                    StringBuilder textBuffer = new StringBuilder();
+                    boolean allLetter = true;
+                    while (committedCharacterCount-- > 0) {
+                        textBuffer.append(c);
+                        c = text.next();
+                        if (!Character.isLetter(c)) {
+                            allLetter = false;
                         }
-                    });
+                    }
+                    if (event.getCommittedCharacterCount() > 0) {
+                        event.consume();
+                        if (allLetter) {
+                            return;
+                        }
+                        SwingUtilities.invokeLater(() -> {
+                            int caretPosition = input.getCaretPosition();
+                            try {
+                                input.getDocument().insertString(caretPosition, textBuffer.toString(), null);
+                            } catch (BadLocationException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }
                 }
             }
 
