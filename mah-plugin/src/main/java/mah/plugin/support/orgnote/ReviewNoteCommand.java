@@ -186,7 +186,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
         }
         PostImpl post = new PostImpl.Builder(note.getString("title"), contentsb.toString()).build();
         layout.setPost(post);
-        Config.update();
+        Config.update(getConfigFile());
     }
 
     private JSONObject currentNode;
@@ -236,7 +236,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
             JSONObject currentNote = source.getCurrentNote();
             int quitCount = currentNote.getIntValue("quitCount");
             currentNote.put("quitCount", quitCount + 1);
-            Config.updateReviewList();
+            Config.updateReviewList(source.getDataDir());
             Window currentWindow = WindowManager.getInstance().getCurrentWindow();
             currentWindow.useDefaultLayoutAsCurrentLayout();
         }
@@ -256,7 +256,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
             jsonObject.put("forgetCount", forgetCount + 1);
             jsonObject.put("familiarDegree", familiarDegree);
             jsonObject.put("lastReviewTime", new Date());
-            Config.updateReviewList();
+            Config.updateReviewList(source.getDataDir());
             source.nextNode();
         }
     }
@@ -281,7 +281,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
             jsonObject.put("rememberCount", rememberCount + 1);
             jsonObject.put("familiarDegree", familiarDegree);
             jsonObject.put("lastReviewTime", new Date());
-            Config.updateReviewList();
+            Config.updateReviewList(source.getDataDir());
             source.nextNode();
         }
     }

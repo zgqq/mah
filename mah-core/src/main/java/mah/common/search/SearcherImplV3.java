@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * Created by zgq on 16-11-24.
  */
+@Deprecated
 public class SearcherImplV3 implements Searcher {
 
     private SearchResultComparator comparator;

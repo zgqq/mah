@@ -59,28 +59,30 @@ public class Config {
         return filenames.size()==0;
     }
 
-    public static void update(Config config, List<JSONObject> list) {
-        if (config.getNodeIndex() >= list.size()-1) {
+    public static void update(Config config, List<JSONObject> list,String path) {
+        if (config.getNodeIndex() >= list.size() - 1) {
             if (config.getFnIndex() + 1 >= config.getFilenames().size()) {
                 config.setFnIndex(0);
-            }else{
-                config.setFnIndex(config.getFnIndex()+1);
+            } else {
+                config.setFnIndex(config.getFnIndex() + 1);
             }
             config.setNodeIndex(0);
-        }else{config.setNodeIndex(config.getNodeIndex()+1);}
+        } else {
+            config.setNodeIndex(config.getNodeIndex() + 1);
+        }
         try {
-            IOUtil.writeToFile("/home/zgq/.config/orgnote/config.json", JSON.toJSONString(config));
+            IOUtil.writeToFile(path, JSON.toJSONString(config));
         } catch (IOException e) {
             new RuntimeException(e);
         }
     }
 
-    public static void update(){
-        update(Config.config,Config.list);
+    public static void update(String path){
+        update(Config.config,Config.list,path);
     }
 
-    public static void updateReviewList(){
-        updateReviewList(Config.config,Config.list);
+    public static void updateReviewList(String dataDir) {
+        updateReviewList(Config.config,Config.list,dataDir);
     }
     private static Config config;
     private static List<JSONObject> list;
@@ -89,9 +91,9 @@ public class Config {
         Config.list = list;
     }
 
-    public static void updateReviewList(Config config,List<JSONObject> list) {
+    public static void updateReviewList(Config config,List<JSONObject> list,String dataDir) {
         try {
-            IOUtil.writeToFile("/home/zgq/.config/orgnote/data/"+config.getCurrentFilename(), JSON.toJSONString(list));
+            IOUtil.writeToFile(dataDir+"/"+config.getCurrentFilename(), JSON.toJSONString(list));
         }catch (IOException e){
             throw new RuntimeException(e);
         }
