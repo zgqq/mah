@@ -4,7 +4,7 @@ dependencies {
 }
 
 jar {
-    archiveName = "app.jar"
+    archiveName = "mah-0.1.1.jar"
     from {
         configurations.runtime.collect {
             it.isDirectory() ? it : zipTree(it)
