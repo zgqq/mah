@@ -45,7 +45,6 @@ public class SwingLayoutFactory implements LayoutFactory {
         }
         createLayout(() -> {
             classicItemListLayout = new ClassicItemListLayout(command);
-            classicItemListLayout.init();
         });
         return classicItemListLayout;
     }
@@ -57,7 +56,6 @@ public class SwingLayoutFactory implements LayoutFactory {
         }
         createLayout(() -> {
             classicPostLayout = new mah.openapi.ui.layout.ClassicPostLayout(command);
-            classicPostLayout.init();
         });
         return classicPostLayout;
     }

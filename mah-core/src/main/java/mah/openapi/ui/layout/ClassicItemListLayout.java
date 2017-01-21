@@ -1,93 +1,112 @@
 package mah.openapi.ui.layout;
 
 import mah.command.Command;
-import mah.command.CommandManager;
-import mah.ui.UIManager;
-import mah.ui.layout.ClassicItemListLayoutWrapper;
+import mah.ui.event.EventHandler;
+import mah.ui.pane.input.InputPane;
 import mah.ui.pane.item.Item;
+import mah.ui.pane.item.ItemSelectedEvent;
 import mah.ui.support.swing.layout.ClassicItemListLayoutImpl;
-import mah.ui.window.Window;
-import mah.ui.window.WindowManager;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by zgq on 2017-01-08 15:11
  */
-public class ClassicItemListLayout extends ClassicItemListLayoutWrapper {
-
-    private final Command command;
-    private final Object lock = CommandManager.getInstance();
+public class ClassicItemListLayout extends AbstractCommandLayout implements mah.ui.layout.ClassicItemListLayout {
 
     public ClassicItemListLayout(Command command) {
-        super(new ClassicItemListLayoutImpl());
-        this.command = command;
+        super(new ClassicItemListLayoutImpl(),command);
     }
 
-
-    private boolean allowUpdateLayout() {
-        Command currentCommand = CommandManager.getInstance().getCurrentCommand();
-        return (currentCommand != null && currentCommand.equals(command));
-    }
-
-    private void updateWindowLayout() {
-        Window currentWindow = WindowManager.getInstance().getCurrentWindow();
-        currentWindow.setCurrentLayout(getLayout());
-    }
-
-    private void updateLayout(Runnable runnable) {
-        synchronized (lock) {
-            if (allowUpdateLayout()) {
-                UIManager.getInstance().runLater(runnable);
-            }
-        }
+    private ClassicItemListLayoutImpl getLayout() {
+        return (ClassicItemListLayoutImpl) layout();
     }
 
     @Override
-    public void unpendingItemIndex(int pendingItemIndex) {
-        updateLayout(() -> {
-            getLayout().unpendingItemIndex(pendingItemIndex);
+    public <T extends Item> T getPendingItem() {
+        return getValue(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return getLayout().getPendingItem();
+            }
         });
     }
 
     @Override
     public void updateItems(List<? extends Item> items) {
-        updateLayout(() -> {
+        updateWholeLayout(() -> {
             getLayout().updateItems(items);
-            updateWindowLayout();
         });
+    }
+
+    @Override
+    public void unpendingItemIndex(int pendingItemIndex) {
+        updatePartLayout(() -> {
+            getLayout().unpendingItemIndex(pendingItemIndex);
+        });
+    }
+
+    @Override
+    public void selectItem(int index) {
+        updatePartLayout(() -> getLayout().selectItem(index));
+    }
+
+    @Override
+    public boolean hasPendingItem() {
+        return getValue(() -> getLayout().hasPendingItem());
+    }
+
+    @Override
+    public int getPendingItemIndex() {
+        return getValue(()->getLayout().getPendingItemIndex());
+    }
+
+    @Override
+    public void setPendingItemIndex(int index) {
+        updatePartLayout(()->getLayout().setPendingItemIndex(index));
+    }
+
+    @Override
+    public void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> eventHandler) {
+        runSafely(()->{getLayout().setOnItemSelected(eventHandler);});
     }
 
     @Override
     public void updateItem(Item item, int num) {
-        updateLayout(()->{
+        updateWholeLayout(()->{
             getLayout().updateItem(item,num);
-            updateWindowLayout();
         });
     }
 
     @Override
+    public int getItemCount() {
+        return getValue(()->getLayout().getItemCount());
+    }
+
+    @Override
     public void clear() {
-        updateLayout(()->{
+        updateWholeLayout(()->{
             getLayout().clear();
-            updateWindowLayout();
         });
     }
 
     @Override
     public void refresh() {
-        updateLayout(()->{
+        updateWholeLayout(()->{
             getLayout().refresh();
-            updateWindowLayout();
         });
-
     }
 
     @Override
     public void updateItems(Item... items) {
-        updateLayout(() -> {
+        updateWholeLayout(() -> {
             getLayout().updateItems(items);
-            updateWindowLayout();
         });
+    }
+
+    @Override
+    public InputPane getInputPane() {
+        return getValue(()->getLayout().getInputPane());
     }
 }

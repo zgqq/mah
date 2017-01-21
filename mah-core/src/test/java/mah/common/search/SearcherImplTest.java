@@ -26,7 +26,7 @@ public class SearcherImplTest {
     public void testPerformance() {
         SearcherImplV4 searcher = createSearcher2();
         List<DataRow> totalData = new ArrayList<>();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 500; i++) {
             List<String> data = new ArrayList<>();
             data.add("fusssscssssck your methodussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
             data.add("fuckyourfuck  sssfussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
