@@ -1,6 +1,5 @@
 dependencies {
-    compile 'com.1stleg:jnativehook:2.0.3'
+    compile 'com.github.tulskiy:jkeymaster:1.2'
     compile 'com.alibaba:fastjson:1.2.19'
-    compile group: 'asm', name: 'asm', version: '3.3.1'
 }
 

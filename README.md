@@ -4,6 +4,14 @@ java写界面真的没啥问题，何况是这种小项目，intellij idea 就�
 * 主要针对linux 开发，可能在windows 和macOS 能够正确运行，但是我没有测试过。
 Windows和macOS已经有很好的同类软件了，而且功能相当强大，我发现linux下这类软件真的找不到好用的，可能只是我觉得不好用。有时候会看点洋文，有很多单词不认识，虽然可以在终端上查，还是不方便，想想以前都是在网页上查单词，那个效率连我自已都怕，后来看到alfred，发现这种模式非常高效，所以就想写一个来查单词，再后来发现需要查天气，就决定把软件改成类似alfred，所以算是刚好自已有需要，所以写了来提高下生产力 
 
+# 最新
+* 修复全局快捷键问题
+
+# TODO
+* Windows 平台支持，打包exe
+* 并行搜索
+* linux 做成包，方便安装管理
+
 # 功能
 * 这个软件是针对程序猿优化的
 * 用linux基本都是键盘流，所以软件不支持鼠标
@@ -27,12 +35,9 @@ Windows和macOS已经有很好的同类软件了，而且功能相当强大，�
 
     <?xml version="1.0" encoding="UTF-8"?>
     <config>
-        <!-- 全局快捷键只能监听按键，并不能消耗那个按键的作用，比如你在配置文件里面配置Ctrl+i为弹出软件，但是一个键击同样可以被其他软件接受到,
-        所以你必须让桌面环境消耗掉那个按键，例如窗口管理器i3 加入bindsym Mod1+space exec '' 
-        这样Alt+space就被桌面环境消耗了，其他软件就接受不到这个键击了，也就不会做其他动作了。 -->
         <global>
-            <!-- s 通常是win 键，space是空格键，这行配置的意思，win+space 唤起软件 -->
-            <globalKeybind bind="s-space" action="FocusWindow" />
+            <!-- M 通常是alt 键，space是空格键，这行配置的意思，alt+space 唤起软件 -->
+            <globalKeybind bind="M-space" action="FocusWindow" />
         </global>
         <mode name="system_mode">
             <!-- system -->
@@ -170,12 +175,9 @@ java的类库那么强大，开发一个插件真的easy，比如计算器插件
 
     <?xml version="1.0" encoding="UTF-8"?>
     <config>
-        <!-- 全局快捷键只能监听按键，并不能消耗那个按键的作用，比如你在配置文件里面配置Ctrl+i为弹出软件，但是一个键击同样可以被其他软件接受到,
-        所以你必须让桌面环境消耗掉那个按键，例如窗口管理器i3 加入bindsym Mod1+space exec '' 
-        这样Alt+space就被桌面环境消耗了，其他软件就接受不到这个键击了，也就不会做其他动作了。 -->
         <global>
-            <!-- s 通常是win 键，space是空格键，这行配置的意思，win+space 唤起软件 -->
-            <globalKeybind bind="s-space" action="FocusWindow" />
+            <!-- M 通常是alt 键，space是空格键，这行配置的意思，alt+space 唤起软件 -->
+            <globalKeybind bind="M-space" action="FocusWindow" />
         </global>
 
         <mode name="system_mode">

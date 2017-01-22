@@ -1,5 +1,7 @@
 package mah.keybind;
 
+import com.tulskiy.keymaster.common.HotKeyListener;
+import com.tulskiy.keymaster.common.Provider;
 import mah.action.Action;
 import mah.action.ActionException;
 import mah.action.ActionManager;
@@ -10,12 +12,16 @@ import mah.app.config.Config;
 import mah.app.config.XMLConfig;
 import mah.keybind.config.KeybindConfig;
 import mah.keybind.config.XMLGlobalKeybindParser;
-import mah.keybind.listener.GlobalKeybindListener;
 import mah.keybind.listener.KeyPressedHandler;
 import mah.keybind.util.SimpleParser;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
+import mah.ui.key.KeystateManager;
 import mah.ui.layout.LayoutFactoryBean;
+import mah.ui.window.Window;
+import mah.ui.window.WindowManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
@@ -30,9 +36,9 @@ import java.util.Map;
 public class KeybindManager implements ApplicationListener {
 
     private final Map<String, List<Keybind>> KEYBINDS = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(KeybindManager.class);
     private Mode currentMode;
     private int keyIndex;
-    private final List<Keybind> GLOBAL_KEYBINDS = new ArrayList<>();
     private static final KeybindManager INSTANCE = new KeybindManager();
     private List<Keybind> currentKeybind;
 
@@ -49,8 +55,19 @@ public class KeybindManager implements ApplicationListener {
         return INSTANCE;
     }
 
-    public void addGlobalKeybind(Keybind keybinds) {
-        GLOBAL_KEYBINDS.add(keybinds);
+    public void addGlobalKeybind(Keybind keybind) {
+        final Provider provider = Provider.getCurrentProvider(true);
+        final HotKeyListener listener = hotKey -> {
+            Window currentWindow = WindowManager.getInstance().getCurrentWindow();
+            if (!currentWindow.isFocused()) {
+                logger.info("trigger hotkey " + keybind.getKeyStrokes().get(0));
+                ActionManager.getInstance().handleAction(keybind.getAction());
+            } else {
+                KeystateManager.getInstance().reset();
+            }
+        };
+        KeyStroke keyStroke = keybind.getKeyStrokes().get(0);
+        provider.register(keyStroke, listener);
     }
 
     private void registerGlobalKeybinds(Document document) {
@@ -72,8 +89,6 @@ public class KeybindManager implements ApplicationListener {
     @Override
     public void start(ApplicationEvent event) {
         LayoutFactoryBean.getInstance().setOnKeyPressed(new KeyPressedHandler());
-        GlobalKeybindListener globalListener = new GlobalKeybindListener();
-        globalListener.start();
     }
 
     @Override
@@ -170,17 +185,6 @@ public class KeybindManager implements ApplicationListener {
 
     public void tryExecuteAction(KeyStroke keyStroke) {
         Action action = findAction(keyStroke);
-        if (action != null) {
-            ActionManager.getInstance().handleAction(action);
-        }
-    }
-
-    private Action findGlobalAction(KeyStroke pressedKeyStroke) {
-        return findAction(GLOBAL_KEYBINDS, pressedKeyStroke);
-    }
-
-    public void tryExecuteGlobalAction(KeyStroke keyStroke) {
-        Action action = findGlobalAction(keyStroke);
         if (action != null) {
             ActionManager.getInstance().handleAction(action);
         }
