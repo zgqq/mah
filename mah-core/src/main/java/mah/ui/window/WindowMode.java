@@ -97,6 +97,7 @@ public class WindowMode extends AbstractMode {
         @Override
         protected void actionPerformed(Window window) {
             window.hide();
+            window.show();
             Command lockedCommand = CommandManager.getInstance().getLockedCommand();
             if (lockedCommand != null) {
                 List<String> maps = CommandManager.getInstance().findCommandMaps(lockedCommand);
@@ -109,7 +110,6 @@ public class WindowMode extends AbstractMode {
                     }
                 }
             }
-            window.show();
         }
     }
 

@@ -14,19 +14,36 @@ import java.util.Map;
 public class SearcherImplTest {
 
     private Searcher createSearcher() {
-        SearcherImplV4 searcherImplV2 = new SearcherImplV4();
+        Searcher searcherImplV2 = new SearcherImplV5();
         return searcherImplV2;
     }
 
-    private SearcherImplV4 createSearcher2() {
-        return new SearcherImplV4();
+//    private SearcherImplV4 createSearcher2() {
+//        return new SearcherImplV4();
+//    }
+
+    @Test
+    public void testPerformance2() {
+        SearcherImplV5 searcher = new SearcherImplV5();
+        List<DataRow> totalData = new ArrayList<>();
+        for (int i = 0; i < 100000; i++) {
+            List<String> data = new ArrayList<>();
+            data.add("fusssscssssck your methodussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
+            data.add("fuckyourfuck  sssfussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
+            DataRow dataRow = new DataRow(data);
+            totalData.add(dataRow);
+        }
+        long start = System.currentTimeMillis();
+        List<SearchResult> searchResults = searcher.smartFuzzyMatch(totalData, "fuck");
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 
     @Test
     public void testPerformance() {
-        SearcherImplV4 searcher = createSearcher2();
+        Searcher searcher = createSearcher();
         List<DataRow> totalData = new ArrayList<>();
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 100000; i++) {
             List<String> data = new ArrayList<>();
             data.add("fusssscssssck your methodussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
             data.add("fuckyourfuck  sssfussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
@@ -128,7 +145,7 @@ public class SearcherImplTest {
 
         List<Integer> desIndexs4 = matchedIndexs4.get(0);
         Assert.assertEquals(0, (int) desIndexs4.get(0));
-        Assert.assertEquals(2, (int) desIndexs4.get(1));
+        Assert.assertEquals(7, (int) desIndexs4.get(1));
         Assert.assertEquals(12, (int) desIndexs4.get(2));
         Assert.assertEquals(13, (int) desIndexs4.get(3));
         Assert.assertEquals(14, (int) desIndexs4.get(4));

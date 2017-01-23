@@ -57,8 +57,8 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
 
     private void openRepository(GithubRepository repository) throws IOException {
         GithubUtils.openRepository(repository);
-        Runtime.getRuntime().exec(this.command);
         hideWindow();
+        Runtime.getRuntime().exec(this.command);
     }
 
 

@@ -49,6 +49,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
     private void init() {
         addInitializeEventHandler(event -> {
             layout = getLayoutFactory().createClassicItemListLayout();
+            layout.registerMode(new TranslationMode(), event1 -> event1.getMode().updateActionHandler(TranslationCommand.this));
             localWordReader();
         });
         addCommonFilterEventHandler(event -> {
@@ -194,6 +195,10 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
         String apikey = XMLUtils.getChildNodeText(node, "apikey");
         this.keyfrom = keyfrom;
         this.apiKey = apikey;
+    }
+
+    public ClassicItemListLayout getLayout() {
+        return layout;
     }
 
 

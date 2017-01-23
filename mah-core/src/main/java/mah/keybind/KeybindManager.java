@@ -18,8 +18,6 @@ import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.key.KeystateManager;
 import mah.ui.layout.LayoutFactoryBean;
-import mah.ui.window.Window;
-import mah.ui.window.WindowManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -58,13 +56,9 @@ public class KeybindManager implements ApplicationListener {
     public void addGlobalKeybind(Keybind keybind) {
         final Provider provider = Provider.getCurrentProvider(true);
         final HotKeyListener listener = hotKey -> {
-            Window currentWindow = WindowManager.getInstance().getCurrentWindow();
-            if (!currentWindow.isFocused()) {
-                logger.info("trigger hotkey " + keybind.getKeyStrokes().get(0));
-                ActionManager.getInstance().handleAction(keybind.getAction());
-            } else {
-                KeystateManager.getInstance().reset();
-            }
+            logger.info("trigger hotkey " + keybind.getKeyStrokes().get(0));
+            ActionManager.getInstance().handleAction(keybind.getAction());
+            KeystateManager.getInstance().reset();
         };
         KeyStroke keyStroke = keybind.getKeyStrokes().get(0);
         provider.register(keyStroke, listener);
