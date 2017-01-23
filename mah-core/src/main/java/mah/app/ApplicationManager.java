@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +85,8 @@ public class ApplicationManager {
         File file = new File(configPath);
         if (!file.exists()) {
             file.createNewFile();
-            IOUtils.writeToFile(configPath, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                    "<config>\n</config>");
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("conf.xml");
+            IOUtils.writeToFile(configPath,  inputStream);
         }
     }
 

@@ -55,6 +55,15 @@ public final class IOUtils {
         return toString(fis);
     }
 
+
+    public static void writeToFile(String filename,InputStream inputStream) throws IOException {
+        File file = new File(filename);
+        FileOutputStream fos = new FileOutputStream(file);
+        byte[] bytes = toBytes(inputStream);
+        fos.write(bytes,0,bytes.length);
+        fos.close();
+    }
+
     public static void writeToFile(String filename,String content) throws IOException {
         File file = new File(filename);
         FileOutputStream fos = new FileOutputStream(file);

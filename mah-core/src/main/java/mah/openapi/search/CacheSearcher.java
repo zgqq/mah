@@ -5,6 +5,7 @@ import mah.common.search.Searchable;
 import mah.common.search.Searcher;
 import mah.common.search.SearcherImplV5;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,11 +23,7 @@ public class CacheSearcher<V> {
 
     public CacheSearcher(List<Searchable> data) {
         this.searcher = new SearcherImplV5();
-        this.data = data;
-    }
-
-    public void clear() {
-        SEARCH_CACHE.clear();
+        this.data = new ArrayList<>(data);
     }
 
     public V smartFuzzySearch(String keyword) {
