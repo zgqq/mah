@@ -3,11 +3,6 @@
 * mah is a alternative to alfred on linux,written in java.
 * There are numerous awesome similar tools on Windows and macOS.However,i didn't find one that meets my requirements.
 
-# Latest
-* Improve search
-* Add copy word and explains actions to translation plugin
-* Fix hotkey
-
 # Features
 * flexible
 * configurable 
