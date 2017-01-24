@@ -66,9 +66,6 @@ public abstract class AbstractInput implements Input{
         remove(caretPosition,1);
     }
 
-    protected abstract void remove(int off, int len);
-
-
     public void forwardWord() {
         if (!canFoward()) {
             return;

@@ -62,7 +62,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     }
 
 
-    private boolean checkConfig(){
+    private boolean checkConfig() {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(token)) {
             TextItemImpl textItem = new TextItemImpl.Builder("Are username and token provided in config?").build();
             layout.updateItems(textItem);
@@ -95,7 +95,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
             }
 
             private void trigger() throws ExecutionException, InterruptedException {
-                if(checkConfig()){
+                if (checkConfig()) {
                     if (synchronizer.isInit()) {
                         showUpdating();
                     }

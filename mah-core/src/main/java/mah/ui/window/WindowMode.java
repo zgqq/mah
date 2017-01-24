@@ -96,6 +96,7 @@ public class WindowMode extends AbstractMode {
 
         @Override
         protected void actionPerformed(Window window) {
+            KeystateManager.getInstance().reset();
             window.hide();
             window.show();
             Command lockedCommand = CommandManager.getInstance().getLockedCommand();

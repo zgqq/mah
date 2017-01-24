@@ -2,6 +2,7 @@ package mah.ui.input;
 
 import mah.action.AbstractAction;
 import mah.action.ActionEvent;
+import mah.command.CommandManager;
 import mah.mode.AbstractMode;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
@@ -13,7 +14,6 @@ import mah.ui.window.WindowMode;
 public class InputMode extends AbstractMode {
 
     public static final String NAME = "input_mode";
-
 
     public InputMode(Mode parent) {
         super(NAME, parent);
@@ -51,6 +51,7 @@ public class InputMode extends AbstractMode {
 
         registerAction(new Undo("Undo"));
         registerAction(new Redo("Redo"));
+        registerAction(new ClearTextPriorToTriggerKey("ClearTextPriorToTriggerKey"));
     }
 
     public static InputMode triggerMode() {
@@ -241,6 +242,20 @@ public class InputMode extends AbstractMode {
         @Override
         protected void actionPerformed(Input source) {
             source.redo();
+        }
+    }
+
+    static class ClearTextPriorToTriggerKey extends InputAction {
+
+        public ClearTextPriorToTriggerKey(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void actionPerformed(Input source) {
+            String currentTriggerKey = CommandManager.getInstance().getCurrentTriggerKey();
+            source.setText(currentTriggerKey+" ");
+            source.setCaretPosition(source.getText().length());
         }
     }
 }

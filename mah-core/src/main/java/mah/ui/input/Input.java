@@ -29,7 +29,7 @@ public interface Input {
 
     void killLine();
 
-    void setText(String currentKey);
+    void setText(String text);
 
     void setCaretPosition(int position);
 
@@ -42,6 +42,8 @@ public interface Input {
     void redo();
 
     void undo();
+
+    void remove(int offset, int len);
 
     int getCaretPosition();
 

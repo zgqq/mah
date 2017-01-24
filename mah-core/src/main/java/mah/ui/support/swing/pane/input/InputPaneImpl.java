@@ -244,7 +244,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
     }
 
     @Override
-    protected void remove(int off, int len) {
+    public void remove(int off, int len) {
         try {
             input.getDocument().remove(off, len);
         } catch (BadLocationException e) {

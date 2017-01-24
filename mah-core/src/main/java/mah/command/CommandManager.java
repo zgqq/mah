@@ -36,6 +36,7 @@ public class CommandManager implements ApplicationListener {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
     private volatile Command lockedCommand;
     private Command currentCommand;
+    private String currentTriggerKey;
 
     private CommandManager() {}
 
@@ -134,6 +135,7 @@ public class CommandManager implements ApplicationListener {
                         if (input.equals(key) || input.charAt(key.length()) == ' ') {
                             triggerCommand(command, key, input);
                             triggerSucc = true;
+                            currentTriggerKey = key.trim();
                         }
                     }
                 }
@@ -158,6 +160,10 @@ public class CommandManager implements ApplicationListener {
                 throw new CommandException(e);
             }
         }
+    }
+
+    public synchronized String getCurrentTriggerKey() {
+        return currentTriggerKey;
     }
 
     private void setDefaultLayout() {
