@@ -15,9 +15,7 @@ import java.io.InputStream;
  */
 public final class XMLUtils {
 
-    private XMLUtils() {
-
-    }
+    private XMLUtils() {}
 
     public static String getChildNodeText(Node parent, String tag) {
         NodeList childNodes = parent.getChildNodes();
@@ -55,9 +53,13 @@ public final class XMLUtils {
     }
 
     public static String getAttribute(Node node, String attr) {
+        Node actionAttr = node.getAttributes().getNamedItem(attr);
+        return actionAttr.getNodeValue();
+    }
+
+    public static String getAttributeText(Node node, String attr) {
         Node nameNode = node.getAttributes().getNamedItem(attr);
         String layoutName = nameNode.getTextContent();
         return layoutName;
     }
-
 }

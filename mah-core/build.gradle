@@ -1,5 +1,6 @@
 dependencies {
     compile 'com.github.tulskiy:jkeymaster:1.2'
+    compile group: 'com.1stleg', name: 'jnativehook', version: '2.0.3'
     compile 'com.alibaba:fastjson:1.2.19'
 }
 
