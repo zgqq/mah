@@ -49,13 +49,8 @@ public class ApplicationManager {
                 applicationListener.afterStart(applicationEvent);
             }
         } catch (Exception e) {
-            if (e instanceof ApplicationException) {
-                ApplicationException applicationException = (ApplicationException) e;
-                throw applicationException;
-            }
-            throw new ApplicationException(e);
+            logger.error("application failed to startup", e);
         }
-
     }
 
     private void init() throws Exception {

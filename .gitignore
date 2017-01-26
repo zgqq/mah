@@ -11,6 +11,7 @@ classes/
 test.log
 logs/
 work/
+target/
 .bower-*
 
 # IDEA
