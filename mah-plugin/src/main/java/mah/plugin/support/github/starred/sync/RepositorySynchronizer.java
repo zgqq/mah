@@ -129,8 +129,9 @@ public class RepositorySynchronizer implements GithubRepositories.Listener {
             GithubRepositories githubRepositories = new GithubRepositories(repositoryData);
             githubRepositories.addListener(this);
             sychronizeRepositories(githubRepositories);
+            UpdateResult updateResult = repositoryUpdater.getUpdateResult();
             searcher = new CacheSearcher(repositoryData);
-            return repositoryUpdater.getUpdateResult();
+            return updateResult;
         } catch (Exception e) {
             throw new RuntimeException("fail to update repository", e);
         } finally {

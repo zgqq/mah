@@ -1,11 +1,15 @@
-[README中文版]( ./README-zh.md )
-# mah
-* mah is a alternative to alfred,written in java.
+# Mah
+* Mah is a alternative to alfred,written in java.
 
 # Features
-* flexible
-* configurable 
-* asynchronous
+## Asynchronous
+For example,it will take long time to synchronize github repositories you starred;
+you can execute other action such as translation while synchronizing.
+## Configurable
+Configuration is a most important feature of mah,you can configure keybind,plugin,and so on.To configure keybind,you should know what is Mode.Mode is a collection of keybinds,allowing same keybind to represent different actions.For instance,TranslationCommand will trigger translation_mode,within which CopyWord and CopyExplains actions are defined;then you can press alt+w (i defined,you can configure it freely in conf.xml) to execute CopyWord
+ action;as a result,translated word will be copied.
+## Plugin support
+Mah is totally based on plugin.Think to java ecosystem,you can develop a plugin with powerful abilities.
 
 # How to use?
 ## Configuration
@@ -66,7 +70,7 @@ Open /home/{username}/.config/mah/conf.xml with editor
 Above is most basic configuration,you can modify it freely.
 
 ### Translation plugin
-First,you must go to apply to api http://fanyi.youdao.com/openapi?path=data-mode
+First,you need to apply api pair http://fanyi.youdao.com/openapi?path=data-mode
 
     <plugs>
             <name>translation</name>

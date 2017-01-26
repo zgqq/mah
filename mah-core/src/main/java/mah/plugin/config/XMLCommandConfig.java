@@ -8,19 +8,22 @@ import org.w3c.dom.Node;
  */
 public class XMLCommandConfig extends CommandConfig {
 
-    private Node customConfig;
+    private final Node customConfig;
 
     public XMLCommandConfig(String pluginName, String commandName, String triggerKey, Node customConfig) {
         super(pluginName, commandName, triggerKey);
-        this.customConfig = customConfig;
+        synchronized (this) {
+            if (customConfig != null) {
+                this.customConfig = customConfig.cloneNode(true);
+            }else{
+                this.customConfig = null;
+            }
+        }
     }
 
     public Node getCustomConfig() {
-        return customConfig;
+        synchronized (this){
+            return customConfig;
+        }
     }
-
-    public void setCustomConfig(Node customConfig) {
-        this.customConfig = customConfig;
-    }
-
 }

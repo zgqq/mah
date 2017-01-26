@@ -49,15 +49,15 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
         int keyCode = e.getKeyCode();
         if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(true);
-            logger.debug("press ctrl");
+            logger.trace("press ctrl");
             return;
         } else if (keyCode == NativeKeyEvent.VC_ALT_L || keyCode == NativeKeyEvent.VC_ALT_R) {
             keyState.setAlt(true);
-            logger.debug("press alt");
+            logger.trace("press alt");
             return;
         } else if (keyCode == NativeKeyEvent.VC_META_L || keyCode == NativeKeyEvent.VC_META_R) {
             keyState.setMeta(true);
-            logger.debug("press meta");
+            logger.trace("press meta");
             return;
         } else {
         }
@@ -76,7 +76,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
             mask |= KeyEvent.META_MASK;
         }
         KeyStroke keyStroke = KeyStroke.getKeyStroke(javaKeyCode, mask);
-        logger.info("press " + keyStroke);
+        logger.trace("press " + keyStroke);
         KeybindManager.getInstance().tryExecuteGlobalAction(keyStroke);
     }
 

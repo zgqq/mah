@@ -66,7 +66,7 @@ public class CommandManager implements ApplicationListener {
         return INSTANCE;
     }
 
-    public void registerCommand(String plugin, Command command) {
+    public synchronized void registerCommand(String plugin, Command command) {
         Map<String, Command> commands = PLUGIN_COMMAND.get(plugin);
         if (commands == null) {
             commands = new HashMap<>();
@@ -75,7 +75,7 @@ public class CommandManager implements ApplicationListener {
         commands.put(command.getName(), command);
     }
 
-    public Command findCommand(String plugin, String command) {
+    public synchronized Command findCommand(String plugin, String command) {
         Map<String, Command> commands = PLUGIN_COMMAND.get(plugin);
         if (commands == null) {
             return null;
