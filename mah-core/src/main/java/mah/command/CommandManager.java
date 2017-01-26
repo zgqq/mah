@@ -37,6 +37,7 @@ public class CommandManager implements ApplicationListener {
     private volatile Command lockedCommand;
     private Command currentCommand;
     private String currentTriggerKey;
+    private String currentQuery;
 
     private CommandManager() {}
 
@@ -132,11 +133,16 @@ public class CommandManager implements ApplicationListener {
                     String key = entry.getKey();
                     Command command = entry.getValue();
                     if (input.startsWith(key)) {
-                        if (input.equals(key) || input.charAt(key.length()) == ' ') {
-                            triggerCommand(command, key, input);
-                            triggerSucc = true;
-                            currentTriggerKey = key.trim();
+                        triggerCommand(command, key, input);
+                        triggerSucc = true;
+                        currentTriggerKey = key.trim();
+                        int index;
+                        if (input.equals(key)){
+                            index = key.length();
+                        }else {
+                            index = key.length() + 1;
                         }
+                        currentQuery = input.substring(index);
                     }
                 }
 
@@ -179,6 +185,10 @@ public class CommandManager implements ApplicationListener {
         synchronized (this) {
             return currentCommand;
         }
+    }
+
+    public synchronized String getCurrentQuery() {
+        return currentQuery;
     }
 
     static class TriggerCommandTask implements Runnable {

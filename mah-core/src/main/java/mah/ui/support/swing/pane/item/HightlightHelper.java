@@ -33,5 +33,4 @@ public class HightlightHelper {
         }
         return defaultStyledDocument;
     }
-
 }

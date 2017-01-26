@@ -14,19 +14,25 @@ public class FullItemImpl implements FullItem{
     private final Text content;
     private final Text description;
     private final Object attachment;
-    private int num;
+    private final String iconName;
 
     public FullItemImpl(Builder builder) {
         this.content = builder.content;
         this.description = builder.description;
         this.iconInputItem = builder.iconInputStream;
         this.attachment = builder.attachment;
+        this.iconName = builder.iconName;
     }
 
 
     @Override
     public Object getAttachment() {
         return attachment;
+    }
+
+    @Override
+    public String getIconName() {
+        return iconName;
     }
 
     public InputStream getIconInputStream() {
@@ -49,6 +55,7 @@ public class FullItemImpl implements FullItem{
         private Text content;
         private Text description;
         private Object attachment;
+        private String iconName;
 
         public Builder(String content,List<Integer> highlightIndexs) {
             this.content = new Text(content,highlightIndexs);
@@ -60,6 +67,11 @@ public class FullItemImpl implements FullItem{
 
         public Builder description(String description) {
             this.description = new Text(description);
+            return this;
+        }
+
+        public Builder iconName(String iconName) {
+            this.iconName = iconName;
             return this;
         }
 

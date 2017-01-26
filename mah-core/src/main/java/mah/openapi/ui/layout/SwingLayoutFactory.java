@@ -21,7 +21,7 @@ public class SwingLayoutFactory implements LayoutFactory {
         void create();
     }
 
-    private ClassicItemListLayout classicItemListLayout;
+    private OpenClassicItemListLayoutImpl classicItemListLayout;
     private ClassicPostLayout classicPostLayout;
 
     private void createLayout(Creator creator) {
@@ -39,12 +39,12 @@ public class SwingLayoutFactory implements LayoutFactory {
     }
 
     @Override
-    public mah.ui.layout.ClassicItemListLayout createClassicItemListLayout() {
+    public OpenClassicItemListLayout createClassicItemListLayout() {
         if (classicItemListLayout != null) {
             return classicItemListLayout;
         }
         createLayout(() -> {
-            classicItemListLayout = new ClassicItemListLayout(command);
+            classicItemListLayout = new OpenClassicItemListLayoutImpl(command);
         });
         return classicItemListLayout;
     }

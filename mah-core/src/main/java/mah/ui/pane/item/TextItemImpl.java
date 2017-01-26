@@ -40,5 +40,4 @@ public class TextItemImpl implements TextItem{
             return new TextItemImpl(this);
         }
     }
-
 }

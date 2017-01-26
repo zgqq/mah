@@ -2,10 +2,10 @@ package mah.ui.support.swing.pane.item;
 
 import mah.common.util.CollectionUtils;
 import mah.ui.UIException;
+import mah.ui.pane.Text;
 import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.ItemListPane;
 import mah.ui.pane.item.ItemPane;
-import mah.ui.pane.Text;
 import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.theme.LayoutThemeImpl;
 import mah.ui.support.swing.util.StringUtils;
@@ -85,18 +85,25 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     }
 
 
+    private String iconName;
+
     private void setIcon(FullItem item) throws IOException {
+        if(iconName!=null && iconName.equals(item.getIconName())){
+            return;
+        }
         InputStream iconInputStream = item.getIconInputStream();
         if (iconInputStream == null) {
             iconLabel.setIcon(null);
             return;
         }
+
         BufferedImage icon = ImageIO.read(iconInputStream);
         ImageIcon imageIcon = new ImageIcon(icon); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
         Image newimg = image.getScaledInstance(ITEM_HEIGHT, ITEM_HEIGHT, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
         imageIcon = new ImageIcon(newimg);  // transform it back
         iconLabel.setIcon(imageIcon);
+        iconName = item.getIconName();
     }
 
     private void setDescription(FullItem item) {

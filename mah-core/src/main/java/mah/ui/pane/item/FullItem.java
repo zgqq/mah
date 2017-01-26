@@ -9,6 +9,8 @@ import java.io.InputStream;
  */
 public interface FullItem extends Item {
 
+    String getIconName();
+
     InputStream getIconInputStream();
 
     Text getContent();

@@ -71,6 +71,7 @@ public class LayoutUpdater {
         }
     }
 
+
     private static class ValueHolder<V> {
         V value;
     }

@@ -7,7 +7,7 @@ import mah.ui.layout.ClassicPostLayout;
  */
 public interface LayoutFactory {
 
-    mah.ui.layout.ClassicItemListLayout createClassicItemListLayout();
+    OpenClassicItemListLayout createClassicItemListLayout();
 
     ClassicPostLayout createClassicPostLayout();
 }

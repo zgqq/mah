@@ -16,6 +16,7 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
     private List<EventHandler<? extends ItemSelectedEvent>> itemSelectedHandlers = new ArrayList<>();
     private final List<ItemPane> itemPanes;
     private int pendingIndex = -1;
+    private LayoutTheme layoutTheme;
 
     public ItemListPaneSupport(List<? extends Item> items) {
         itemPanes = new ArrayList<>(items.size());
@@ -59,12 +60,16 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
 
     @Override
     public void apply(LayoutTheme theme) {
+        if (theme == layoutTheme) {
+            return;
+        }
         for (ItemPane itemPane : itemPanes) {
             if (itemPane instanceof Themeable) {
                 Themeable themeable = (Themeable) itemPane;
                 themeable.apply(theme);
             }
         }
+        layoutTheme = theme;
     }
 
     @Override

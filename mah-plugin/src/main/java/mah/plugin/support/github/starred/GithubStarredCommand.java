@@ -11,6 +11,7 @@ import mah.common.search.SearchResult;
 import mah.common.util.IOUtils;
 import mah.common.util.StringUtils;
 import mah.openapi.search.CacheSearcher;
+import mah.openapi.ui.layout.OpenClassicItemListLayout;
 import mah.plugin.command.PluginCommandSupport;
 import mah.plugin.config.XMLConfigurable;
 import mah.plugin.support.github.GithubMode;
@@ -42,7 +43,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class GithubStarredCommand extends PluginCommandSupport implements XMLConfigurable, GithubModeHandler {
 
-    private ClassicItemListLayout layout;
+    private OpenClassicItemListLayout layout;
     private String localRepositoryFile;
     private String starredRepositoryAPI;
     private String username;
@@ -83,7 +84,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
                 CacheSearcher<List<SearchResult>> searcher = synchronizer.getSearcher();
                 List<SearchResult> searchResults = searcher.smartFuzzySearch(event.getContent());
                 logger.info("searched {} results", searchResults.size());
-                updateSearchView(searchResults);
+                updateSearchView(searchResults,event.getContent());
             }
         });
 
@@ -112,6 +113,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
         FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName(), matchedResult.findMatchedIndex(0))//
                 .description(githubRepository.getDescription(), matchedResult.findMatchedIndex(1)) //
                 .attachment(githubRepository) //
+                .iconName("github_star_search") // will improve performance
                 .iconInputStream(getIconInputStream())
                 .build();
         return item;
@@ -125,14 +127,14 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
         return size > 9 ? 9 : size;
     }
 
-    private void updateSearchView(List<SearchResult> searchResults) {
+    private void updateSearchView(List<SearchResult> searchResults,String expect) {
         List<FullItemImpl> items = new ArrayList<>();
         int itemSize = getItemSize(searchResults);
         for (int i = 0; i < itemSize; i++) {
             SearchResult searchResult = searchResults.get(i);
             items.add(convertToSearchItem(searchResult));
         }
-        layout.updateItems(items);
+        layout.compareAndUpdateItems(items,expect);
     }
 
     private InputStream getIconInputStream() {
