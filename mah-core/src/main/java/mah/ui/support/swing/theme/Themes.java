@@ -41,14 +41,14 @@ public enum Themes {
 
         properties.put("pending-background-color",pendingBackgroundColor);
 
-        LayoutTheme layoutTheme = new LayoutThemeImpl("classic_item_list_layout",properties);
+        LayoutTheme layoutTheme = new SwingLayoutTheme("classic_item_list_layout",properties);
         layoutThemes.put(layoutTheme.getName(),layoutTheme);
 
-        LayoutTheme defaultLayoutTheme = new LayoutThemeImpl("default_layout",inputProperties);
+        LayoutTheme defaultLayoutTheme = new SwingLayoutTheme("default_layout",inputProperties);
         layoutThemes.put(defaultLayoutTheme.getName(),defaultLayoutTheme);
 
         Map<String, String> postLayoutProperties = new HashMap<>(basicProperties);
-        LayoutTheme postLayoutTheme  = new LayoutThemeImpl("classic_post_layout",postLayoutProperties);
+        LayoutTheme postLayoutTheme  = new SwingLayoutTheme("classic_post_layout",postLayoutProperties);
         layoutThemes.put(postLayoutTheme.getName(), postLayoutTheme);
 
         theme = new Theme("dark",layoutThemes);

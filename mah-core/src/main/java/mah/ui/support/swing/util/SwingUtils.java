@@ -7,9 +7,7 @@ import javax.swing.*;
  */
 public final class SwingUtils {
 
-    private SwingUtils() {
-
-    }
+    private SwingUtils() {}
 
     public static JPanel createPanelWithXBoxLayout() {
         JPanel panel = new JPanel();
@@ -33,8 +31,5 @@ public final class SwingUtils {
         BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.X_AXIS);
         panel.setLayout(boxLayout);
         return boxLayout;
-
     }
-
-
 }

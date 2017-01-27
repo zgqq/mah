@@ -1,6 +1,7 @@
 package mah.ui.support.swing.layout;
 
 import mah.ui.layout.ClassicAbstractLayoutWrapper;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.theme.LayoutTheme;
 
 import javax.swing.*;
@@ -29,4 +30,7 @@ public abstract class SwingAbstractClassicLayoutWrapper extends ClassicAbstractL
         getLayout().apply(theme);
     }
 
+    public SwingLayoutTheme getCurrentTheme() {
+        return getLayout().getCurrentTheme();
+    }
 }

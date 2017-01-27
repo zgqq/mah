@@ -4,6 +4,7 @@ import mah.ui.layout.Layout;
 import mah.ui.layout.LayoutType;
 import mah.ui.support.swing.layout.DefaultLayout;
 import mah.ui.support.swing.layout.SwingLayout;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.theme.ThemeManager;
 import mah.ui.util.ScreenUtils;
 import mah.ui.window.WindowProperties;
@@ -18,7 +19,7 @@ import java.awt.*;
 public class WindowImpl extends WindowSupport {
 
     private final WindowProperties properties;
-    private JFrame frame;
+    private WindowFrame frame;
     private DefaultLayout defaultLayout;
     private SwingLayout currentLayout;
 
@@ -47,9 +48,10 @@ public class WindowImpl extends WindowSupport {
     }
 
     private void initWindow() {
-        frame = new JFrame();
+        frame = new WindowFrame();
         frame.setUndecorated(true);
         frame.setAlwaysOnTop(true);
+        frame.setBackground(Color.black);
         frame.setResizable(false);
         frame.setType(java.awt.Window.Type.UTILITY);
     }
@@ -139,12 +141,19 @@ public class WindowImpl extends WindowSupport {
         frame.pack();
     }
 
+    private void preventFlicking(SwingLayout layout) {
+        SwingLayoutTheme theme = layout.getCurrentTheme();
+        Color background = theme.getColorByProperty("background-color");
+        frame.setBackground(background);
+    }
+
     @Override
     public void setCurrentLayout(Layout layout) {
         if (layout instanceof SwingLayout) {
             SwingLayout swingLayout = (SwingLayout) layout;
             updateLayout(swingLayout);
             currentLayout = swingLayout;
+            preventFlicking(swingLayout);
             frame.pack();
         }
     }

@@ -3,7 +3,7 @@ package mah.ui.support.swing.pane.post;
 import mah.ui.pane.post.Post;
 import mah.ui.pane.post.PostPane;
 import mah.ui.support.swing.pane.SwingPane;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
 
@@ -62,8 +62,8 @@ public class PostPaneImpl implements SwingPane,PostPane{
 
     @Override
     public void apply(LayoutTheme theme) {
-        if (theme instanceof LayoutThemeImpl) {
-            LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
+        if (theme instanceof SwingLayoutTheme) {
+            SwingLayoutTheme layoutTheme = (SwingLayoutTheme) theme;
             String backgroundColor = layoutTheme.findProperty("background-color");
             title.setForeground(Color.WHITE);
             title.setBackground(Color.decode(backgroundColor));

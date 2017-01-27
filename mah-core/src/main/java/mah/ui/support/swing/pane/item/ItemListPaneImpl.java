@@ -2,7 +2,7 @@ package mah.ui.support.swing.pane.item;
 
 import mah.ui.pane.item.*;
 import mah.ui.support.swing.pane.SwingPane;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
 
@@ -26,14 +26,16 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
 
     private void init() {
         if (itemList == null) {
-            itemList = SwingUtils.createPanelWithYBoxLayout();
+            JPanel panel = new JPanel();
+            SwingUtils.setYBoxLayout(panel);
+            itemList = panel;
         }
     }
 
     @Override
     public void apply(LayoutTheme theme) {
-        if (theme instanceof LayoutThemeImpl) {
-            LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
+        if (theme instanceof SwingLayoutTheme) {
+            SwingLayoutTheme layoutTheme = (SwingLayoutTheme) theme;
             String itemListBackgroundColor = layoutTheme.findProperty("background-color");
             if (itemList != null) {
                 this.itemList.setBackground(Color.decode(itemListBackgroundColor));

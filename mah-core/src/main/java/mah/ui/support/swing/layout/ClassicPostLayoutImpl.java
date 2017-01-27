@@ -7,7 +7,7 @@ import mah.ui.layout.LayoutFactoryBean;
 import mah.ui.layout.ModeListener;
 import mah.ui.pane.post.Post;
 import mah.ui.support.swing.pane.post.PostPaneImpl;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.ThemeManager;
 import mah.ui.window.WindowMode;
@@ -25,7 +25,7 @@ public class ClassicPostLayoutImpl extends SwingLayoutSupport implements Classic
     private static final Logger logger = LoggerFactory.getLogger(ClassicPostLayoutImpl.class);
     private PostPaneImpl postPane;
     private boolean init;
-    private LayoutThemeImpl theme;
+    private SwingLayoutTheme theme;
 
     private ClassicPostLayoutImpl() {}
 
@@ -67,6 +67,11 @@ public class ClassicPostLayoutImpl extends SwingLayoutSupport implements Classic
         return postPane.getPanel();
     }
 
+    @Override
+    public SwingLayoutTheme getCurrentTheme() {
+        return theme;
+    }
+
     private static ClassicPostLayoutImpl instance;
 
     public static ClassicPostLayoutImpl instance() {
@@ -87,10 +92,7 @@ public class ClassicPostLayoutImpl extends SwingLayoutSupport implements Classic
     }
 
     @Override
-    public void apply(LayoutTheme theme) {
-        if (theme != null) {
-            this.theme = (LayoutThemeImpl) theme;
-            postPane.apply(theme);
-        }
+    protected void applyTheme(SwingLayoutTheme layoutTheme) {
+        postPane.apply(layoutTheme);
     }
 }

@@ -1,6 +1,6 @@
 package mah.ui.support.swing.pane.item;
 
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 
 import javax.swing.*;
 import javax.swing.text.Style;
@@ -12,12 +12,12 @@ import java.awt.*;
  */
 public final class ItemPaneTheme {
 
-    private final LayoutThemeImpl theme;
+    private final SwingLayoutTheme theme;
     private JTextPane pane;
     private Style matchedTextStyle;
     private Style normalTextStyle;
 
-    public ItemPaneTheme(LayoutThemeImpl theme) {
+    public ItemPaneTheme(SwingLayoutTheme theme) {
         this.theme = theme;
         pane = new JTextPane();
     }

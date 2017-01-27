@@ -23,6 +23,7 @@ import java.util.List;
  * Created by zgq on 2017-01-08 13:51
  */
 public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper implements ClassicItemListLayout, SwingLayout, Themeable {
+
     private static final String NAME = "classic_item_list_layout";
     private final List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
     private final ItemListPaneFactoryImpl factory;
@@ -161,6 +162,4 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     public void unpendingItemIndex(int pendingItemIndex) {
         getItemListPane().unpendingItemIndex(pendingItemIndex);
     }
-
-
 }

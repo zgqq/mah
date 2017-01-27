@@ -51,6 +51,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     private String command;
     private Logger logger = LoggerFactory.getLogger(GithubStarredCommand.class);
     private RepositorySynchronizer synchronizer;
+    private final String GITHUB_ICON = "github_icon";
 
     public GithubStarredCommand() {
         init();
@@ -113,7 +114,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
         FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName(), matchedResult.findMatchedIndex(0))//
                 .description(githubRepository.getDescription(), matchedResult.findMatchedIndex(1)) //
                 .attachment(githubRepository) //
-                .iconName("github_star_search") // will improve performance
+                .iconName(GITHUB_ICON) // will improve performance
                 .iconInputStream(getIconInputStream())
                 .build();
         return item;
@@ -253,6 +254,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
             FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName())//
                     .description(githubRepository.getDescription()) //
                     .attachment(githubRepository) //
+                    .iconName(GITHUB_ICON) //
                     .iconInputStream(getIconInputStream())
                     .build();
             return item;

@@ -60,9 +60,6 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
 
     @Override
     public void apply(LayoutTheme theme) {
-        if (theme == layoutTheme) {
-            return;
-        }
         for (ItemPane itemPane : itemPanes) {
             if (itemPane instanceof Themeable) {
                 Themeable themeable = (Themeable) itemPane;

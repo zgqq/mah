@@ -7,9 +7,7 @@ import mah.ui.pane.Pane;
 import mah.ui.pane.input.InputPane;
 import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.pane.input.InputPaneImpl;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
-import mah.ui.theme.LayoutTheme;
-import mah.ui.theme.Themeable;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +25,9 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     private JPanel panel;
     private InputPaneImpl inputPane;
     private SwingPane bottomPane;
-    private LayoutThemeImpl currentTheme;
     private boolean init;
 
     private ClassicAbstractLayoutImpl() {
-
     }
 
     @Override
@@ -54,7 +50,6 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
         JTextComponent input = inputPane.getInput();
         input.addKeyListener(new KeyHandler());
     }
-
 
     @Override
     public JPanel getPanel() {
@@ -93,27 +88,22 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     }
 
     private void applyToLayout() {
-        String layoutColor = currentTheme.findProperty("background-color");
-        this.panel.setBackground(Color.decode(layoutColor));
+        Color layoutColor = getColorByProperty("background-color");
+        this.panel.setBackground(layoutColor);
     }
 
     private void applyThemeToPane() {
-        if (bottomPane != null && bottomPane instanceof Themeable) {
-            Themeable themeable = bottomPane;
-            themeable.apply(currentTheme);
+        if (bottomPane != null) {
+            bottomPane.apply(getCurrentTheme());
         }
     }
 
     @Override
-    public void apply(LayoutTheme theme) {
-        if (theme instanceof LayoutThemeImpl) {
-            inputPane.apply(theme);
-            currentTheme = (LayoutThemeImpl) theme;
-            applyToLayout();
-            applyThemeToPane();
-        }
+    public void applyTheme(SwingLayoutTheme theme) {
+        inputPane.apply(theme);
+        applyToLayout();
+        applyThemeToPane();
     }
-
 
     private void check() {
         if (!init) {

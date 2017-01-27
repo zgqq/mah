@@ -4,7 +4,7 @@
 # Features
 ## Asynchronous
 For example,it will take long time to synchronize github repositories you starred;
-you can execute other action such as translation while synchronizing.
+you can execute other actions like translation while synchronizing.
 ## Configurable
 Configuration is a most important feature of mah,you can configure keybind,plugin,and so on.To configure keybind,you should know what is Mode.Mode is a collection of keybinds,allowing same keybind to represent different actions.For instance,TranslationCommand will trigger translation_mode,within which CopyWord and CopyExplains actions are defined;then you can press alt+w (i defined,you can configure it freely in conf.xml) to execute CopyWord
  action;as a result,translated word will be copied.

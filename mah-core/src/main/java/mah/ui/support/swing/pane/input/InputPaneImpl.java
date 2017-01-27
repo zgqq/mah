@@ -8,7 +8,7 @@ import mah.ui.input.TextState;
 import mah.ui.pane.input.InputPane;
 import mah.ui.pane.input.InputPaneSupport;
 import mah.ui.support.swing.pane.SwingPane;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.support.swing.util.StringUtils;
 import mah.ui.theme.LayoutTheme;
 
@@ -197,8 +197,8 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
 
     @Override
     public void apply(LayoutTheme theme) {
-        if (theme instanceof LayoutThemeImpl) {
-            LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
+        if (theme instanceof SwingLayoutTheme) {
+            SwingLayoutTheme layoutTheme = (SwingLayoutTheme) theme;
             String panelBackgroundColor = layoutTheme.findProperty("background-color");
             panel.setBackground(Color.decode(panelBackgroundColor));
             String inputFieldBackgroundColor = layoutTheme.findProperty("input-field-background-color");

@@ -1,6 +1,7 @@
 package mah.ui.support.swing.layout;
 
 import mah.ui.layout.Layout;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.theme.Themeable;
 
 import javax.swing.*;
@@ -12,4 +13,5 @@ public interface SwingLayout extends Layout,Themeable {
 
     JPanel getPanel();
 
+    SwingLayoutTheme getCurrentTheme();
 }

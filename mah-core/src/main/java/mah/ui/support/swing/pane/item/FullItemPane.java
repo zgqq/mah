@@ -7,7 +7,7 @@ import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.ItemListPane;
 import mah.ui.pane.item.ItemPane;
 import mah.ui.support.swing.pane.SwingPane;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.support.swing.util.StringUtils;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
@@ -36,7 +36,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private JTextPane description;
     private JLabel numLabel;
     private FullItem item;
-    private LayoutThemeImpl theme;
+    private SwingLayoutTheme theme;
     private static final int ITEM_HEIGHT = 58;
     private static final int TEXT_LEN = 60;
 
@@ -191,7 +191,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private Style matchedTextStyle;
     private Style normalTextStyle;
 
-    private void initStyle(LayoutThemeImpl theme) {
+    private void initStyle(SwingLayoutTheme theme) {
 
         Color highlightForegroundColor = Color.decode(theme.findProperty("text-highlight-foreground-color"));
         Color highlightBackgroundColor = Color.decode(theme.findProperty("text-highlight-background-color"));
@@ -244,8 +244,8 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
 
     @Override
     public void apply(LayoutTheme theme) {
-        if (theme instanceof LayoutThemeImpl) {
-            LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
+        if (theme instanceof SwingLayoutTheme) {
+            SwingLayoutTheme layoutTheme = (SwingLayoutTheme) theme;
             decorateContent(layoutTheme);
             decorateMiddleContainer(layoutTheme);
             decorateDescription(layoutTheme);
@@ -256,30 +256,30 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         }
     }
 
-    private void decorateMiddleContainer(LayoutThemeImpl layoutTheme) {
+    private void decorateMiddleContainer(SwingLayoutTheme layoutTheme) {
         String numFontColor = layoutTheme.findProperty("middle-container-background-color");
         this.middlePanel.setBackground(Color.decode(numFontColor));
     }
 
-    private void decorateNum(LayoutThemeImpl layoutTheme) {
+    private void decorateNum(SwingLayoutTheme layoutTheme) {
         String numFontColor = layoutTheme.findProperty("num-font-color");
         numLabel.setForeground(Color.decode(numFontColor));
     }
 
-    private void decoratePane(LayoutThemeImpl layoutTheme) {
+    private void decoratePane(SwingLayoutTheme layoutTheme) {
         String itemBackgroundColor = layoutTheme.findProperty("item-pane-background-color");
         this.container.setBackground(Color.decode(itemBackgroundColor));
         this.panel.setBackground(Color.decode(itemBackgroundColor));
     }
 
-    private void decorateDescription(LayoutThemeImpl layoutTheme) {
+    private void decorateDescription(SwingLayoutTheme layoutTheme) {
         String descriptionColor = layoutTheme.findProperty("text-foreground-color");
         this.description.setForeground(Color.decode(descriptionColor));
         String descriptionBackgroundColor = layoutTheme.findProperty("text-background-color");
         this.description.setBackground(Color.decode(descriptionBackgroundColor));
     }
 
-    private void decorateContent(LayoutThemeImpl layoutTheme) {
+    private void decorateContent(SwingLayoutTheme layoutTheme) {
         String contentColor = layoutTheme.findProperty("text-foreground-color");
         String contentBackgroundColor = layoutTheme.findProperty("text-background-color");
         this.content.setForeground(Color.decode(contentColor));

@@ -6,7 +6,7 @@ import mah.ui.pane.item.ItemPane;
 import mah.ui.pane.Text;
 import mah.ui.pane.item.TextItem;
 import mah.ui.support.swing.pane.SwingPane;
-import mah.ui.support.swing.theme.LayoutThemeImpl;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.support.swing.util.StringUtils;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
@@ -146,8 +146,8 @@ public class TextItemPane implements ItemPane<TextItem>, SwingPane {
 
     @Override
     public void apply(LayoutTheme theme) {
-        if (theme instanceof LayoutThemeImpl) {
-            LayoutThemeImpl layoutTheme = (LayoutThemeImpl) theme;
+        if (theme instanceof SwingLayoutTheme) {
+            SwingLayoutTheme layoutTheme = (SwingLayoutTheme) theme;
             this.theme = new ItemPaneTheme(layoutTheme);
             setNormalText(item.getText());
             decorateNum(this.theme);
