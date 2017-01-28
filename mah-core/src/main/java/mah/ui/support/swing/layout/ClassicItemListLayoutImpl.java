@@ -10,7 +10,8 @@ import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemListPane;
 import mah.ui.pane.item.ItemMode;
 import mah.ui.pane.item.ItemSelectedEvent;
-import mah.ui.support.swing.pane.item.ItemListPaneFactoryImpl;
+import mah.ui.support.swing.pane.item.ItemListPaneFactory;
+import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.ThemeManager;
 import mah.ui.theme.Themeable;
@@ -26,19 +27,20 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
     private static final String NAME = "classic_item_list_layout";
     private final List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
-    private final ItemListPaneFactoryImpl factory;
+    private final ItemListPaneFactory factory;
     private ItemListPane itemListPane;
     private final List<ModeListener> modeListeners = new ArrayList<>();
     private Mode mode;
 
     public ClassicItemListLayoutImpl() {
         super(ClassicAbstractLayoutImpl.instance());
-        this.factory = new ItemListPaneFactoryImpl();
+        this.factory = new ItemListPaneFactory();
     }
 
-    private void applyTheme() {
+    private SwingLayoutTheme applyTheme() {
         LayoutTheme layoutTheme = ThemeManager.getInstance().getLayoutTheme(NAME);
         apply(layoutTheme);
+        return (SwingLayoutTheme) layoutTheme;
     }
 
     @Override
@@ -63,8 +65,8 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     @Override
     public void updateItems(List<? extends Item> items) {
         triggerMode();
-        applyTheme();
-        this.itemListPane = factory.createItemListPane(items, itemSelectedEventHandlers);
+        SwingLayoutTheme layoutTheme = applyTheme();
+        this.itemListPane = factory.createItemListPane(items, itemSelectedEventHandlers,layoutTheme);
         getLayout().updatePane(this.itemListPane);
         if (items != null && items.size() > 0) {
             this.itemListPane.setPendingItemIndex(0);

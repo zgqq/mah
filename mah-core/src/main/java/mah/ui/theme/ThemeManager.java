@@ -21,7 +21,11 @@ public class ThemeManager {
     private String currentTheme;
 
     private ThemeManager() {
+        addThemes();
+    }
 
+    private void addThemes() {
+        addTheme(Themes.DARK.getTheme());
     }
 
     public final void start(ApplicationEvent event) {
@@ -30,7 +34,6 @@ public class ThemeManager {
             XMLThemeConfigParser parser = new XMLThemeConfigParser(((XMLConfig) config).getDocument());
             this.currentTheme = parser.parseTheme();
         }
-        addTheme(Themes.DARK.getTheme());
     }
 
     public void addTheme(Theme theme) {
@@ -65,6 +68,4 @@ public class ThemeManager {
     public static ThemeManager getInstance() {
         return INSTANCE;
     }
-
-
 }

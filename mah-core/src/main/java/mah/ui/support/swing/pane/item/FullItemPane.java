@@ -40,11 +40,15 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private static final int ITEM_HEIGHT = 58;
     private static final int TEXT_LEN = 60;
 
-    public FullItemPane(FullItem fullItem,int num) {
-        init(fullItem,num);
+    public FullItemPane(FullItem fullItem, int num,SwingLayoutTheme theme) {
+        if (theme == null) {
+            throw new NullPointerException();
+        }
+        init(fullItem, num, theme);
+        this.theme = theme;
     }
 
-    private void init(FullItem item,int num) {
+    private void init(FullItem item, int num,SwingLayoutTheme theme) {
         try {
             this.panel = new JPanel();
             this.panel.setLayout(new BorderLayout());
@@ -61,7 +65,8 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
             initContent();
             initDescription();
             initNum();
-            reset(item,num);
+            initStyle(theme);
+            reset(item, num);
         } catch (Exception e) {
             throw new UIException(e);
         }
@@ -84,11 +89,10 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         this.middlePanel.add(this.content);
     }
 
-
     private String iconName;
 
     private void setIcon(FullItem item) throws IOException {
-        if(iconName!=null && iconName.equals(item.getIconName())){
+        if (iconName != null && iconName.equals(item.getIconName())) {
             return;
         }
         InputStream iconInputStream = item.getIconInputStream();
@@ -108,7 +112,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
 
     private void setDescription(FullItem item) {
         Text description = item.getDescription();
-        String descriptionStr="";
+        String descriptionStr = "";
         if (description != null) {
             descriptionStr = item.getDescription().getText();
         }
@@ -192,7 +196,6 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private Style normalTextStyle;
 
     private void initStyle(SwingLayoutTheme theme) {
-
         Color highlightForegroundColor = Color.decode(theme.findProperty("text-highlight-foreground-color"));
         Color highlightBackgroundColor = Color.decode(theme.findProperty("text-highlight-background-color"));
         matchedTextStyle = description.addStyle("matchedText", null);
@@ -208,7 +211,6 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         StyleConstants.setFontSize(normalTextStyle, 14);
     }
 
-
     @Override
     public void reset(FullItem item, int num) {
         try {
@@ -222,7 +224,6 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         }
     }
 
-
     @Override
     public void unpending() {
         Color color = Color.decode(theme.findProperty("background-color"));
@@ -235,12 +236,10 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         this.numLabel.setText(String.valueOf(num));
     }
 
-
     @Override
     public JPanel getPanel() {
         return panel;
     }
-
 
     @Override
     public void apply(LayoutTheme theme) {

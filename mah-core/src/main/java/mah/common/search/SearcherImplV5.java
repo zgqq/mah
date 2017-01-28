@@ -21,6 +21,9 @@ public class SearcherImplV5 implements Searcher {
 
     private List<SearchResult> fuzzyMatch(List<? extends Searchable> data, String keyword, boolean smart) {
         List<SearchResult> searchResults = new ArrayList<>();
+        if (StringUtils.isEmpty(keyword)) {
+            return searchResults;
+        }
         for (Searchable dataRow : data) {
             int prority = 0;
             List<String> dataCells = dataRow.fetchData();
@@ -79,7 +82,7 @@ public class SearcherImplV5 implements Searcher {
     }
 
     protected void matchNodes(String content, String keyword, boolean smart, int prevLen, List<Node> nodes) {
-        if (StringUtils.isEmpty(content) || StringUtils.isEmpty(keyword)) {
+        if (content == null) {
             return;
         }
         List<Node> matchedNode = matchNodes(content, keyword, 0);
@@ -127,7 +130,7 @@ public class SearcherImplV5 implements Searcher {
     }
 
     protected final Node selectOptimalNode(String content, String key, List<Node> matchedNodes) {
-        int priority = 0;
+        int priority = 1;
         int ind = 0;
         for (int j = 0; j < matchedNodes.size(); j++) {
             Node node = computerProrityNode(content, key, matchedNodes.get(j));

@@ -79,6 +79,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
 
         addCommonFilterEventHandler(event -> {
             if (mah.common.util.StringUtils.isEmpty(event.getContent())) {
+                trigger();
                 return;
             }
             if (checkConfig()) {
@@ -95,16 +96,16 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
             public void handle(TriggerEvent event) throws Exception {
                 trigger();
             }
-
-            private void trigger() throws ExecutionException, InterruptedException {
-                if (checkConfig()) {
-                    if (synchronizer.isInit()) {
-                        showUpdating();
-                    }
-                    synchronizer.fetchRepositories(9);
-                }
-            }
         });
+    }
+
+    private void trigger() throws ExecutionException, InterruptedException {
+        if (checkConfig()) {
+            if (synchronizer.isInit()) {
+                showUpdating();
+            }
+            synchronizer.fetchRepositories(9);
+        }
     }
 
 

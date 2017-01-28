@@ -1,5 +1,5 @@
 # Mah
-* Mah is a alternative to alfred,written in java.
+Mah is a alternative to alfred,written in java.
 
 # Features
 ## Asynchronous

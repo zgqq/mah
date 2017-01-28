@@ -5,6 +5,7 @@ import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.theme.SwingLayoutTheme;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
+import mah.ui.theme.Themeable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,18 +19,34 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
 
     private JPanel itemList;
     private final int itemGap = 10;
+    private SwingLayoutTheme theme;
 
-    public ItemListPaneImpl(List<? extends Item> items) {
+    public ItemListPaneImpl(List<? extends Item> items,SwingLayoutTheme theme) {
         super(items);
-        init();
+        if (items == null) {
+            throw new NullPointerException();
+        }
+        this.theme = theme;
+        init(items);
     }
 
-    private void init() {
+    private void init(List<? extends Item> items) {
         if (itemList == null) {
             JPanel panel = new JPanel();
             SwingUtils.setYBoxLayout(panel);
             itemList = panel;
+            super.initialize(items);
         }
+    }
+
+    private void applyThemeToItems(LayoutTheme theme) {
+        for (ItemPane itemPane : getItemPanes()) {
+            if (itemPane instanceof Themeable) {
+                Themeable themeable = (Themeable) itemPane;
+                themeable.apply(theme);
+            }
+        }
+        this.theme = (SwingLayoutTheme) theme;
     }
 
     @Override
@@ -41,7 +58,7 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
                 this.itemList.setBackground(Color.decode(itemListBackgroundColor));
             }
         }
-        super.apply(theme);
+        applyThemeToItems(theme);
     }
 
     private void addItemPane(SwingPane itemPanel) {
@@ -49,13 +66,11 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
         itemList.add(Box.createVerticalStrut(itemGap));
     }
 
-
     @Override
     protected ItemPane createItemPane(Item item,int num) {
-        init();
         if (item instanceof FullItem) {
             FullItem fullItem = (FullItem) item;
-            FullItemPane fullItemPane = new FullItemPane(fullItem,num);
+            FullItemPane fullItemPane = new FullItemPane(fullItem,num,theme);
             addItemPane(fullItemPane);
             return fullItemPane;
         } else if (item instanceof TextItem) {
@@ -71,6 +86,4 @@ public class ItemListPaneImpl extends ItemListPaneSupport implements ItemListPan
     public JPanel getPanel() {
         return itemList;
     }
-
-
 }

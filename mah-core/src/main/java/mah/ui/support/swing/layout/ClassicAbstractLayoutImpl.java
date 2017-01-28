@@ -27,8 +27,7 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     private SwingPane bottomPane;
     private boolean init;
 
-    private ClassicAbstractLayoutImpl() {
-    }
+    private ClassicAbstractLayoutImpl() {}
 
     @Override
     public void init() {

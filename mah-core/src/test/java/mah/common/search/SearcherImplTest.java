@@ -18,27 +18,6 @@ public class SearcherImplTest {
         return searcherImplV2;
     }
 
-//    private SearcherImplV4 createSearcher2() {
-//        return new SearcherImplV4();
-//    }
-
-    @Test
-    public void testPerformance2() {
-        SearcherImplV5 searcher = new SearcherImplV5();
-        List<DataRow> totalData = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
-            List<String> data = new ArrayList<>();
-            data.add("fusssscssssck your methodussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
-            data.add("fuckyourfuck  sssfussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
-            DataRow dataRow = new DataRow(data);
-            totalData.add(dataRow);
-        }
-        long start = System.currentTimeMillis();
-        List<SearchResult> searchResults = searcher.smartFuzzyMatch(totalData, "fuck");
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
-    }
-
     @Test
     public void testPerformance() {
         Searcher searcher = createSearcher();

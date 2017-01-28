@@ -2,8 +2,6 @@ package mah.ui.pane.item;
 
 import mah.ui.UIException;
 import mah.ui.event.EventHandler;
-import mah.ui.theme.LayoutTheme;
-import mah.ui.theme.Themeable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +9,17 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-08 14:08
  */
-public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
+public abstract class ItemListPaneSupport implements ItemListPane{
 
     private List<EventHandler<? extends ItemSelectedEvent>> itemSelectedHandlers = new ArrayList<>();
     private final List<ItemPane> itemPanes;
     private int pendingIndex = -1;
-    private LayoutTheme layoutTheme;
 
     public ItemListPaneSupport(List<? extends Item> items) {
         itemPanes = new ArrayList<>(items.size());
-        init(items);
     }
 
-    protected void init(List<? extends Item> items) {
+    protected final void initialize(List<? extends Item> items) {
         if (items == null || items.size() < 0) {
             return;
         }
@@ -58,16 +54,10 @@ public abstract class ItemListPaneSupport implements ItemListPane, Themeable {
         return itemPanes.size();
     }
 
-    @Override
-    public void apply(LayoutTheme theme) {
-        for (ItemPane itemPane : itemPanes) {
-            if (itemPane instanceof Themeable) {
-                Themeable themeable = (Themeable) itemPane;
-                themeable.apply(theme);
-            }
-        }
-        layoutTheme = theme;
+    public List<ItemPane> getItemPanes() {
+        return itemPanes;
     }
+
 
     @Override
     public void updateItem(Item item, int num) {
