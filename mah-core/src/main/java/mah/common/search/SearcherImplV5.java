@@ -1,3 +1,4 @@
+
 package mah.common.search;
 
 
@@ -82,7 +83,7 @@ public class SearcherImplV5 implements Searcher {
     }
 
     protected void matchNodes(String content, String keyword, boolean smart, int prevLen, List<Node> nodes) {
-        if (content == null) {
+        if (StringUtils.isEmpty(content)) {
             return;
         }
         List<Node> matchedNode = matchNodes(content, keyword, 0);
@@ -120,7 +121,7 @@ public class SearcherImplV5 implements Searcher {
             int end = matchedIndexs.get(matchedIndexs.size() - 1);
             String substring = content.substring(start, end + 1);
             matchedIndexs = new ArrayList<>();
-            int[] matchedInd=getMatchedIndex(substring, key);
+            int[] matchedInd = computeOptimalMatchedIndexs(substring, key);
             for (int index : matchedInd) {
                 matchedIndexs.add(start + index);
             }
@@ -171,39 +172,13 @@ public class SearcherImplV5 implements Searcher {
                 // add new node when encountering first char
                 curNodes.add(new Node(0, indexs));
             }
-
-            for (Node node : curNodes) {
-                List<Integer> matchedIndexs = node.matchedIndexs;
-                int indexsSize = matchedIndexs.size();
-                if (indexsSize < key.length()) {
-                    // match next char of node
-                    char nextChar = key.charAt(indexsSize);
-                    if (compare(nextChar, c, true)) {
-                        matchedIndexs.add(offset + i);
-                    }
-                }
-            }
-
-            // select longest node
-            int longestNodeIndex = -1;
-            int maxSize = -1;
-            for (int j = 0; j < curNodes.size(); j++) {
-                Node node = curNodes.get(j);
-                List<Integer> mi = node.matchedIndexs;
-                int size = mi.size();
-                if (size >= maxSize) {
-                    maxSize = size;
-                    longestNodeIndex = j;
-                }
-            }
-
+            int longestNodeIndex = getLongestNodeIndex(key, offset, curNodes, i, c);
             if (longestNodeIndex != -1) {
                 // remove those nodes that are prior to longest node
                 Node longestNode = curNodes.get(longestNodeIndex);
                 for (int k = longestNodeIndex - 1; k >= 0; k--) {
                     curNodes.remove(k);
                 }
-
                 // retrieving completes if there is only node
                 List<Integer> mmi = longestNode.matchedIndexs;
                 if (mmi.size() == key.length()) {
@@ -219,8 +194,31 @@ public class SearcherImplV5 implements Searcher {
         return matchedNodes;
     }
 
+    private int getLongestNodeIndex(String key, int offset, List<Node> curNodes, int i, char c) {
+        int longestNodeIndex = -1;
+        int maxSize = -1;
+        for (int j = 0; j < curNodes.size(); j++) {
+            Node node = curNodes.get(j);
+            List<Integer> matchedIndexs = node.matchedIndexs;
+            int indexsSize = matchedIndexs.size();
+            if (indexsSize < key.length()) {
+                // match next char of node
+                char nextChar = key.charAt(indexsSize);
+                if (compare(nextChar, c, true)) {
+                    matchedIndexs.add(offset + i);
+                }
+            }
+            int size = matchedIndexs.size();
+            if (size >= maxSize) {
+                maxSize = size;
+                longestNodeIndex = j;
+            }
+        }
+        return longestNodeIndex;
+    }
+
     //abcd abcd
-    public final int[] getMatchedIndex(String str, String key) {
+    public final int[] computeOptimalMatchedIndexs(String str, String key) {
         if (key == null) {
             throw new NullPointerException("key could not be null");
         }
@@ -246,3 +244,4 @@ public class SearcherImplV5 implements Searcher {
         return pi;
     }
 }
+

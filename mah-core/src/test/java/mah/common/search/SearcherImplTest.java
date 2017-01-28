@@ -22,7 +22,7 @@ public class SearcherImplTest {
     public void testPerformance() {
         Searcher searcher = createSearcher();
         List<DataRow> totalData = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 50000; i++) {
             List<String> data = new ArrayList<>();
             data.add("fusssscssssck your methodussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
             data.add("fuckyourfuck  sssfussssssssbbbbbbbfckbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa ");
