@@ -158,7 +158,6 @@ public class SearcherImplV5 implements Searcher {
         return node;
     }
 
-
     private List<Node> matchNodes(String text, String key, int offset) {
         List<Node> matchedNodes = new ArrayList<>(3);
         List<Node> curNodes = new ArrayList<>(3);

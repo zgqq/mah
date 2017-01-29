@@ -6,6 +6,8 @@ import mah.command.CommandManager;
 import mah.mode.AbstractMode;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
+import mah.ui.UIManager;
+import mah.ui.util.ClipboardUtils;
 import mah.ui.window.WindowMode;
 
 /**
@@ -52,6 +54,7 @@ public class InputMode extends AbstractMode {
         registerAction(new Undo("Undo"));
         registerAction(new Redo("Redo"));
         registerAction(new ClearTextPriorToTriggerKey("ClearTextPriorToTriggerKey"));
+        registerAction(new CopyArgumentText("CopyArgumentText"));
     }
 
     public static InputMode triggerMode() {
@@ -72,7 +75,12 @@ public class InputMode extends AbstractMode {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             Input source = (Input) actionEvent.getSource();
-            actionPerformed(source);
+            UIManager.getInstance().runLater(new Runnable() {
+                @Override
+                public void run() {
+                    actionPerformed(source);
+                }
+            });
         }
 
         protected abstract void actionPerformed(Input source);
@@ -254,8 +262,28 @@ public class InputMode extends AbstractMode {
         @Override
         protected void actionPerformed(Input source) {
             String currentTriggerKey = CommandManager.getInstance().getCurrentTriggerKey();
-            source.setText(currentTriggerKey+" ");
+            if (currentTriggerKey == null) {
+                return;
+            }
+            source.setText(currentTriggerKey.trim()+" ");
             source.setCaretPosition(source.getText().length());
+        }
+    }
+
+    static class CopyArgumentText extends InputAction{
+
+        public CopyArgumentText(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void actionPerformed(Input source) {
+            String currentTriggerKey = CommandManager.getInstance().getCurrentTriggerKey();
+            if (currentTriggerKey == null || !currentTriggerKey.endsWith(" ")) {
+                return;
+            }
+            String copyText = source.getText().substring(currentTriggerKey.length(), source.getText().length());
+            ClipboardUtils.copy(copyText);
         }
     }
 }

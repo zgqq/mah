@@ -14,6 +14,7 @@ import mah.ui.input.TextState;
 import mah.ui.layout.Layout;
 import mah.ui.window.Window;
 import mah.ui.window.WindowManager;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,12 +136,13 @@ public class CommandManager implements ApplicationListener {
                     if (input.startsWith(key)) {
                         triggerCommand(command, key, input);
                         triggerSucc = true;
-                        currentTriggerKey = key.trim();
                         int index;
                         if (input.equals(key)){
                             index = key.length();
+                            currentTriggerKey = key;
                         }else {
                             index = key.length() + 1;
+                            currentTriggerKey = key + ' ';
                         }
                         currentQuery = input.substring(index);
                     }
@@ -161,6 +163,8 @@ public class CommandManager implements ApplicationListener {
                         currentCommand = null;
                         setDefaultLayout();
                     }
+                    currentTriggerKey = null;
+                    currentQuery = null;
                 }
             } catch (Exception e) {
                 throw new CommandException(e);
@@ -168,6 +172,7 @@ public class CommandManager implements ApplicationListener {
         }
     }
 
+    @Nullable
     public synchronized String getCurrentTriggerKey() {
         return currentTriggerKey;
     }
@@ -187,6 +192,7 @@ public class CommandManager implements ApplicationListener {
         }
     }
 
+    @Nullable
     public synchronized String getCurrentQuery() {
         return currentQuery;
     }
