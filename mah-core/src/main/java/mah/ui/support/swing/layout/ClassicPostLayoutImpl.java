@@ -44,7 +44,7 @@ public class ClassicPostLayoutImpl extends SwingLayoutSupport implements Classic
     @Override
     public void registerMode(Mode mode, ModeListener modeListener) {
         Mode windowMode = WindowMode.getOrRegisterMode();
-        mode.setParent(windowMode);
+        mode.addChild(windowMode);
         setMode(mode);
         addModeListener(modeListener);
         ModeManager.getInstance().registerMode(mode);

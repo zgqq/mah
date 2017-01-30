@@ -1,11 +1,9 @@
 package mah.mode;
 
 import mah.action.*;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -18,19 +16,18 @@ public abstract class AbstractMode implements Mode {
     private final Map<Class<?>, List<Action>> HANDLERS_ACTIONS = new HashMap<>();
     private final String name;
     private final Lock lock = new ReentrantLock();
-    private Mode parent;
+    private final List<Mode> children = new ArrayList<>();
 
-    public AbstractMode(String name, Mode parent) {
+    public AbstractMode(String name, Mode children) {
         this.name = name;
-        if (parent == null) {
+        if (children == null) {
             throw new ModeException("Parent mode must not be null,child mode is " + getName());
         }
-        this.parent = parent;
+        this.children.add(children);
     }
 
     public AbstractMode(String name) {
         this.name = name;
-        this.parent = null;
     }
 
     @Override
@@ -76,13 +73,13 @@ public abstract class AbstractMode implements Mode {
     }
 
     @Override
-    public void setParent(Mode mode) {
+    public void addChild(Mode mode) {
         lock.lock();
         try {
-            if (this.parent != null) {
-                throw new IllegalStateException("Unable to change parent of mode");
+            if (this.children.contains(mode)) {
+                throw new IllegalStateException("Child already existed");
             }
-            this.parent = mode;
+            this.children.add(mode);
         } finally {
             lock.unlock();
         }
@@ -90,14 +87,26 @@ public abstract class AbstractMode implements Mode {
 
     @Override
     public final Action findAction(String actionName) {
-        Action action = NAMED_ACTIONS.get(actionName);
-        if (action == null && parent != null) {
-            action = parent.findAction(actionName);
-        }
+        Action action = lookupAction(actionName);
         if (action == null) {
             throw new ActionException("Not found action " + actionName + " in mode " + getName());
         }
         return action;
+    }
+
+    @Nullable
+    public final Action lookupAction(String actionName) {
+        Action action = NAMED_ACTIONS.get(actionName);
+        if (action != null) {
+            return action;
+        }
+        for (Mode child : children) {
+            action = child.lookupAction(actionName);
+            if (action != null) {
+                return action;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -106,11 +115,11 @@ public abstract class AbstractMode implements Mode {
     }
 
     @Override
-    public Mode getParent() {
+    public List<Mode> getChildren() {
         lock.lock();
         try {
-            return parent;
-        }finally {
+            return Collections.unmodifiableList(children);
+        } finally {
             lock.unlock();
         }
     }

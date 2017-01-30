@@ -56,7 +56,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
     @Override
     public void registerMode(Mode mode, ModeListener modeListener) {
-        mode.setParent(ItemMode.getAndRegisterMode());
+        mode.addChild(ItemMode.getAndRegisterMode());
         this.mode = mode;
         modeListeners.add(modeListener);
         ModeManager.getInstance().registerMode(mode);

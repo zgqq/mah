@@ -2,6 +2,7 @@ package mah.openapi.ui.layout;
 
 import mah.command.Command;
 import mah.mode.Mode;
+import mah.plugin.command.CommandMode;
 import mah.ui.event.EventHandler;
 import mah.ui.key.KeyEvent;
 import mah.ui.layout.Layout;
@@ -18,7 +19,7 @@ public class AbstractCommandLayout implements Layout {
     private final Layout layout;
 
     public AbstractCommandLayout(Layout layout, Command command) {
-        this.layoutUpdater = new LayoutUpdater(layout,command);
+        this.layoutUpdater = new LayoutUpdater(layout, command);
         this.layout = layout;
         this.layout.init();
     }
@@ -45,17 +46,20 @@ public class AbstractCommandLayout implements Layout {
 
     @Override
     public void registerMode(Mode mode, ModeListener modeListener) {
-        runSafely(() -> layout().registerMode(mode, modeListener));
+        runSafely(() -> {
+            mode.addChild(CommandMode.registerModeIfAbsent());
+            layout().registerMode(mode, modeListener);
+        });
     }
 
     @Override
     public void setDefaultMode() {
-        runSafely(()->layout().setDefaultMode());
+        runSafely(() -> layout().setDefaultMode());
     }
 
     @Override
     public Mode getMode() {
-        return getValue(()->layout().getMode());
+        return getValue(() -> layout().getMode());
     }
 
     @Override
@@ -65,12 +69,16 @@ public class AbstractCommandLayout implements Layout {
 
     @Override
     public void setOnKeyPressed(EventHandler<? extends KeyEvent> keyPressedHandler) {
-        runSafely(()->{layout().setOnKeyPressed(keyPressedHandler);});
+        runSafely(() -> {
+            layout().setOnKeyPressed(keyPressedHandler);
+        });
     }
 
     @Override
     public void setOnKeyReleased(EventHandler<? extends KeyEvent> keyReleasedHandler) {
-        runSafely(()->{layout().setOnKeyReleased(keyReleasedHandler);});
+        runSafely(() -> {
+            layout().setOnKeyReleased(keyReleasedHandler);
+        });
     }
 
     @Override
@@ -80,6 +88,6 @@ public class AbstractCommandLayout implements Layout {
 
     @Override
     public String getName() {
-        return getValue(()->layout().getName());
+        return getValue(() -> layout().getName());
     }
 }

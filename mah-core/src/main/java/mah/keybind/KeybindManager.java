@@ -18,6 +18,7 @@ import mah.keybind.util.SimpleParser;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.layout.LayoutFactoryBean;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -37,9 +38,8 @@ public class KeybindManager implements ApplicationListener {
     private static final Logger logger = LoggerFactory.getLogger(KeybindManager.class);
     private final List<Keybind> GLOBAL_KEYBINDS = new ArrayList<>();
     private Mode currentMode;
-    private int keyIndex;
     private static final KeybindManager INSTANCE = new KeybindManager();
-    private List<Keybind> currentKeybind;
+    private final KeybindMatcher keybindMatcher = new KeybindMatcher();
 
     public void addKeybind(String mod, Keybind keybind) {
         List<Keybind> keybindings = KEYBINDS.get(mod);
@@ -100,83 +100,37 @@ public class KeybindManager implements ApplicationListener {
         }
     }
 
-    private Action findAction(KeyStroke pressedKeyStroke) {
-        String mod = currentMode.getName();
-        List<Keybind> keybinds = KEYBINDS.get(mod);
-        Mode curMod = currentMode;
-        while (keybinds == null) {
-            Mode parent = curMod.getParent();
-            if (parent == null) {
-                break;
-            }
-            curMod = parent;
-            keybinds = KEYBINDS.get(parent.getName());
-        }
-        if (keybinds == null) {
-            return null;
-        }
-        return findAction(keybinds, pressedKeyStroke);
-    }
-
-    private Action matchAction(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
-        currentKeybind = new ArrayList<>();
-        for (Keybind keybind : keybinds) {
-            List<KeyStroke> keyStrokes = keybind.getKeyStrokes();
-            KeyStroke keyStroke = keyStrokes.get(0);
-            if (keyStroke.equals(pressedKeyStroke)) {
-                if (keyStrokes.size() > 1) {
-                    currentKeybind.add(keybind);
-                } else {
-                    currentKeybind = null;
-                    return keybind.getAction();
-                }
-            }
-        }
-        return null;
-    }
-
-    private Action matchActionByPendingKeybinds(KeyStroke pressedKeyStroke) {
-        List<Keybind> prevKeybinds = currentKeybind;
-        currentKeybind = new ArrayList<>();
-        for (Keybind keybinding : prevKeybinds) {
-            List<KeyStroke> keyStrokes = keybinding.getKeyStrokes();
-            KeyStroke keyStroke = keyStrokes.get(keyIndex);
-            if (keyStroke.equals(pressedKeyStroke)) {
-                if (keyStrokes.size() - 1 == keyIndex) {
-                    restoreKeybind();
-                    return keybinding.getAction();
-                }
-                currentKeybind.add(keybinding);
-            }
-        }
-        if (currentKeybind.size() > 0) {
-            keyIndex++;
-            return null;
-        }
-        restoreKeybind();
-        return null;
-    }
-
-    private Action findAction(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
-        if (currentKeybind == null) {
-            Action action = matchAction(keybinds, pressedKeyStroke);
+    @Nullable
+    private Action findAction(Mode mode, KeyStroke pressedKeyStroke) {
+        List<Keybind> keybinds = KEYBINDS.get(mode.getName());
+        if (keybinds != null) {
+            Action action = keybindMatcher.matchAction(keybinds, pressedKeyStroke);
             if (action != null) {
                 return action;
             }
-            if (currentKeybind.size() > 0) {
-                keyIndex = 1;
-            } else {
-                currentKeybind = null;
+        }
+
+        final List<Mode> children = mode.getChildren();
+        for (final Mode child : children) {
+            Action action = findAction(child, pressedKeyStroke);
+            if (action != null) {
+                return action;
             }
-        } else {
-            return matchActionByPendingKeybinds(pressedKeyStroke);
         }
         return null;
     }
 
-    private void restoreKeybind() {
-        currentKeybind = null;
-        keyIndex = 0;
+    @Nullable
+    private Action findAction(KeyStroke pressedKeyStroke) {
+        keybindMatcher.start();
+        Action action = findAction(currentMode, pressedKeyStroke);
+        keybindMatcher.end();
+        return action;
+    }
+
+    @Nullable
+    private Action findAction(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
+        return keybindMatcher.matchAction(keybinds, pressedKeyStroke);
     }
 
     public void setCurrentMode(Mode currentMode) {

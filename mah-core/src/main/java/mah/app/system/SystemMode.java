@@ -4,8 +4,6 @@ import mah.action.AbstractAction;
 import mah.action.ActionEvent;
 import mah.action.NoSourceAction;
 import mah.app.ApplicationManager;
-import mah.command.Command;
-import mah.command.CommandManager;
 import mah.mode.AbstractMode;
 
 /**
@@ -22,30 +20,11 @@ public class SystemMode extends AbstractMode {
     @Override
     public void init() {
         registerAction(new ExitSystem("ExitSystem"));
-        registerAction(new ToggleLockCommand("ToggleLockCommand"));
     }
 
     static abstract class SystemAction extends AbstractAction implements NoSourceAction {
         public SystemAction(String name) {
             super(name, null);
-        }
-    }
-
-    static class ToggleLockCommand extends SystemAction {
-        public ToggleLockCommand(String name) {
-            super(name);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-            Command lockedCommand = CommandManager.getInstance().getLockedCommand();
-            if (lockedCommand != null) {
-                CommandManager.getInstance().setLockedCommand(null);
-            } else {
-                Command currentCommand = CommandManager.getInstance().getCurrentCommand();
-                if (currentCommand != null)
-                    CommandManager.getInstance().setLockedCommand(currentCommand);
-            }
         }
     }
 

@@ -76,7 +76,7 @@ public class ModeManager implements ApplicationListener {
         Action action = null;
         for (Map.Entry<String, Mode> entry : entries) {
             Mode mode = entry.getValue();
-            action = mode.findAction(actionName);
+            action = mode.lookupAction(actionName);
             if (action != null && action instanceof GlobalAction) {
                 break;
             }
