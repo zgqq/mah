@@ -49,7 +49,6 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
     private void init() {
         addInitializeEventHandler(event -> {
             layout = getLayoutFactory().createClassicItemListLayout();
-            layout.registerMode(new TranslationMode(), event1 -> event1.getMode().updateActionHandler(TranslationCommand.this));
             localWordReader();
         });
         addCommonFilterEventHandler(event -> {

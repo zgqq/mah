@@ -7,6 +7,9 @@ import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.UIManager;
 import mah.ui.input.InputMode;
+import mah.ui.pane.Text;
+import mah.ui.util.ClipboardUtils;
+import mah.ui.window.WindowManager;
 
 /**
  * Created by zgq on 2017-01-11 15:11
@@ -19,7 +22,7 @@ public class ItemMode extends AbstractMode {
     private static final String DEFAULT_SELECT_ITEM = "DefaultSelectItem";
     private static final String SELECT_ITEM = "SelectItem";
 
-    public ItemMode( Mode parent) {
+    public ItemMode(Mode parent) {
         super(NAME, parent);
     }
 
@@ -30,8 +33,10 @@ public class ItemMode extends AbstractMode {
         registerAction(new DefaultSelectItem(DEFAULT_SELECT_ITEM));
         for (int i = 1; i < 10; i++) {
             String name = SELECT_ITEM + i;
-            registerAction(new SelectItem(name, i-1));
+            registerAction(new SelectItem(name, i - 1));
         }
+        registerAction(new CopyContent("CopyContent"));
+        registerAction(new CopyDescription("CopyDescription"));
     }
 
     public static ItemMode triggerMode() {
@@ -129,6 +134,41 @@ public class ItemMode extends AbstractMode {
                     itemList.setPendingItemIndex(pendingItemIndex + 1);
                 });
             }
+        }
+    }
+
+    static abstract class CopyAction extends ItemAction {
+
+        public CopyAction(String name) {
+            super(name);
+        }
+    }
+
+    static class CopyContent extends CopyAction {
+
+        public CopyContent(String name) {
+            super(name);
+        }
+
+        public void actionPerformed(ItemList layout) {
+            FullItem item = layout.getPendingItem();
+            Text content = item.getContent();
+            ClipboardUtils.copy(content.getText());
+            WindowManager.hideWindow();
+        }
+    }
+
+    static class CopyDescription extends CopyAction {
+
+        public CopyDescription(String name) {
+            super(name);
+        }
+
+        public void actionPerformed(ItemList layout) {
+            FullItem item = layout.getPendingItem();
+            Text explains = item.getDescription();
+            ClipboardUtils.copy(explains.getText());
+            WindowManager.hideWindow();
         }
     }
 }

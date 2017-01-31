@@ -17,11 +17,11 @@ public class KeybindMatcher {
     private boolean isFoundAction;
     private int keyIndex;
 
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return pendingKeybinds == null || pendingKeybinds.isEmpty();
     }
 
-    private Action continueMatch(KeyStroke pressedKeyStroke) {
+    public Action continueMatch(KeyStroke pressedKeyStroke) {
         final List<Keybind> prevKeybinds = pendingKeybinds;
         for (Keybind keybinding : prevKeybinds) {
             List<KeyStroke> keyStrokes = keybinding.getKeyStrokes();
@@ -38,34 +38,37 @@ public class KeybindMatcher {
     }
 
     @Nullable
-    public Keybind matchKeybind(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
+    public List<Keybind> matchKeybind(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
+        List<Keybind> pendingKeybinds = new ArrayList<>();
         for (Keybind keybind : keybinds) {
             List<KeyStroke> keyStrokes = keybind.getKeyStrokes();
             KeyStroke keyStroke = keyStrokes.get(0);
             if (keyStroke.equals(pressedKeyStroke)) {
-                return keybind;
+                pendingKeybinds.add(keybind);
             }
         }
-        return null;
+        return pendingKeybinds;
     }
 
     @Nullable
-    public Action matchAction(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
+    public Action addPendingKeybindIfNotFoundAction(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
+        if (!isEmpty()) {
+            throw new IllegalStateException("Pending keybind is not empty");
+        }
         Action action = null;
-        if (isEmpty()) {
-            Keybind keybind = matchKeybind(keybinds, pressedKeyStroke);
-            if (keybind == null) {
-                return null;
-            }
+        List<Keybind> pendingKeybinds = matchKeybind(keybinds, pressedKeyStroke);
+        final int size = pendingKeybinds.size();
+        if (size == 0) {
+            return null;
+        } else if (size == 1) {
+            Keybind keybind = pendingKeybinds.get(0);
             if (keybind.getKeyStrokes().size() == 1) {
                 action = keybind.getAction();
                 isFoundAction = true;
-            } else {
-                remainingKeybinds.add(keybind);
+                return action;
             }
-        } else {
-            action = continueMatch(pressedKeyStroke);
         }
+        remainingKeybinds.addAll(pendingKeybinds);
         return action;
     }
 
@@ -76,10 +79,10 @@ public class KeybindMatcher {
 
     public void end() {
         pendingKeybinds = remainingKeybinds;
-        //If there are pending keybinds
         if (isFoundAction || pendingKeybinds.size() == 0) {
             keyIndex = 0;
         } else {
+            // if not found action and the count of pending keybind greater than 0
             keyIndex++;
         }
     }

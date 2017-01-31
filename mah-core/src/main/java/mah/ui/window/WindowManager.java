@@ -1,6 +1,7 @@
 package mah.ui.window;
 
 import mah.ui.UIManager;
+import mah.ui.key.KeystateManager;
 import mah.ui.layout.LayoutType;
 
 /**
@@ -31,4 +32,10 @@ public class WindowManager {
         currentWindow.show();
     }
 
+    public static void hideWindow() {
+        UIManager.getInstance().runLater(() -> {
+            KeystateManager.getInstance().reset();
+            ourInstance.getCurrentWindow().hide();
+        });
+    }
 }

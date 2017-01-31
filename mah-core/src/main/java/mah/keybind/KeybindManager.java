@@ -104,7 +104,7 @@ public class KeybindManager implements ApplicationListener {
     private Action findAction(Mode mode, KeyStroke pressedKeyStroke) {
         List<Keybind> keybinds = KEYBINDS.get(mode.getName());
         if (keybinds != null) {
-            Action action = keybindMatcher.matchAction(keybinds, pressedKeyStroke);
+            Action action = keybindMatcher.addPendingKeybindIfNotFoundAction(keybinds, pressedKeyStroke);
             if (action != null) {
                 return action;
             }
@@ -122,15 +122,20 @@ public class KeybindManager implements ApplicationListener {
 
     @Nullable
     private Action findAction(KeyStroke pressedKeyStroke) {
+        Action action;
         keybindMatcher.start();
-        Action action = findAction(currentMode, pressedKeyStroke);
+        if (keybindMatcher.isEmpty()) {
+            action = findAction(currentMode, pressedKeyStroke);
+        } else {
+            action = keybindMatcher.continueMatch(pressedKeyStroke);
+        }
         keybindMatcher.end();
         return action;
     }
 
     @Nullable
     private Action findAction(List<Keybind> keybinds, KeyStroke pressedKeyStroke) {
-        return keybindMatcher.matchAction(keybinds, pressedKeyStroke);
+        return keybindMatcher.addPendingKeybindIfNotFoundAction(keybinds, pressedKeyStroke);
     }
 
     public void setCurrentMode(Mode currentMode) {
