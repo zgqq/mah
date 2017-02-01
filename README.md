@@ -11,7 +11,15 @@ Configuration is the one of important features,you can configure keybind,plugin,
 ## Plugin support
 Mah is totally based on plugin.Thinks to java ecosystem,you can develop a plugin with powerful abilities.
 
-# How to use?
+# Getting Started
+## Installation
+Mah doesn't provide binary package to user as there are some efforts to do this.So to use
+Mah,you must compile it yourself;it is not a big deal,only tough thing is to install jdk8.Once jdk8 installed,the rest is easy.
+
+    git clone https://github.com/zgqq/mah && cd mah 
+    ./gradlew build # The first time will take much time
+    java -jar mah-app/build/{version}.jar
+
 ## Configuration
 Open /home/{username}/.config/mah/conf.xml with editor
 
