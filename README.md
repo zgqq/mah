@@ -14,68 +14,67 @@ Mah is totally based on plugin.Thinks to java ecosystem,you can develop a plugin
 # Getting Started
 ## Installation
 Mah doesn't provide binary package to user as there are some efforts to do this.So to use
-Mah,you must compile it yourself;it is not a big deal,only tough thing is to install jdk8.Once jdk8 installed,the rest is easy.
+Mah,you must compile it yourself;it is not a big deal,only tough thing is to install jdk8.Once installed,the rest is easy.
 
     git clone https://github.com/zgqq/mah && cd mah 
-    ./gradlew build # The first time will take much time
-    java -jar mah-app/build/{version}.jar
+    ./install
 
 ## Configuration
-Open /home/{username}/.config/mah/conf.xml with editor
-
+Open /home/{username}/.config/mah/conf.xml with editor,you will see
+   
     <?xml version="1.0" encoding="UTF-8"?>
-    <config>
-        <global>
-            <globalKeybind bind="M-space" action="FocusWindow" />
-        </global>
-        <mode name="system_mode">
-            <keybind bind="C-x C-c" action="ExitSystem" />
-        </mode>
-        <mode name="window_mode" parent="system_mode">
-            <keybind bind="C-g" action="HideWindow" />
-            <keybind bind="M-h" action="MoveWindowToLeft" />
-            <keybind bind="M-l" action="MoveWindowToRight" />
-            <keybind bind="M-c" action="MoveWindowToCenter" />
-        </mode>
-        <mode name="input_mode" parent="window_mode">
-            <keybind bind="C-r" action="Redo" />
-            <keybind bind="C-/" action="Undo" />
-            <!-- line -->
-            <keybind bind="C-a" action="BeginningOfLine" />
-            <keybind bind="C-e" action="EndOfLine" />
-            <keybind bind="C-u" action="KillWholeLine" />
-            <keybind bind="C-k" action="KillLine" />
-            <!-- char -->
-            <keybind bind="backspace" action="BackwardDeleteChar" />
-            <keybind bind="C-h" action="BackwardDeleteChar" />
-            <keybind bind="C-d" action="DeleteChar" />
-            <keybind bind="C-f" action="ForwardChar" />
-            <keybind bind="C-b" action="BackwardChar" />
-            <!-- word -->
-            <keybind bind="C-backspace" action="BackwardKillWord" />
-            <keybind bind="M-f" action="ForwardWord" />
-            <keybind bind="M-b" action="BackwardWord" />
-            <keybind bind="M-d" action="KillWord" />
-        </mode>
-        <mode name="item_mode" parent="input_mode">
-                <!-- item -->
-                <keybind bind="C-n" action="NextItem" />
-                <keybind bind="C-p" action="PreviousItem" />
-                <keybind bind="Enter" action="DefaultSelectItem" />
-                <keybind bind="M-1" action="SelectItem1" />
-                <keybind bind="M-2" action="SelectItem2" />
-                <keybind bind="M-3" action="SelectItem3" />
-                <keybind bind="M-4" action="SelectItem4" />
-                <keybind bind="M-5" action="SelectItem5" />
-                <keybind bind="M-6" action="SelectItem6" />
-                <keybind bind="M-7" action="SelectItem7" />
-                <keybind bind="M-8" action="SelectItem8" />
-                <keybind bind="M-9" action="SelectItem9" />
-        </mode>
-        <theme>dark</theme>
-    </config>
-    
-Above is most basic configuration,you can modify it freely.
+   <config>
+       <global>
+           <globalKeybind listen="M-space" consume="M-space" action="FocusWindow" />
+       </global>
+       <mode name="system_mode">
+           <keybind bind="C-x C-c" action="ExitSystem" />
+       </mode>
+       <mode name="window_mode">
+           <keybind bind="C-g" action="HideWindow" />
+           <keybind bind="M-h" action="MoveWindowToLeft" />
+           <keybind bind="M-l" action="MoveWindowToRight" />
+           <keybind bind="M-c" action="MoveWindowToCenter" />
+       </mode>
+       <mode name="input_mode">
+           <keybind bind="C-r" action="Redo" />
+           <keybind bind="C-/" action="Undo" />
+           <!-- line -->
+           <keybind bind="C-a" action="BeginningOfLine" />
+           <keybind bind="C-e" action="EndOfLine" />
+           <keybind bind="C-u" action="KillWholeLine" />
+           <keybind bind="C-k" action="KillLine" />
+           <!-- char -->
+           <keybind bind="backspace" action="BackwardDeleteChar" />
+           <keybind bind="C-h" action="BackwardDeleteChar" />
+           <keybind bind="C-d" action="DeleteChar" />
+           <keybind bind="C-f" action="ForwardChar" />
+           <keybind bind="C-b" action="BackwardChar" />
+           <!-- word -->
+           <keybind bind="C-backspace" action="BackwardKillWord" />
+           <keybind bind="M-f" action="ForwardWord" />
+           <keybind bind="M-b" action="BackwardWord" />
+           <keybind bind="M-d" action="KillWord" />
+       </mode>
+       <mode name="item_mode">
+               <!-- item -->
+               <keybind bind="C-n" action="NextItem" />
+               <keybind bind="C-p" action="PreviousItem" />
+               <keybind bind="Enter" action="DefaultSelectItem" />
+               <keybind bind="M-1" action="SelectItem1" />
+               <keybind bind="M-2" action="SelectItem2" />
+               <keybind bind="M-3" action="SelectItem3" />
+               <keybind bind="M-4" action="SelectItem4" />
+               <keybind bind="M-5" action="SelectItem5" />
+               <keybind bind="M-6" action="SelectItem6" />
+               <keybind bind="M-7" action="SelectItem7" />
+               <keybind bind="M-8" action="SelectItem8" />
+               <keybind bind="M-9" action="SelectItem9" />
+       </mode>
+       <theme>dark</theme>
+   </config>
+
+Above is most basic configuration,mah will generate it automatically,you can modify it freely.
 
 ### Translation plugin
 First,you need to apply api pair http://fanyi.youdao.com/openapi?path=data-mode

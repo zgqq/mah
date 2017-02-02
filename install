@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -u
+
+./gradlew build
+java -jar mah-app/build/libs/mah.jar
