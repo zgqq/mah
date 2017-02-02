@@ -3,6 +3,7 @@ dependencies {
     compile project(':mah-core')
 }
 
+
 jar {
     archiveName = "mah.jar"
     from {
