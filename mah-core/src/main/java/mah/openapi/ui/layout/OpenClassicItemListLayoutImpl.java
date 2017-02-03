@@ -40,7 +40,6 @@ import java.util.concurrent.Callable;
  * Created by zgq on 2017-01-08 15:11
  */
 public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout implements OpenClassicItemListLayout{
-
     private static final Logger LOG = LoggerFactory.getLogger(OpenClassicItemListLayoutImpl.class);
 
     public OpenClassicItemListLayoutImpl(Command command) {
@@ -66,16 +65,9 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
         updateWholeLayout(() -> {
             final String actual = CommandManager.getInstance().getCurrentQuery();
             LOG.debug("expect {},actual:{}", expect, actual);
-            if (actual!=null && actual.equals(expect)) {
+            if (actual != null && actual.equals(expect)) {
                 getLayout().updateItems(items);
             }
-        });
-    }
-
-    @Override
-    public void updateItems(List<? extends Item> items) {
-        updateWholeLayout(() -> {
-            getLayout().updateItems(items);
         });
     }
 
@@ -98,42 +90,30 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
 
     @Override
     public int getPendingItemIndex() {
-        return getValue(()->getLayout().getPendingItemIndex());
+        return getValue(() -> getLayout().getPendingItemIndex());
     }
 
     @Override
     public void setPendingItemIndex(int index) {
-        updatePartLayout(()->getLayout().setPendingItemIndex(index));
+        updatePartLayout(() -> getLayout().setPendingItemIndex(index));
     }
 
     @Override
     public void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> eventHandler) {
-        runSafely(()->{getLayout().setOnItemSelected(eventHandler);});
+        runSafely(() -> { getLayout().setOnItemSelected(eventHandler); });
     }
 
     @Override
     public void updateItem(Item item, int num) {
-        updateWholeLayout(()->{
+        updateWholeLayout(() -> {
             getLayout().updateItem(item,num);
         });
     }
 
     @Override
-    public int getItemCount() {
-        return getValue(()->getLayout().getItemCount());
-    }
-
-    @Override
-    public void clear() {
-        updateWholeLayout(()->{
-            getLayout().clear();
-        });
-    }
-
-    @Override
-    public void refresh() {
-        updateWholeLayout(()->{
-            getLayout().refresh();
+    public void updateItems(List<? extends Item> items) {
+        updateWholeLayout(() -> {
+            getLayout().updateItems(items);
         });
     }
 
@@ -145,7 +125,26 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
     }
 
     @Override
+    public int getItemCount() {
+        return getValue(() -> getLayout().getItemCount());
+    }
+
+    @Override
+    public void clear() {
+        updateWholeLayout(() -> {
+            getLayout().clear();
+        });
+    }
+
+    @Override
+    public void refresh() {
+        updateWholeLayout(() -> {
+            getLayout().refresh();
+        });
+    }
+
+    @Override
     public InputPane getInputPane() {
-        return getValue(()->getLayout().getInputPane());
+        return getValue(() -> getLayout().getInputPane());
     }
 }

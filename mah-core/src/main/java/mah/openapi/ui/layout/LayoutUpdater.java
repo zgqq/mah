@@ -25,8 +25,8 @@ package mah.openapi.ui.layout;
 
 import mah.command.Command;
 import mah.command.CommandManager;
-import mah.ui.UIException;
-import mah.ui.UIManager;
+import mah.ui.UiException;
+import mah.ui.UiManager;
 import mah.ui.layout.Layout;
 import mah.ui.window.Window;
 import mah.ui.window.WindowManager;
@@ -57,7 +57,7 @@ public class LayoutUpdater {
     public void updateWholeLayout(Runnable runnable) {
         synchronized (lock) {
             if (allowUpdateLayout()) {
-                UIManager.getInstance().runLater(() -> {
+                UiManager.getInstance().runLater(() -> {
                     runnable.run();
                     updateWindow();
                 });
@@ -72,7 +72,7 @@ public class LayoutUpdater {
     public void updatePartLayout(Runnable runnable) {
         synchronized (lock) {
             if (allowUpdateLayout()) {
-                UIManager.getInstance().runLater(runnable);
+                UiManager.getInstance().runLater(runnable);
             }
         }
     }
@@ -90,7 +90,7 @@ public class LayoutUpdater {
                 return value.value;
             }
         } catch (Exception e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 

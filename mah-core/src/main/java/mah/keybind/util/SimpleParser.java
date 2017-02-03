@@ -33,7 +33,6 @@ import java.util.List;
  * Created by zgq on 2017-01-09 09:27
  */
 public class SimpleParser {
-
     private static final int getModifer(char c) {
         switch (c) {
             case 'c':
@@ -59,10 +58,10 @@ public class SimpleParser {
             int keycode;
             if (comp.contains("-")) {
                 String[] arrs = comp.split("-");
-                for (int i = 0; i < arrs.length -1; i++) {
+                for (int i = 0; i < arrs.length - 1; i++) {
                     modifierMask |= getModifer(arrs[i].charAt(0));
                 }
-                String cs= arrs[arrs.length - 1];
+                String cs = arrs[arrs.length - 1];
                 keycode = getKeyCode(cs);
             } else {
                 keycode = getKeyCode(comp);
@@ -84,10 +83,9 @@ public class SimpleParser {
             } else {
                 throw new RuntimeException("Not supported key sequence" + cs);
             }
-        }else {
+        } else {
             keycode = SwingUtils.getKeyCode(cs.charAt(0));
         }
         return keycode;
     }
-
 }

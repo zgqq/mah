@@ -26,13 +26,14 @@ package mah.ui.support.swing.util;
 /**
  * Created by zgq on 2017-01-09 19:05
  */
-public class StringUtils {
-
+public final class StringUtils {
     private static final int IDO_LEN = 3;
+
+    private StringUtils() {}
 
     public static int getLen(String origin, String text, int maxLen) {
         int length;
-        if ((length=getLength(origin))> maxLen) {
+        if ((length = getLength(origin)) > maxLen) {
             return 0;
         }
 
@@ -101,6 +102,4 @@ public class StringUtils {
         }
         return text.length() - 1;
     }
-
-
 }

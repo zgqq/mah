@@ -23,7 +23,7 @@
  */
 package mah.keybind.config;
 
-import mah.common.util.XMLUtils;
+import mah.common.util.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,11 +34,10 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-09 09:32
  */
-public class XMLGlobalKeybindParser {
-
+public class XmlGlobalKeybindParser {
     private final Document document;
 
-    public XMLGlobalKeybindParser(Document document) {
+    public XmlGlobalKeybindParser(Document document) {
         this.document = document;
     }
 
@@ -56,9 +55,9 @@ public class XMLGlobalKeybindParser {
     }
 
     private GlobalKeybindConfig parseKeybind(Node item) {
-        String listen = XMLUtils.getAttribute(item, "listen");
-        String consume = XMLUtils.getAttribute(item, "consume");
-        String action = XMLUtils.getAttribute(item, "action");
+        String listen = XmlUtils.getAttribute(item, "listen");
+        String consume = XmlUtils.getAttribute(item, "consume");
+        String action = XmlUtils.getAttribute(item, "action");
         return new GlobalKeybindConfig(listen, consume, action);
     }
 }

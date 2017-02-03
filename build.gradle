@@ -6,7 +6,7 @@ buildscript {
 }
 
 plugins {
-        id "com.github.hierynomus.license" version "0.13.1"
+    id "com.github.hierynomus.license" version "0.13.1"
 }
 
 wrapper.gradleVersion = '2.13'
@@ -15,6 +15,7 @@ configure(allprojects) { project ->
     repositories {
         jcenter()
     }
+
     apply plugin: 'idea'
         idea {
             module {
@@ -35,13 +36,19 @@ configure(allprojects) { project ->
                 compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.6.2'
                 compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.2'
         }
-        apply plugin: 'com.github.hierynomus.license'
-license {
-    header =        rootProject.file('LICENSE') 
-        ext.year = Calendar.getInstance().get(Calendar.YEAR)
-        ext.name = 'zgqq'
-        ext.email = 'zgqjava@gmail.com'
-        include "**/*.groovy"
-        includes(["**/*.java", "**/*.properties"])
-}
+
+    apply plugin: 'com.github.hierynomus.license'
+        license {
+            header =        rootProject.file('LICENSE') 
+                ext.year = Calendar.getInstance().get(Calendar.YEAR)
+                ext.name = 'zgqq'
+                ext.email = 'zgqjava@gmail.com'
+                include "**/*.groovy"
+                includes(["**/*.java", "**/*.properties"])
+        }
+
+    apply plugin: 'checkstyle'
+        checkstyle {
+            configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        }
 }

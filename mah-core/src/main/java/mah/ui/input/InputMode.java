@@ -29,7 +29,7 @@ import mah.command.CommandManager;
 import mah.mode.AbstractMode;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
-import mah.ui.UIManager;
+import mah.ui.UiManager;
 import mah.ui.util.ClipboardUtils;
 import mah.ui.window.WindowMode;
 
@@ -37,24 +37,23 @@ import mah.ui.window.WindowMode;
  * Created by zgq on 2017-01-09 10:33
  */
 public class InputMode extends AbstractMode {
-
     public static final String NAME = "input_mode";
 
     public InputMode(Mode parent) {
         super(NAME, parent);
     }
 
-    private static String FORWARD_CHAR = "ForwardChar";
-    private static String BACKWARD_CHAR = "BackwardChar";
-    private static String DELETE_CHAR = "DeleteChar";
+    private static final String FORWARD_CHAR = "ForwardChar";
+    private static final String BACKWARD_CHAR = "BackwardChar";
+    private static final String DELETE_CHAR = "DeleteChar";
 
-    private static String FORWARD_WORD = "ForwardWord";
-    private static String BACKWARD_WORD = "BackwardWord";
-    private static String KILL_WORD = "KillWord";
+    private static final String FORWARD_WORD = "ForwardWord";
+    private static final String BACKWARD_WORD = "BackwardWord";
+    private static final String KILL_WORD = "KillWord";
 
-    private static String BEGINNING_OF_LINE = "BeginningOfLine";
-    private static String END_OF_LINE = "EndOfLine";
-    private static String KILL_LINE = "KillLine";
+    private static final String BEGINNING_OF_LINE = "BeginningOfLine";
+    private static final String END_OF_LINE = "EndOfLine";
+    private static final String KILL_LINE = "KillLine";
 
     @Override
     public void init() {
@@ -90,7 +89,7 @@ public class InputMode extends AbstractMode {
         return (InputMode) ModeManager.getInstance().getOrRegisterMode(new InputMode(WindowMode.getOrRegisterMode()));
     }
 
-    static abstract class InputAction extends AbstractAction {
+    abstract static class InputAction extends AbstractAction {
         public InputAction(String name) {
             super(name, Input.class);
         }
@@ -98,7 +97,7 @@ public class InputMode extends AbstractMode {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             Input source = (Input) actionEvent.getSource();
-            UIManager.getInstance().runLater(new Runnable() {
+            UiManager.getInstance().runLater(new Runnable() {
                 @Override
                 public void run() {
                     actionPerformed(source);
@@ -288,12 +287,12 @@ public class InputMode extends AbstractMode {
             if (currentTriggerKey == null) {
                 return;
             }
-            source.setText(currentTriggerKey.trim()+" ");
+            source.setText(currentTriggerKey.trim() + " ");
             source.setCaretPosition(source.getText().length());
         }
     }
 
-    static class CopyArgumentText extends InputAction{
+    static class CopyArgumentText extends InputAction {
 
         public CopyArgumentText(String name) {
             super(name);

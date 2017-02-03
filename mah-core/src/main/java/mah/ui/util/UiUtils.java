@@ -21,34 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.app.config;
+package mah.ui.util;
 
-import org.w3c.dom.Document;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import mah.ui.key.KeystateManager;
+import mah.ui.layout.Layout;
+import mah.ui.pane.input.InputPane;
+import mah.ui.pane.input.InputPaneProvider;
+import mah.ui.window.WindowManager;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Created by zgq on 2017-01-09 10:04
+ * Created by zgq on 2017-01-12 11:17
  */
-public class XMLConfigParser {
+public final class UiUtils {
+    private UiUtils(){}
 
-    private final String path;
-
-    public XMLConfigParser(String path) {
-        this.path = path;
+    public static void hideWindow() {
+        KeystateManager.getInstance().reset();
+        WindowManager.getInstance().getCurrentWindow().hide();
     }
 
-    public Config parse() {
-        File file = new File(path);
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(file);
-            return new XMLConfig(doc);
-        } catch (Exception e) {
-            throw new ParserConfigException(e);
+    @Nullable
+    public static InputPane getInputPane() {
+        Layout currentLayout = WindowManager.getInstance().getCurrentWindow().getCurrentLayout();
+        if (currentLayout instanceof InputPaneProvider) {
+            InputPaneProvider layout = (InputPaneProvider) currentLayout;
+            return layout.getInputPane();
         }
+        return null;
     }
 }

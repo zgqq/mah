@@ -40,17 +40,15 @@ import javax.swing.*;
 /**
  * Created by zgq on 2017-01-08 11:38
  */
-public class UIManager implements ApplicationListener{
-
-    private static UIManager ourInstance = new UIManager();
+public class UiManager implements ApplicationListener {
+    private static final UiManager INSTANCE = new UiManager();
     private FactoryHelper helper = new FactoryHelper();
 
-    public static UIManager getInstance() {
-        return ourInstance;
+    public static UiManager getInstance() {
+        return INSTANCE;
     }
 
-    private UIManager() {
-    }
+    private UiManager() {}
 
     private void registerMode() {
         ModeManager.getInstance().registerMode(new SystemMode());
@@ -67,7 +65,7 @@ public class UIManager implements ApplicationListener{
 
     @Override
     public void afterStart(ApplicationEvent applicationEvent) {
-        runLater(()->{
+        runLater(() -> {
             WindowManager.getInstance().createWindow();
             WindowManager.getInstance().showWindow();
         });

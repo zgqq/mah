@@ -35,26 +35,25 @@ import java.util.concurrent.Future;
  * Created by zgq on 2017-01-12 20:22
  */
 public class ExecutorServices {
-
-    private static final ExecutorService executor = Executors.newCachedThreadPool();
-    private static final Logger logger = LoggerFactory.getLogger(ExecutorServices.class);
+    private static final ExecutorService EXECUOTR = Executors.newCachedThreadPool();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorServices.class);
 
     public static Future<?> submit(Runnable task) {
-        return executor.submit(() -> {
+        return EXECUOTR.submit(() -> {
             try {
                 task.run();
             } catch (Exception e) {
-                logger.error("task failed to be executed", e);
+                LOGGER.error("task failed to be executed", e);
             }
         });
     }
 
     public static <T> Future<T> submit(Callable<T> task) {
-        return executor.submit(() -> {
+        return EXECUOTR.submit(() -> {
             try {
                 return task.call();
             } catch (Exception e) {
-                logger.error("task failed to be executed", e);
+                LOGGER.error("task failed to be executed", e);
             }
             return null;
         });

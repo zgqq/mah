@@ -24,8 +24,8 @@
 package mah.plugin.support.orgnote.source;
 
 
+import mah.common.util.IoUtils;
 import mah.plugin.support.orgnote.entity.NodeEntity;
-import mah.plugin.support.orgnote.util.IOUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -36,11 +36,10 @@ import java.util.regex.Pattern;
  * Created by zgq on 10/1/16.
  */
 public class OrgMode {
-
     public static List<NodeEntity> getNoteList(String filename, String title) {
         try {
             ArrayList<NodeEntity> noteEntities = new ArrayList<>();
-            String content = IOUtil.getStringByFilename(filename);
+            String content = IoUtils.getStringByFilename(filename);
             StringBuilder stars = getPrefixStars(title);
             String group = getItemsContent(content, stars);
             Pattern itemPatt = Pattern.compile(stars + "*(.*?)(" + stars + "*)?");
@@ -60,7 +59,7 @@ public class OrgMode {
         StringBuilder stars = new StringBuilder();
         for (int i = 0; i < title.length(); i++) {
             char c = title.charAt(i);
-            if (c != '*' || c !=' ') {
+            if (c != '*' || c != ' ') {
                 break;
             }
             stars.append('*');
@@ -96,7 +95,7 @@ public class OrgMode {
                 nextLine = scanner.nextLine();
                 noteContent.append(nextLine);
             }
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             nodeEntity.setContent(noteContent.toString());
         }
         return nodeEntity;

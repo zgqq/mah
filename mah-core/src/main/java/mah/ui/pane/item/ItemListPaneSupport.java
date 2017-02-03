@@ -23,7 +23,7 @@
  */
 package mah.ui.pane.item;
 
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.event.EventHandler;
 
 import java.util.ArrayList;
@@ -32,8 +32,7 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-08 14:08
  */
-public abstract class ItemListPaneSupport implements ItemListPane{
-
+public abstract class ItemListPaneSupport implements ItemListPane {
     private List<EventHandler<? extends ItemSelectedEvent>> itemSelectedHandlers = new ArrayList<>();
     private final List<ItemPane> itemPanes;
     private int pendingIndex = -1;
@@ -48,7 +47,7 @@ public abstract class ItemListPaneSupport implements ItemListPane{
         }
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            ItemPane itemPane = createItemPane(item,i+1);
+            ItemPane itemPane = createItemPane(item,i + 1);
             itemPanes.add(itemPane);
         }
     }
@@ -62,7 +61,7 @@ public abstract class ItemListPaneSupport implements ItemListPane{
         }
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            itemPanes.get(i).reset(item,i+1);
+            itemPanes.get(i).reset(item,i + 1);
         }
         pendingIndex = -1;
         itemSelectedHandlers.clear();
@@ -85,7 +84,8 @@ public abstract class ItemListPaneSupport implements ItemListPane{
     @Override
     public void updateItem(Item item, int num) {
         if (num < 1 || num > itemPanes.size()) {
-            throw new IllegalArgumentException("Unable to update item " + num + ",num must be greater than 1 and less than " + (itemPanes.size() + 1));
+            throw new IllegalArgumentException("Unable to update item " + num
+                    + ",num must be greater than 1 and less than " + (itemPanes.size() + 1));
         }
         itemPanes.get(num - 1).reset(item, num);
     }
@@ -113,7 +113,7 @@ public abstract class ItemListPaneSupport implements ItemListPane{
             try {
                 itemSelectedHandler.handle(itemSelectedEvent);
             } catch (Exception e) {
-                throw new UIException(e);
+                throw new UiException(e);
             }
         }
     }

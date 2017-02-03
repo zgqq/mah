@@ -88,11 +88,6 @@ public class FullItemImpl implements FullItem{
             this.content = new Text(content);
         }
 
-        public Builder description(String description) {
-            this.description = new Text(description);
-            return this;
-        }
-
         public Builder iconName(String iconName) {
             this.iconName = iconName;
             return this;
@@ -110,6 +105,11 @@ public class FullItemImpl implements FullItem{
 
         public FullItemImpl build() {
             return new FullItemImpl(this);
+        }
+
+        public Builder description(String description) {
+            this.description = new Text(description);
+            return this;
         }
 
         public Builder description(String description, List<Integer> matchedIndexs) {

@@ -71,8 +71,9 @@ public class CommandMode extends AbstractMode {
                 CommandManager.getInstance().setLockedCommand(null);
             } else {
                 Command currentCommand = CommandManager.getInstance().getCurrentCommand();
-                if (currentCommand != null)
+                if (currentCommand != null) {
                     CommandManager.getInstance().setLockedCommand(currentCommand);
+                }
             }
         }
     }

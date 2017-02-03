@@ -23,7 +23,7 @@
  */
 package mah.ui.window;
 
-import mah.ui.UIManager;
+import mah.ui.UiManager;
 import mah.ui.key.KeystateManager;
 import mah.ui.layout.LayoutType;
 
@@ -43,7 +43,7 @@ public class WindowManager {
     }
 
     public void createWindow() {
-        this.windowFactory = UIManager.getInstance().getWindowFactory();
+        this.windowFactory = UiManager.getInstance().getWindowFactory();
         currentWindow = this.windowFactory.createWindow(new WindowProperties.Builder(LayoutType.DEFAULT).build());
     }
 
@@ -56,7 +56,7 @@ public class WindowManager {
     }
 
     public static void hideWindow() {
-        UIManager.getInstance().runLater(() -> {
+        UiManager.getInstance().runLater(() -> {
             KeystateManager.getInstance().reset();
             ourInstance.getCurrentWindow().hide();
         });

@@ -21,33 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.util;
+package mah.plugin.config;
 
-import mah.ui.key.KeystateManager;
-import mah.ui.layout.Layout;
-import mah.ui.pane.input.InputPane;
-import mah.ui.pane.input.InputPaneProvider;
-import mah.ui.window.WindowManager;
-import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Node;
 
 /**
- * Created by zgq on 2017-01-12 11:17
+ * Created by zgq on 2017-01-08 20:21
  */
-public final class UIUtils {
+public class XmlCommandConfig extends CommandConfig {
+    private final Node customConfig;
 
-
-    public static void hideWindow() {
-        KeystateManager.getInstance().reset();
-        WindowManager.getInstance().getCurrentWindow().hide();
+    public XmlCommandConfig(String pluginName, String commandName, String triggerKey, Node customConfig) {
+        super(pluginName, commandName, triggerKey);
+        synchronized (this) {
+            if (customConfig != null) {
+                this.customConfig = customConfig.cloneNode(true);
+            } else {
+                this.customConfig = null;
+            }
+        }
     }
 
-    @Nullable
-    public static InputPane getInputPane() {
-        Layout currentLayout = WindowManager.getInstance().getCurrentWindow().getCurrentLayout();
-        if (currentLayout instanceof InputPaneProvider) {
-            InputPaneProvider layout = (InputPaneProvider) currentLayout;
-            return layout.getInputPane();
+    public Node getCustomConfig() {
+        synchronized (this) {
+            return customConfig;
         }
-        return null;
     }
 }

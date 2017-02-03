@@ -21,26 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.keybind.config;
+package mah.ui;
 
-import org.w3c.dom.Node;
+import mah.app.ApplicationException;
 
 /**
- * Created by zgq on 2017-01-09 09:30
+ * Created by zgq on 2017-01-08 14:29
  */
-public class XMLKeybindParser {
+public class UiException extends ApplicationException{
+    public UiException() {}
 
-    protected KeybindConfig parseKeybind(Node item) {
-        return parseKeybind(item, null);
+    public UiException(String message) {
+        super(message);
     }
 
-    protected KeybindConfig parseKeybind(Node item,String mode) {
-        Node bindAttr = item.getAttributes().getNamedItem("bind");
-        String keys = bindAttr.getNodeValue();
-        Node actionAttr = item.getAttributes().getNamedItem("action");
-        String action = actionAttr.getNodeValue();
-        KeybindConfig keybind = new KeybindConfig(mode,keys,action);
-        return keybind;
+    public UiException(String message, Throwable cause) {
+        super(message, cause);
     }
 
+    public UiException(Throwable cause) {
+        super(cause);
+    }
+
+    public UiException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

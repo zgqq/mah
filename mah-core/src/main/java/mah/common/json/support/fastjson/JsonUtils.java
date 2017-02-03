@@ -21,35 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.plugin.support.translation.repo;
+package mah.common.json.support.fastjson;
 
-import mah.common.json.JSONArr;
-import mah.common.json.JSONFactory;
-import mah.common.json.support.fastjson.FastjsonJSONFactory;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import mah.common.json.JsonArr;
+import mah.common.json.JsonObj;
 
 /**
  * Created by zgq on 16-12-4.
  */
-public class JSONUtils {
-
-    private static final JSONFactory jsonFactory = new FastjsonJSONFactory();
-
-    public static JSONFactory getJSONFactory() {
-        return jsonFactory;
-    }
-
-
-    public static List<String> toExplains(JSONArr explainsObj) {
-        List<String> explains = new ArrayList<>();
-        for (Object explain : explainsObj) {
-            explains.add(explain.toString());
+public class JsonUtils {
+    public static JsonObj createJsonObj(JSONObject jsonObject) {
+        if (jsonObject == null) {
+            return null;
         }
-        return explains;
+        return new FastjsonAdapter(jsonObject);
     }
 
-
-
+    public static JsonArr createJsonArr(JSONArray jsonArray) {
+        if (jsonArray == null) {
+            return null;
+        }
+        return new FastjsonArrAdapter(jsonArray);
+    }
 }

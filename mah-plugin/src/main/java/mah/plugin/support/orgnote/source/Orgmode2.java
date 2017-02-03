@@ -24,8 +24,8 @@
 package mah.plugin.support.orgnote.source;
 
 import com.alibaba.fastjson.JSON;
+import mah.common.util.IoUtils;
 import mah.plugin.support.orgnote.entity.NodeEntity;
-import mah.plugin.support.orgnote.util.IOUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,9 +38,9 @@ import java.util.Scanner;
 public class Orgmode2 {
     public static final NodeEntity parseNodeEntity(String content) {
         ParserHelper parserHelper = new ParserHelper(content);
-        if (parserHelper.hasNext()){
+        if (parserHelper.hasNext()) {
             parserHelper.nextLine();
-            if (parserHelper.isHeadline()){
+            if (parserHelper.isHeadline()) {
                 return parseNodeEntity(parserHelper,parserHelper.getHeadlineLevel());
             }
             throw new RuntimeException("Only support headline start with *");
@@ -89,11 +89,11 @@ public class Orgmode2 {
             return false;
         }
 
-        public int getHeadlineLevel(){
+        public int getHeadlineLevel() {
             return headlineLevel;
         }
 
-        public void nextLine(){
+        public void nextLine() {
             currentLine++;
         }
 
@@ -101,10 +101,10 @@ public class Orgmode2 {
             currentLine--;
         }
 
-        private int getCharSkipSpaceFromTail(String line){
-            for (int i = line.length()-1; i>=0; i--) {
+        private int getCharSkipSpaceFromTail(String line) {
+            for (int i = line.length() - 1; i >= 0; i--) {
                 char c = line.charAt(i);
-                if (c == ' '){
+                if (c == ' ') {
                     continue;
                 }
                 return i;
@@ -112,27 +112,27 @@ public class Orgmode2 {
             return -1;
         }
 
-        public int getCurrentLine(){
+        public int getCurrentLine() {
             return currentLine;
         }
 
         public String getTitle() {
             String line = getLine();
-            int nospIndex =getCharSkipSpaceFromTail(line);
-            if (nospIndex == -1){
+            int nospIndex = getCharSkipSpaceFromTail(line);
+            if (nospIndex == -1) {
                 return "";
             }
 
-            if (line.charAt(nospIndex)!=':'){
+            if (line.charAt(nospIndex) != ':') {
                 return line.substring(headlineLevel,line.length());
             }
 
             int tagStartInd = -1;
-            for (int i = nospIndex-1; i > 0; i--) {
+            for (int i = nospIndex - 1; i > 0; i--) {
                 char c = line.charAt(i);
                 if (c == ' ') {
                     break;
-                }else if (c == ':'){
+                } else if (c == ':') {
                     tagStartInd = i;
                 }
             }
@@ -144,37 +144,40 @@ public class Orgmode2 {
         }
 
         public List<String> getRange(int start, int end) {
-            return contents.subList(start-1, end);
+            return contents.subList(start - 1, end);
         }
     }
 
     public static final NodeEntity parseNodeEntity(ParserHelper parserHelper, int currentLevel) {
         NodeEntity nodeEntity = new NodeEntity();
-        ArrayList<NodeEntity> childrens=null;
+        ArrayList<NodeEntity> childrens = null;
         boolean sameHeadline = true;
         int conStartInd = 0;
         boolean hasChild = false;
         while (parserHelper.hasNext()) {
             parserHelper.nextLine();
-            if (parserHelper.isHeadline()){
+            if (parserHelper.isHeadline()) {
                 if (parserHelper.getHeadlineLevel() < currentLevel) {
-                    if (!hasChild){
-                        nodeEntity.setContentLines(parserHelper.getRange(conStartInd,parserHelper.getCurrentLine()-1));
+                    if (!hasChild) {
+                        nodeEntity.setContentLines(parserHelper.getRange(conStartInd,
+                                parserHelper.getCurrentLine() - 1));
                     }
                     parserHelper.backToPreviousLine();
                     return nodeEntity;
-                }else if (parserHelper.getHeadlineLevel() > currentLevel){
+                } else if (parserHelper.getHeadlineLevel() > currentLevel) {
                     hasChild = true;
                     parserHelper.backToPreviousLine();
-                    if(childrens==null)
+                    if (childrens == null) {
                         childrens = new ArrayList<>();
+                    }
                     // Parse its children node.
                     NodeEntity child = parseNodeEntity(parserHelper, parserHelper.getHeadlineLevel());
                     childrens.add(child);
-                }else if (parserHelper.getHeadlineLevel() == currentLevel) {
-                    if (!sameHeadline){
-                        if (!hasChild){
-                            nodeEntity.setContentLines(parserHelper.getRange(conStartInd,parserHelper.getCurrentLine()-1));
+                } else if (parserHelper.getHeadlineLevel() == currentLevel) {
+                    if (!sameHeadline) {
+                        if (!hasChild) {
+                            nodeEntity.setContentLines(parserHelper.getRange(conStartInd,
+                                    parserHelper.getCurrentLine() - 1));
                         }
                         parserHelper.backToPreviousLine();
                         return nodeEntity;
@@ -182,7 +185,7 @@ public class Orgmode2 {
                     sameHeadline = false;
                     // Parse headline
                     nodeEntity.setTitle(parserHelper.getTitle());
-                    conStartInd = parserHelper.getCurrentLine()+1;
+                    conStartInd = parserHelper.getCurrentLine() + 1;
                 }
             }
         }
@@ -190,7 +193,7 @@ public class Orgmode2 {
         return nodeEntity;
     }
     public static final String toJson(String filename) throws IOException {
-        String content = IOUtil.getStringByFilename(filename);
+        String content = IoUtils.getStringByFilename(filename);
         NodeEntity nodeEntity = Orgmode2.parseNodeEntity(content);
         return JSON.toJSONString(nodeEntity.getChildrens());
     }

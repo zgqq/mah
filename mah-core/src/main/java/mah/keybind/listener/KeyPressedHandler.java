@@ -35,9 +35,8 @@ import java.awt.event.InputEvent;
 /**
  * Created by zgq on 2017-01-09 09:42
  */
-public class KeyPressedHandler implements EventHandler<KeyEvent>{
-
-    private static final Logger logger = LoggerFactory.getLogger(KeyPressedHandler.class);
+public class KeyPressedHandler implements EventHandler<KeyEvent> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyPressedHandler.class);
 
     @Override
     public void handle(KeyEvent event) {
@@ -61,11 +60,9 @@ public class KeyPressedHandler implements EventHandler<KeyEvent>{
 
         if (!event.isModifierKey()) {
            KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, mask);
-            logger.debug("try key stroke {}", keyStroke);
+            LOGGER.debug("try key stroke {}", keyStroke);
             KeybindManager.getInstance().tryExecuteAction(keyStroke);
             return;
         }
     }
-
-
 }

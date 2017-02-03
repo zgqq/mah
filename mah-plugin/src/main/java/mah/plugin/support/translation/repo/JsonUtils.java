@@ -21,12 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.common.json;
+package mah.plugin.support.translation.repo;
 
+import mah.common.json.JsonArr;
+import mah.common.json.JsonFactory;
+import mah.common.json.support.fastjson.FastjsonJsonFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by zgq on 16-12-4.
  */
-public interface JSONArr extends List {
+public class JsonUtils {
+    private static final JsonFactory JSON_FACTORY = new FastjsonJsonFactory();
+
+    public static JsonFactory getJsonFactory() {
+        return JSON_FACTORY;
+    }
+
+    public static List<String> toExplains(JsonArr explainsObj) {
+        List<String> explains = new ArrayList<>();
+        for (Object explain : explainsObj) {
+            explains.add(explain.toString());
+        }
+        return explains;
+    }
 }

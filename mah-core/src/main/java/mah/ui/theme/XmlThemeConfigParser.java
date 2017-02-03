@@ -21,28 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.common.json;
+package mah.ui.theme;
+
+import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 
 /**
- * Created by zgq on 16-12-4.
+ * Created by zgq on 2017-01-13 21:14
  */
-public class JSONException extends RuntimeException{
-    public JSONException() {
+public class XmlThemeConfigParser {
+    private Document document;
+
+    public XmlThemeConfigParser(Document document) {
+        this.document = document;
     }
 
-    public JSONException(String message) {
-        super(message);
-    }
-
-    public JSONException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public JSONException(Throwable cause) {
-        super(cause);
-    }
-
-    public JSONException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    @Nullable
+    public String parseTheme() {
+        NodeList themeNode = document.getElementsByTagName("theme");
+        int length = themeNode.getLength();
+        if (length > 0) {
+            Node item = themeNode.item(0);
+            return item.getTextContent();
+        }
+        return null;
     }
 }

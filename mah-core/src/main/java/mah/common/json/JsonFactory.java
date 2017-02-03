@@ -21,30 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui;
+package mah.common.json;
 
-import mah.app.ApplicationException;
+import java.util.List;
 
 /**
- * Created by zgq on 2017-01-08 14:29
+ * Created by zgq on 16-12-4.
  */
-public class UIException extends ApplicationException{
-    public UIException() {
-    }
+public interface JsonFactory {
 
-    public UIException(String message) {
-        super(message);
-    }
+    JsonObj parseObj(String text);
 
-    public UIException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    JsonArr parseArr(String text);
 
-    public UIException(Throwable cause) {
-        super(cause);
-    }
-
-    public UIException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+   <T> List<T> parseArr(String json, Class<T> clazz);
 }

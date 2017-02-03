@@ -137,19 +137,19 @@ public class NodeEntity {
 
     @Override
     public String toString() {
-        return "NodeEntity{" +
-                "title='" + title + '\'' +
-                ", contentLines=" + contentLines +
-                ", content='" + content + '\'' +
-                ", tags=" + tags +
-                ", lastReviewTime=" + lastReviewTime +
-                ", familiarDegree=" + familiarDegree +
-                ", childrens=" + childrens +
-                ", quit=" + quit +
-                ", rememberCount=" + rememberCount +
-                ", quitCount=" + quitCount +
-                ", forgetCount=" + forgetCount +
-                '}';
+        return "NodeEntity{"
+                + "title='" + title + '\''
+                + ", contentLines=" + contentLines
+                + ", content='" + content + '\''
+                + ", tags=" + tags
+                + ", lastReviewTime=" + lastReviewTime
+                + ", familiarDegree=" + familiarDegree
+                + ", childrens=" + childrens
+                + ", quit=" + quit
+                + ", rememberCount=" + rememberCount
+                + ", quitCount=" + quitCount
+                + ", forgetCount=" + forgetCount
+                + '}';
     }
 
     public String joinContentLines() {
@@ -157,7 +157,7 @@ public class NodeEntity {
         if (contentLines == null) {
             return "";
         }
-        contentLines.forEach(line->sb.append(line+"\n"));
+        contentLines.forEach(line -> sb.append(line + "\n"));
         return sb.toString();
     }
 }

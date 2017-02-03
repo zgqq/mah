@@ -32,22 +32,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public class RepositoryUpdater {
-
-    private Logger logger = LoggerFactory.getLogger(RepositoryUpdater.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryUpdater.class);
     private volatile Future<UpdateResult> synchronizeFuture;
-
-    private String synchURL;
+    private String synchUrl;
     private String localStoreFile;
     private ExecutorService executorService;
 
-    public RepositoryUpdater(ExecutorService executorService, String localStoreFile, String synchURL) {
+    public RepositoryUpdater(ExecutorService executorService, String localStoreFile, String synchUrl) {
         this.executorService = executorService;
         this.localStoreFile = localStoreFile;
-        this.synchURL = synchURL;
+        this.synchUrl = synchUrl;
     }
 
     public void checkRemote(GithubRepositories githubRepositories) {
-        SynchronizeRepositoryTask synchronizeRepositoryTask = new SynchronizeRepositoryTask(githubRepositories, this.synchURL);
+        SynchronizeRepositoryTask synchronizeRepositoryTask = new SynchronizeRepositoryTask(githubRepositories,
+                this.synchUrl);
         synchronizeFuture = executorService.submit(synchronizeRepositoryTask);
     }
 
@@ -57,7 +56,7 @@ public class RepositoryUpdater {
 
     public UpdateResult getUpdateResult() throws ExecutionException, InterruptedException {
         if (synchronizeFuture == null) {
-            logger.warn("Could not update local store due to remote check unavaible!");
+            LOGGER.warn("Could not update local store due to remote check unavaible!");
             return null;
         }
         UpdateResult updateResult = synchronizeFuture.get();

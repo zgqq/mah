@@ -24,7 +24,7 @@
 package mah.plugin.config;
 
 import mah.app.config.ParserConfigException;
-import mah.common.util.XMLUtils;
+import mah.common.util.XmlUtils;
 import mah.plugin.PluginMetainfo;
 import mah.plugin.loader.PluginClassLoader;
 import org.jetbrains.annotations.NotNull;
@@ -46,24 +46,27 @@ import java.util.stream.Collectors;
 /**
  * Created by zgq on 2017-01-08 20:02
  */
-public class XMLPluginMetainfoParser {
-
+public class XmlPluginMetainfoParser {
     private final File pluginDir;
     private final InputStream metainfoFile;
-    private final static PluginClassLoader pluginClassLoader = new PluginClassLoader();
+    private static final PluginClassLoader PLUGIN_CLASSLOADER = new PluginClassLoader();
 
-    public XMLPluginMetainfoParser(File pluginDir, InputStream metainfoFile) {
+    public XmlPluginMetainfoParser(File pluginDir, InputStream metainfoFile) {
         this.pluginDir = pluginDir;
         this.metainfoFile = metainfoFile;
     }
 
     @NotNull
-    protected final List<PluginMetainfo> parsePluginMetainfosFromJars(File pluginDir, List<String> pluginNames) throws Exception {
+    protected final List<PluginMetainfo> parsePluginMetainfosFromJars(File pluginDir, List<String> pluginNames)
+            throws Exception {
         List<PluginMetainfo> pluginMetainfos = null;
-        if (pluginDir!=null && pluginDir.isDirectory()) {
+        if (pluginDir != null && pluginDir.isDirectory()) {
             List<String> pluginFiles = Arrays.stream(pluginDir.list((dir, name) -> {
-                if (name.endsWith(".jar")) return true;
-                else return false;
+                if (name.endsWith(".jar")) {
+                    return true;
+                } else {
+                    return false;
+                }
             })).collect(Collectors.toList());
             for (String pluginFile : pluginFiles) {
                 File file = new File(pluginDir.getAbsolutePath() + File.separator + pluginFile);
@@ -73,8 +76,8 @@ public class XMLPluginMetainfoParser {
                 pluginMetainfos = parsePluginMetainfos(inputStream, pluginNames);
                 for (PluginMetainfo pluginMetainfo : pluginMetainfos) {
                     //Load plugin
-                    pluginClassLoader.loadClass(pluginMetainfo.getPluginClass(), jarFile);
-                    pluginMetainfo.setPluginLoader(pluginClassLoader);
+                    PLUGIN_CLASSLOADER.loadClass(pluginMetainfo.getPluginClass(), jarFile);
+                    pluginMetainfo.setPluginLoader(PLUGIN_CLASSLOADER);
                 }
             }
         }
@@ -96,12 +99,23 @@ public class XMLPluginMetainfoParser {
         }
     }
 
+    protected List<PluginMetainfo> parsePluginMetainfos(InputStream inputStream,List<String> pluginNames) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(inputStream);
+            return parseMetainfos(doc,pluginNames);
+        } catch (Exception e) {
+            throw new ParserConfigException(e);
+        }
+    }
+
     @NotNull
     private List<PluginMetainfo> parseBuiltinPluginMetainfos(List<String> pluginNames) throws Exception {
         if (metainfoFile == null) {
             return new ArrayList<>();
         }
-        Document doc = XMLUtils.getDocument(metainfoFile);
+        Document doc = XmlUtils.getDocument(metainfoFile);
         List<PluginMetainfo> pluginMetainfos = parseMetainfos(doc, pluginNames);
         for (PluginMetainfo pluginMetainfo : pluginMetainfos) {
             pluginMetainfo.setPluginLoader(getClass().getClassLoader());
@@ -117,7 +131,7 @@ public class XMLPluginMetainfoParser {
         for (int j = 0; j < length; j++) {
             Node item = pluginNodes.item(j);
             PluginMetainfo metainfo = parseMetaInfo(item);
-            if(pluginNames==null  || pluginNames.contains(metainfo.getName())){
+            if (pluginNames == null  || pluginNames.contains(metainfo.getName())) {
                 metainfos.add(metainfo);
             }
         }
@@ -141,17 +155,5 @@ public class XMLPluginMetainfoParser {
             }
         }
         return metainfo;
-    }
-
-
-    protected List<PluginMetainfo> parsePluginMetainfos(InputStream inputStream,List<String> pluginNames) {
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(inputStream);
-            return parseMetainfos(doc,pluginNames);
-        } catch (Exception e) {
-            throw new ParserConfigException(e);
-        }
     }
 }

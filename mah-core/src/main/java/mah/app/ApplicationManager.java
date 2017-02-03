@@ -24,13 +24,13 @@
 package mah.app;
 
 import mah.app.config.Config;
-import mah.app.config.XMLConfigParser;
+import mah.app.config.XmlConfigParser;
 import mah.command.CommandManager;
-import mah.common.util.IOUtils;
+import mah.common.util.IoUtils;
 import mah.keybind.KeybindManager;
 import mah.mode.ModeManager;
 import mah.plugin.PluginManager;
-import mah.ui.UIManager;
+import mah.ui.UiManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,17 +44,16 @@ import java.util.List;
  * Created by zgq on 2017-01-08 11:35
  */
 public class ApplicationManager {
-
     private static final ApplicationManager INSTANCE = new ApplicationManager();
     private static final List<ApplicationListener> APPLICATION_LISTENER = new ArrayList<>();
-    private static final Logger logger = LoggerFactory.getLogger(ApplicationManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationManager.class);
 
     static {
         APPLICATION_LISTENER.add(PluginManager.getInstance());
         APPLICATION_LISTENER.add(ModeManager.getInstance());
         APPLICATION_LISTENER.add(KeybindManager.getInstance());
         APPLICATION_LISTENER.add(CommandManager.getInstance());
-        APPLICATION_LISTENER.add(UIManager.getInstance());
+        APPLICATION_LISTENER.add(UiManager.getInstance());
     }
 
     private ApplicationManager() {}
@@ -62,7 +61,7 @@ public class ApplicationManager {
     public void start() {
         try {
             init();
-            XMLConfigParser configParser = new XMLConfigParser(configPath);
+            XmlConfigParser configParser = new XmlConfigParser(configPath);
             Config config = configParser.parse();
             ApplicationEvent applicationEvent = new ApplicationEvent(config);
             for (ApplicationListener applicationListener : APPLICATION_LISTENER) {
@@ -72,7 +71,7 @@ public class ApplicationManager {
                 applicationListener.afterStart(applicationEvent);
             }
         } catch (Exception e) {
-            logger.error("application failed to startup", e);
+            LOGGER.error("application failed to startup", e);
         }
     }
 
@@ -104,7 +103,7 @@ public class ApplicationManager {
         if (!file.exists()) {
             file.createNewFile();
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("conf.xml");
-            IOUtils.writeToFile(configPath,  inputStream);
+            IoUtils.writeToFile(configPath,  inputStream);
         }
     }
 
@@ -137,7 +136,7 @@ public class ApplicationManager {
             }
             System.exit(0);
         } catch (Exception e) {
-            logger.error("fail to shutdown", e);
+            LOGGER.error("fail to shutdown", e);
             System.exit(-1);
         }
     }

@@ -36,11 +36,10 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-08 19:59
  */
-public class XMLPluginConfigParser {
-
+public class XmlPluginConfigParser {
     private final Document document;
 
-    public XMLPluginConfigParser(Document document) {
+    public XmlPluginConfigParser(Document document) {
         this.document = document;
     }
 
@@ -57,7 +56,7 @@ public class XMLPluginConfigParser {
             }
             String name = nameAttr.getNodeValue();
             if (pluginNames.contains(name)) {
-                List<XMLCommandConfig> commandConfigs = parseCommandConfigs(name,item);
+                List<XmlCommandConfig> commandConfigs = parseCommandConfigs(name,item);
                 PluginConfig pluginConfig = new PluginConfig();
                 pluginConfig.setName(name);
                 pluginConfig.setCommandConfigs(commandConfigs);
@@ -67,8 +66,8 @@ public class XMLPluginConfigParser {
         return pluginConfigs;
     }
 
-    private List<XMLCommandConfig> parseCommandConfigs(String pluginName,Node item) {
-        List<XMLCommandConfig> commandConfigs = new ArrayList<>();
+    private List<XmlCommandConfig> parseCommandConfigs(String pluginName, Node item) {
+        List<XmlCommandConfig> commandConfigs = new ArrayList<>();
         NodeList commandNodes = item.getChildNodes();
         for (int i = 0; i < commandNodes.getLength(); i++) {
             Node itemNode = commandNodes.item(i);
@@ -87,7 +86,7 @@ public class XMLPluginConfigParser {
                         configNode = commandChildNode;
                     }
                 }
-                XMLCommandConfig commandConfig = new XMLCommandConfig(pluginName,commandName,key,configNode);
+                XmlCommandConfig commandConfig = new XmlCommandConfig(pluginName,commandName,key,configNode);
                 commandConfigs.add(commandConfig);
             }
         }

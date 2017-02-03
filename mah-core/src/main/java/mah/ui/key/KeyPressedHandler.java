@@ -29,7 +29,6 @@ import mah.ui.event.EventHandler;
  * Created by zgq on 2017-01-09 10:26
  */
 public class KeyPressedHandler implements EventHandler<KeyEvent> {
-
     @Override
     public void handle(KeyEvent event) {
         int keyCode = event.getKeyCode();
@@ -48,5 +47,4 @@ public class KeyPressedHandler implements EventHandler<KeyEvent> {
                 break;
         }
     }
-
 }

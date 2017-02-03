@@ -28,15 +28,15 @@ import mah.command.CommandException;
 import mah.command.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.command.event.TriggerEvent;
-import mah.common.json.JSONUtils;
+import mah.common.json.JsonUtils;
 import mah.common.search.MatchedResult;
 import mah.common.search.SearchResult;
-import mah.common.util.IOUtils;
+import mah.common.util.IoUtils;
 import mah.common.util.StringUtils;
 import mah.openapi.search.CacheSearcher;
 import mah.openapi.ui.layout.OpenClassicItemListLayout;
 import mah.plugin.command.PluginCommandSupport;
-import mah.plugin.config.XMLConfigurable;
+import mah.plugin.config.XmlConfigurable;
 import mah.plugin.support.github.GithubMode;
 import mah.plugin.support.github.GithubModeHandler;
 import mah.plugin.support.github.entity.GithubRepository;
@@ -64,17 +64,16 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by zgq on 16-12-24.
  */
-public class GithubStarredCommand extends PluginCommandSupport implements XMLConfigurable, GithubModeHandler {
-
+public class GithubStarredCommand extends PluginCommandSupport implements XmlConfigurable, GithubModeHandler {
     private OpenClassicItemListLayout layout;
     private String localRepositoryFile;
-    private String starredRepositoryAPI;
+    private String starredRepositoryApi;
     private String username;
     private String token;
     private String command;
     private Logger logger = LoggerFactory.getLogger(GithubStarredCommand.class);
     private RepositorySynchronizer synchronizer;
-    private final String GITHUB_ICON = "github_icon";
+    private static final String GITHUB_ICON = "github_icon";
 
     public GithubStarredCommand() {
         init();
@@ -193,8 +192,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
 
     private void addInitializeHandler() {
         addInitializeEventHandler(new EventHandler<InitializeEvent>() {
-
-            private void initUI() {
+            private void initUi() {
                 layout = getLayoutFactory().createClassicItemListLayout();
                 layout.setOnItemSelected(e -> {
                     Item item = e.getItem();
@@ -208,12 +206,14 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
 
             @Override
             public void handle(InitializeEvent event) throws Exception {
-                initUI();
+                initUi();
                 localRepositoryFile = getFileStoredInPluginDataDir("starred_repositories.json");
-                starredRepositoryAPI = "https://api.github.com/users/" + username + "/starred?access_token=" + token;
-                IOUtils.createFileIfNotExists(localRepositoryFile);
-                List<GithubRepository> repositoryData = JSONUtils.parseArrFromLocalFile(localRepositoryFile, GithubRepository.class);
-                synchronizer = new RepositorySynchronizer(repositoryData, getExecutor(), localRepositoryFile, starredRepositoryAPI, new UpdatingUI());
+                starredRepositoryApi = "https://api.github.com/users/" + username + "/starred?access_token=" + token;
+                IoUtils.createFileIfNotExists(localRepositoryFile);
+                List<GithubRepository> repositoryData = JsonUtils.parseArrFromLocalFile(localRepositoryFile,
+                        GithubRepository.class);
+                synchronizer = new RepositorySynchronizer(repositoryData, getExecutor(), localRepositoryFile,
+                        starredRepositoryApi, new UpdatingUi());
             }
         });
     }
@@ -259,9 +259,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XMLCon
     /**
      * Created by zgq on 2017-01-13 13:28
      */
-    public class UpdatingUI implements SynchronizerListener {
-
-
+    public class UpdatingUi implements SynchronizerListener {
         private void showNoRepositoryTips() {
             layout.updateItems(createNoRepositoryTips());
         }

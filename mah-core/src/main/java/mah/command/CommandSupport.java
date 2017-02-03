@@ -42,8 +42,7 @@ import java.util.concurrent.Future;
  * Created by zgq on 2017-01-09 09:10
  */
 public abstract class CommandSupport implements ActionHandler, Command {
-
-    private static final ExecutorService executor = Executors.newCachedThreadPool();
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
     private final List<EventHandler<? extends InitializeEvent>> initializeHandlers = new ArrayList<>(3);
     private final List<EventHandler<? extends TriggerEvent>> triggerEventHandlers = new ArrayList<>(3);
     private final List<EventHandler<? extends CommonFilterEvent>> commonFilterEventHandlers = new ArrayList<>(3);
@@ -72,7 +71,7 @@ public abstract class CommandSupport implements ActionHandler, Command {
     }
 
     protected final ExecutorService getExecutor() {
-        return executor;
+        return EXECUTOR;
     }
 
     protected final URL getResource(String path) {
@@ -97,7 +96,7 @@ public abstract class CommandSupport implements ActionHandler, Command {
 
     @Override
     public String toString() {
-        return "CommandSupport{" +
-                ",name=" + getName() + "}";
+        return "CommandSupport{"
+                + ",name=" + getName() + "}";
     }
 }

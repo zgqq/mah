@@ -43,9 +43,8 @@ import javax.swing.*;
  * Created by zgq on 2017-01-17 14:35
  */
 public class ClassicPostLayoutImpl extends SwingLayoutSupport implements ClassicPostLayout {
-
     public static final String NAME = "classic_post_layout";
-    private static final Logger logger = LoggerFactory.getLogger(ClassicPostLayoutImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassicPostLayoutImpl.class);
     private PostPaneImpl postPane;
     private boolean init;
     private SwingLayoutTheme theme;
@@ -55,7 +54,7 @@ public class ClassicPostLayoutImpl extends SwingLayoutSupport implements Classic
     @Override
     public void init() {
         if (init) {
-            logger.warn("The layout has already been initialized");
+            LOGGER.warn("The layout has already been initialized");
             return;
         }
         postPane = PostPaneImpl.instance();

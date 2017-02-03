@@ -30,13 +30,13 @@ import mah.action.GlobalAction;
 import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
 import mah.app.config.Config;
-import mah.app.config.XMLConfig;
+import mah.app.config.XmlConfig;
 import mah.keybind.Keybind;
 import mah.keybind.KeybindManager;
 import mah.keybind.config.KeybindConfig;
 import mah.keybind.util.SimpleParser;
 import mah.mode.config.ModeConfig;
-import mah.mode.config.XMLModeParser;
+import mah.mode.config.XmlModeParser;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
@@ -46,9 +46,8 @@ import java.util.*;
  * Created by zgq on 2017-01-08 20:34
  */
 public class ModeManager implements ApplicationListener {
-
     private static final ModeManager INSTANCE = new ModeManager();
-    private final Map<String, Mode> MODES = new HashMap<>();
+    private final Map<String, Mode> modes = new HashMap<>();
 
     private ModeManager() {}
 
@@ -69,22 +68,22 @@ public class ModeManager implements ApplicationListener {
     }
 
     public Mode getMode(String mod) {
-        return MODES.get(mod);
+        return modes.get(mod);
     }
 
     public void registerMode(Mode mode) {
         mode.init();
-        MODES.put(mode.getName(), mode);
+        modes.put(mode.getName(), mode);
     }
 
     public void registerMode(Mode mode, ActionHandler actionHandler) {
         mode.init();
         mode.updateActionHandler(actionHandler);
-        MODES.put(mode.getName(), mode);
+        modes.put(mode.getName(), mode);
     }
 
     public Mode registerOrUpdateMode(Mode mode, ActionHandler actionHandler) {
-        Mode existedMode = MODES.get(mode.getName());
+        Mode existedMode = modes.get(mode.getName());
         if (existedMode == null) {
             registerMode(mode, actionHandler);
             return null;
@@ -95,7 +94,7 @@ public class ModeManager implements ApplicationListener {
     }
 
     public Action findGlobalAction(String actionName) {
-        Set<Map.Entry<String, Mode>> entries = MODES.entrySet();
+        Set<Map.Entry<String, Mode>> entries = modes.entrySet();
         Action action = null;
         for (Map.Entry<String, Mode> entry : entries) {
             Mode mode = entry.getValue();
@@ -122,20 +121,20 @@ public class ModeManager implements ApplicationListener {
     @Override
     public void afterStart(ApplicationEvent event) {
         Config config = event.getConfig();
-        if (config instanceof XMLConfig) {
-            XMLConfig xmlConfig = (XMLConfig) config;
+        if (config instanceof XmlConfig) {
+            XmlConfig xmlConfig = (XmlConfig) config;
             registerModeKeybinds(xmlConfig.getDocument());
         }
     }
 
     private void registerModeKeybinds(Document document) {
-        XMLModeParser xmlModeParser = new XMLModeParser(document);
+        XmlModeParser xmlModeParser = new XmlModeParser(document);
         List<ModeConfig> modeConfigs = xmlModeParser.parseModeConfigs();
         modeConfigs.forEach(modeConfig -> {
             HashSet<KeybindConfig> keybinds = modeConfig.getKeybinds();
             for (KeybindConfig keybindConfig : keybinds) {
                 Keybind keybind = new Keybind();
-                Mode mode = MODES.get(modeConfig.getName());
+                Mode mode = modes.get(modeConfig.getName());
                 if (mode == null) {
                     throw new ModeException("Not found mode " + modeConfig.getName());
                 }

@@ -21,23 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.common.json;
+package mah.plugin.config;
 
-import java.util.Date;
-import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
- * Created by zgq on 16-12-4.
+ * Created by zgq on 2017-01-08 20:35
  */
-public interface JSONObj extends Map<String,Object> {
+public interface XmlConfigurable {
 
-    String getString(String key);
-
-    JSONObj getJSONObj(String key);
-
-    JSONArr getJSONArr(String key);
-
-    Date getDate(String key);
-
-    int getInt(String key);
+    /**
+     * Will be invoked before method(configure) of the plugin implementing this interface.
+     * In other words,this method will be invoked very early.
+     * @param node
+     * @throws Exception
+     */
+    void configure(Node node) throws Exception;
 }

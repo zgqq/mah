@@ -41,19 +41,21 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by zgq on 2017-01-13 10:32
  */
 public class RepositorySynchronizer implements GithubRepositories.Listener {
-
     private List<GithubRepository> repositoryData;
     private RepositoryUpdater repositoryUpdater;
     private SynchronizerListener listener;
-    private static final Logger logger = LoggerFactory.getLogger(RepositorySynchronizer.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepositorySynchronizer.class);
     private Lock lock = new ReentrantLock();
     private volatile boolean init;
     private Lock initLock = new ReentrantLock();
     private volatile CacheSearcher<List<SearchResult>> searcher;
 
-    public RepositorySynchronizer(List<GithubRepository> githubRepositories, ExecutorService executor, String localRepositoryFile, String starredRepositoryAPI, SynchronizerListener listener) {
-        repositoryUpdater = new RepositoryUpdater(executor, localRepositoryFile, starredRepositoryAPI);
+    public RepositorySynchronizer(List<GithubRepository> githubRepositories,
+                                  ExecutorService executor,
+                                  String localRepositoryFile,
+                                  String starredRepositoryApi,
+                                  SynchronizerListener listener) {
+        repositoryUpdater = new RepositoryUpdater(executor, localRepositoryFile, starredRepositoryApi);
         int delay = 0;
         if (githubRepositories == null) {
             repositoryData = new CopyOnWriteArrayList();

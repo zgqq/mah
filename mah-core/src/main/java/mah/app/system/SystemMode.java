@@ -45,7 +45,7 @@ public class SystemMode extends AbstractMode {
         registerAction(new ExitSystem("ExitSystem"));
     }
 
-    static abstract class SystemAction extends AbstractAction implements NoSourceAction {
+    abstract static class SystemAction extends AbstractAction implements NoSourceAction {
         public SystemAction(String name) {
             super(name, null);
         }

@@ -36,9 +36,8 @@ import java.io.InputStream;
 /**
  * Created by zgq on 2017-01-08 20:04
  */
-public final class XMLUtils {
-
-    private XMLUtils() {}
+public final class XmlUtils {
+    private XmlUtils() {}
 
     public static String getChildNodeText(Node parent, String tag) {
         NodeList childNodes = parent.getChildNodes();

@@ -25,7 +25,7 @@ package mah.common.json.support.fastjson;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import mah.common.json.JSONArr;
+import mah.common.json.JsonArr;
 
 import java.util.AbstractList;
 import java.util.Iterator;
@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 /**
  * Created by zgq on 16-12-4.
  */
-public class FastjsonArrAdapter extends AbstractList implements JSONArr {
+public class FastjsonArrAdapter extends AbstractList implements JsonArr {
 
     private JSONArray jsonArray;
 

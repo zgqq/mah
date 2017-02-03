@@ -42,9 +42,8 @@ import java.awt.*;
  * Created by zgq on 2017-01-08 11:56
  */
 public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements ClassicAbstractLayout {
-
     private static ClassicAbstractLayoutImpl instance;
-    private static final Logger logger = LoggerFactory.getLogger(ClassicAbstractLayoutImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassicAbstractLayoutImpl.class);
     private JPanel panel;
     private InputPaneImpl inputPane;
     private SwingPane bottomPane;
@@ -55,10 +54,10 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     @Override
     public void init() {
         if (init == true) {
-            logger.warn("The layout has already been initialized");
+            LOGGER.warn("The layout has already been initialized");
             return;
         }
-        logger.info("Initializing classic abstract layout");
+        LOGGER.info("Initializing classic abstract layout");
         this.panel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         this.panel.setLayout(boxLayout);
@@ -91,8 +90,9 @@ public class ClassicAbstractLayoutImpl extends SwingLayoutSupport implements Cla
     }
 
     private void removeBottomPane() {
-        if (bottomPane != null)
+        if (bottomPane != null) {
             this.panel.remove(bottomPane.getPanel());
+        }
     }
 
     @Override

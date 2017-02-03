@@ -39,8 +39,7 @@ import java.util.concurrent.FutureTask;
  * Created by zgq on 2017-01-10 17:19
  */
 public class CacheSearcher<V> {
-
-    private final ConcurrentHashMap<String, Future<V>> SEARCH_CACHE = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Future<V>> caches = new ConcurrentHashMap<>();
     private final Searcher searcher;
     private final List<Searchable> data;
 
@@ -51,14 +50,14 @@ public class CacheSearcher<V> {
 
     public V smartFuzzySearch(String keyword) {
         while (true) {
-            Future<V> searchTask = SEARCH_CACHE.get(keyword);
+            Future<V> searchTask = caches.get(keyword);
             if (searchTask == null) {
                 Callable<V> eval = () -> {
                     List<SearchResult> searchResults = searcher.smartFuzzyMatch(data, keyword);
                     return (V) searchResults;
                 };
                 FutureTask<V> ft = new FutureTask<V>(eval);
-                searchTask = SEARCH_CACHE.putIfAbsent(keyword, ft);
+                searchTask = caches.putIfAbsent(keyword, ft);
                 if (searchTask == null) {
                     searchTask = ft;
                     ft.run();
@@ -67,10 +66,9 @@ public class CacheSearcher<V> {
             try {
                 return searchTask.get();
             } catch (Exception e) {
-                SEARCH_CACHE.remove(keyword, searchTask);
+                caches.remove(keyword, searchTask);
                 throw new RuntimeException(e);
             }
         }
     }
-
 }

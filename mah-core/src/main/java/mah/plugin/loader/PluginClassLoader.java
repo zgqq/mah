@@ -36,26 +36,25 @@ import java.util.jar.JarFile;
 /**
  * Created by zgq on 2017-01-08 20:18
  */
-public class PluginClassLoader extends ClassLoader{
-
-    private final Map<String,Class<?>> CLASS_CACHES = new HashMap();
+public class PluginClassLoader extends ClassLoader {
+    private final Map<String, Class<?>> classsLoader = new HashMap();
 
     public PluginClassLoader() {
         super(PluginClassLoader.class.getClassLoader());
     }
 
-    private static final ThreadLocal<JarFile> localJarFile = new ThreadLocal<>();
+    private static final ThreadLocal<JarFile> LOCAL_JAR = new ThreadLocal<>();
 
-    public Class<?> loadClass(String className,JarFile jar) throws ClassNotFoundException {
-        localJarFile.set(jar);
+    public Class<?> loadClass(String className, JarFile jar) throws ClassNotFoundException {
+        LOCAL_JAR.set(jar);
         return super.loadClass(className);
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        Class<?> clazz = CLASS_CACHES.get(name);
+        Class<?> clazz = classsLoader.get(name);
         if (clazz == null) {
-            JarFile jar = localJarFile.get();
+            JarFile jar = LOCAL_JAR.get();
             JarEntry entry = jar.getJarEntry(name + ".class");
             InputStream is = null;
             try {
@@ -68,7 +67,7 @@ public class PluginClassLoader extends ClassLoader{
                 }
                 byte[] classByte = byteStream.toByteArray();
                 Class<?> result = defineClass(name, classByte, 0, classByte.length, null);
-                CLASS_CACHES.put(name, result);
+                classsLoader.put(name, result);
                 return result;
             } catch (IOException e) {
                 throw new PluginException(e);

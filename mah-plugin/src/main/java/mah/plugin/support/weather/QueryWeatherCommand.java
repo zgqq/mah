@@ -23,14 +23,14 @@
  */
 package mah.plugin.support.weather;
 
-import mah.common.json.JSONArr;
-import mah.common.json.JSONObj;
-import mah.common.json.JSONUtils;
+import mah.common.json.JsonArr;
+import mah.common.json.JsonObj;
+import mah.common.json.JsonUtils;
 import mah.common.util.HttpUtils;
 import mah.common.util.StringUtils;
-import mah.common.util.XMLUtils;
+import mah.common.util.XmlUtils;
 import mah.plugin.command.PluginCommandSupport;
-import mah.plugin.config.XMLConfigurable;
+import mah.plugin.config.XmlConfigurable;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
 import mah.ui.pane.item.TextItem;
@@ -46,9 +46,8 @@ import java.util.List;
 /**
  * Created by zgq on 16-1-02.
  */
-public class QueryWeatherCommand extends PluginCommandSupport implements XMLConfigurable{
-
-    private Logger logger = LoggerFactory.getLogger(QueryWeatherCommand.class);
+public class QueryWeatherCommand extends PluginCommandSupport implements XmlConfigurable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueryWeatherCommand.class);
     private String url = "http://api.map.baidu.com/telematics/v3/weather?output=json&ak=Gy7SGUigZ4HxGYDaq9azWy09&location=";
     private ClassicItemListLayout layout;
     private String defaultCity;
@@ -70,7 +69,7 @@ public class QueryWeatherCommand extends PluginCommandSupport implements XMLConf
         return inputStream;
     }
 
-    private FullItemImpl createResult(JSONObj weatherData) {
+    private FullItemImpl createResult(JsonObj weatherData) {
         String date = weatherData.getString("date");
         String weather = weatherData.getString("weather");
         String wind = weatherData.getString("wind");
@@ -84,14 +83,16 @@ public class QueryWeatherCommand extends PluginCommandSupport implements XMLConf
 
     private FullItemImpl createQueryingItem() {
         FullItemImpl.Builder builder = new FullItemImpl.Builder("Weather Query");
-        return builder.iconInputStream(getInputStreamFromClasspath("weather/querying.png")).description("querying").build();
+        return builder.iconInputStream(getInputStreamFromClasspath("weather/querying.png"))
+                .description("querying")
+                .build();
     }
 
     private void showQuerying() {
         layout.updateItems(createQueryingItem());
     }
 
-    private void showError(JSONObj weatherData) {
+    private void showError(JsonObj weatherData) {
         FullItemImpl errorItem = new FullItemImpl.Builder("Query error") //
                 .description(weatherData.getString("status")) //
                 .iconInputStream(getInputStreamFromClasspath("weather/unknown.png")).build();
@@ -99,32 +100,32 @@ public class QueryWeatherCommand extends PluginCommandSupport implements XMLConf
     }
 
     protected void triggerHook() throws Exception {
-        if(StringUtils.isNotEmpty(defaultCity)){
+        if (StringUtils.isNotEmpty(defaultCity)) {
             queryWeather(defaultCity);
         }
     }
 
     private void queryWeather(String city) {
         showQuerying();
-        JSONObj json;
-        String api="";
+        JsonObj json;
+        String api = "";
         try {
             api = url + city;
-            json = JSONUtils.getJSON(api);
+            json = JsonUtils.getJson(api);
         } catch (Exception e) {
             showQueryError();
-            logger.error("Unable to fetch url "+api,e);
+            LOGGER.error("Unable to fetch url " + api,e);
             return;
         }
         int code = json.getInt("error");
         if (code == 0) {
-            JSONArr results = json.getJSONArr("results");
+            JsonArr results = json.getJsonArr("results");
             if (results != null && results.size() > 0) {
                 List<FullItemImpl> resultItems = new ArrayList<>();
-                JSONObj result = (JSONObj) results.get(0);
-                JSONArr weatherdatas = result.getJSONArr("weather_data");
+                JsonObj result = (JsonObj) results.get(0);
+                JsonArr weatherdatas = result.getJsonArr("weather_data");
                 for (Object weatherdataObj : weatherdatas) {
-                    JSONObj weatherdata = (JSONObj) weatherdataObj;
+                    JsonObj weatherdata = (JsonObj) weatherdataObj;
                     resultItems.add(createResult(weatherdata));
                 }
                 layout.updateItems(resultItems);
@@ -153,7 +154,7 @@ public class QueryWeatherCommand extends PluginCommandSupport implements XMLConf
     @Override
     public void configure(Node node) throws Exception {
         if (node != null) {
-            this.defaultCity = XMLUtils.getChildNodeText(node, "defaultCity");
+            this.defaultCity = XmlUtils.getChildNodeText(node, "defaultCity");
         }
     }
 }

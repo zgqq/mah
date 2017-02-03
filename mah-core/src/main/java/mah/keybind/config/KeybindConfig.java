@@ -45,21 +45,24 @@ public final class KeybindConfig {
         return action;
     }
 
-
     public String getMode() {
         return mode;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         KeybindConfig keybind = (KeybindConfig) o;
-
-        if (!bind.equals(keybind.bind)) return false;
+        if (!bind.equals(keybind.bind)) {
+            return false;
+        }
         return action.equals(keybind.action);
-
     }
 
     @Override

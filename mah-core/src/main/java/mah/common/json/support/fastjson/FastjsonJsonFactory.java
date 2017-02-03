@@ -21,32 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.plugin.config;
+package mah.common.json.support.fastjson;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import mah.common.json.AbstractJsonFactory;
+import mah.common.json.JsonArr;
+import mah.common.json.JsonFactory;
+import mah.common.json.JsonObj;
 
-import org.w3c.dom.Node;
+import java.util.List;
 
 /**
- * Created by zgq on 2017-01-08 20:21
+ * Created by zgq on 16-12-4.
  */
-public class XMLCommandConfig extends CommandConfig {
+public class FastjsonJsonFactory extends AbstractJsonFactory implements JsonFactory {
 
-    private final Node customConfig;
-
-    public XMLCommandConfig(String pluginName, String commandName, String triggerKey, Node customConfig) {
-        super(pluginName, commandName, triggerKey);
-        synchronized (this) {
-            if (customConfig != null) {
-                this.customConfig = customConfig.cloneNode(true);
-            }else{
-                this.customConfig = null;
-            }
-        }
+    @Override
+    public JsonObj parseObj(String content) {
+        JSONObject jsonObject = JSON.parseObject(content);
+        return JsonUtils.createJsonObj(jsonObject);
     }
 
-    public Node getCustomConfig() {
-        synchronized (this){
-            return customConfig;
-        }
+    @Override
+    public JsonArr parseArr(String content) {
+        JSONArray jsonArray = JSON.parseArray(content);
+        return JsonUtils.createJsonArr(jsonArray);
+    }
+
+    @Override
+    public <T> List<T> parseArr(String text, Class<T> clazz) {
+        return JSON.parseArray(text,clazz);
     }
 }

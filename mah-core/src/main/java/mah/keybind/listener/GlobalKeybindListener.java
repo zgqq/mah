@@ -65,7 +65,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
 
     public void nativeKeyPressed(NativeKeyEvent e) {
         Window window = WindowManager.getInstance().getCurrentWindow();
-        if (window!=null && window.isShowing() && window.isFocused()) {
+        if (window != null && window.isShowing() && window.isFocused()) {
             return;
         }
         KeystateManager keyState = KeystateManager.getInstance();
@@ -82,7 +82,6 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
             keyState.setMeta(true);
             logger.trace("press meta");
             return;
-        } else {
         }
 
         int javaKeyCode = getJavaKeyCode(e);
@@ -122,8 +121,5 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
         }
     }
 
-    public void nativeKeyTyped(NativeKeyEvent e) {
-    }
-
-
+    public void nativeKeyTyped(NativeKeyEvent e) {}
 }

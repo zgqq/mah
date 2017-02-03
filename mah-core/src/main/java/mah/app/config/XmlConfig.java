@@ -21,33 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.theme;
+package mah.app.config;
 
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 
 /**
- * Created by zgq on 2017-01-13 21:14
+ * Created by zgq on 2017-01-08 20:24
  */
-public class XMLThemeConfigParser {
+public class XmlConfig implements Config {
 
-    private Document document;
+    private final Document document;
 
-    public XMLThemeConfigParser(Document document) {
+    public XmlConfig(Document document) {
         this.document = document;
     }
 
-    @Nullable
-    public String parseTheme() {
-        NodeList themeNode = document.getElementsByTagName("theme");
-        int length = themeNode.getLength();
-        if (length > 0) {
-            Node item = themeNode.item(0);
-            return item.getTextContent();
-        }
-        return null;
+    public Document getDocument() {
+        return document;
     }
+
 }

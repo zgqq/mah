@@ -38,7 +38,13 @@ public enum Themes {
 
     private Theme theme;
 
-    Themes(String backgroundColor,String cursorColor,String inputBackgroundColor,String pendingBackgroundColor,String fontColor,String highlightForegroundColor,String highlightColor) {
+    Themes(String backgroundColor,
+           String cursorColor,
+           String inputBackgroundColor,
+           String pendingBackgroundColor,
+           String fontColor,
+           String highlightForegroundColor,
+           String highlightColor) {
 
         Map<String, String> basicProperties = new HashMap<>();
         basicProperties.put("background-color",backgroundColor);

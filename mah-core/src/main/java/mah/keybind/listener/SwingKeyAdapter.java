@@ -36,7 +36,6 @@ import java.awt.event.KeyEvent;
  */
 public abstract class SwingKeyAdapter implements NativeKeyListener {
 
-
     protected int getJavaKeyCode(NativeKeyEvent nativeEvent) {
         int keyCode = KeyEvent.VK_UNDEFINED;
         switch (nativeEvent.getKeyCode()) {
@@ -398,8 +397,31 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
                 break;
             // End Edit Key Zone
 
+            case NativeKeyEvent.VC_POWER:
+            case NativeKeyEvent.VC_SLEEP:
+            case NativeKeyEvent.VC_WAKE:
+            case NativeKeyEvent.VC_MEDIA_PLAY:
+            case NativeKeyEvent.VC_MEDIA_STOP:
+            case NativeKeyEvent.VC_MEDIA_PREVIOUS:
+            case NativeKeyEvent.VC_MEDIA_NEXT:
+            case NativeKeyEvent.VC_MEDIA_SELECT:
+            case NativeKeyEvent.VC_MEDIA_EJECT:
+            case NativeKeyEvent.VC_VOLUME_MUTE:
+            case NativeKeyEvent.VC_VOLUME_UP:
+            case NativeKeyEvent.VC_VOLUME_DOWN:
+            case NativeKeyEvent.VC_APP_MAIL:
+            case NativeKeyEvent.VC_APP_CALCULATOR:
+            case NativeKeyEvent.VC_APP_MUSIC:
+            case NativeKeyEvent.VC_APP_PICTURES:
+            case NativeKeyEvent.VC_BROWSER_SEARCH:
+            case NativeKeyEvent.VC_BROWSER_HOME:
+            case NativeKeyEvent.VC_BROWSER_BACK:
+            case NativeKeyEvent.VC_BROWSER_FORWARD:
+            case NativeKeyEvent.VC_BROWSER_STOP:
+            case NativeKeyEvent.VC_BROWSER_REFRESH:
+            case NativeKeyEvent.VC_BROWSER_FAVORITES:
 
-            // Begin Cursor Key Zone
+                // Begin Cursor Key Zone
             case NativeKeyEvent.VC_UP:
                 keyCode = KeyEvent.VK_UP;
                 break;
@@ -425,33 +447,6 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
                 keyCode = KeyEvent.VK_CONTEXT_MENU;
                 break;
             // End Modifier and Control Keys
-
-
-			/* Begin Media Control Keys
-            case NativeKeyEvent.VC_POWER:
-			case NativeKeyEvent.VC_SLEEP:
-			case NativeKeyEvent.VC_WAKE:
-			case NativeKeyEvent.VC_MEDIA_PLAY:
-			case NativeKeyEvent.VC_MEDIA_STOP:
-			case NativeKeyEvent.VC_MEDIA_PREVIOUS:
-			case NativeKeyEvent.VC_MEDIA_NEXT:
-			case NativeKeyEvent.VC_MEDIA_SELECT:
-			case NativeKeyEvent.VC_MEDIA_EJECT:
-			case NativeKeyEvent.VC_VOLUME_MUTE:
-			case NativeKeyEvent.VC_VOLUME_UP:
-			case NativeKeyEvent.VC_VOLUME_DOWN:
-			case NativeKeyEvent.VC_APP_MAIL:
-			case NativeKeyEvent.VC_APP_CALCULATOR:
-			case NativeKeyEvent.VC_APP_MUSIC:
-			case NativeKeyEvent.VC_APP_PICTURES:
-			case NativeKeyEvent.VC_BROWSER_SEARCH:
-			case NativeKeyEvent.VC_BROWSER_HOME:
-			case NativeKeyEvent.VC_BROWSER_BACK:
-			case NativeKeyEvent.VC_BROWSER_FORWARD:
-			case NativeKeyEvent.VC_BROWSER_STOP:
-			case NativeKeyEvent.VC_BROWSER_REFRESH:
-			case NativeKeyEvent.VC_BROWSER_FAVORITES:
-			// End Media Control Keys */
 
 
             // Begin Japanese Language Keys
@@ -512,6 +507,8 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
                 keyCode = KeyEvent.VK_CUT;
                 break;
             // End Sun keyboards
+            default:
+                break;
         }
 
         return keyCode;

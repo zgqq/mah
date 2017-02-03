@@ -23,15 +23,15 @@
  */
 package mah.plugin.support.translation;
 
-import mah.common.util.IOUtils;
+import mah.common.util.IoUtils;
 import mah.common.util.StringUtils;
-import mah.common.util.XMLUtils;
+import mah.common.util.XmlUtils;
 import mah.plugin.PluginException;
 import mah.plugin.command.PluginCommandSupport;
-import mah.plugin.config.XMLConfigurable;
+import mah.plugin.config.XmlConfigurable;
 import mah.plugin.support.translation.parser.WordParser;
 import mah.plugin.support.translation.parser.YoudaoParser;
-import mah.plugin.support.translation.repo.JSONUtils;
+import mah.plugin.support.translation.repo.JsonUtils;
 import mah.plugin.support.translation.repo.WordRepository;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
@@ -54,15 +54,14 @@ import java.util.Map;
 /**
  * Created by zgq on 16-12-24.
  */
-public class TranslationCommand extends PluginCommandSupport implements XMLConfigurable {
-
+public class TranslationCommand extends PluginCommandSupport implements XmlConfigurable {
     private ClassicItemListLayout layout;
     private InputStream translationIcon;
     private String keyfrom ;
     private String apiKey;
-    private static final Logger logger = LoggerFactory.getLogger(TranslationCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TranslationCommand.class);
     private volatile WordRepository repository;
-    private final WordParser parser = new YoudaoParser(JSONUtils.getJSONFactory());
+    private final WordParser parser = new YoudaoParser(JsonUtils.getJsonFactory());
     private String lastWord;
 
     public TranslationCommand() {
@@ -91,12 +90,12 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
         } catch (Exception e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 try {
-                    IOUtils.createFileIfNotExists(pluginDataFile);
+                    IoUtils.createFileIfNotExists(pluginDataFile);
                 } catch (Exception e2) {
-                    logger.error("Fail to create new file " + pluginDataFile, e2);
+                    LOGGER.error("Fail to create new file " + pluginDataFile, e2);
                 }
             } else {
-                logger.error("Fail to initialize repository", e);
+                LOGGER.error("Fail to initialize repository", e);
             }
         }
     }
@@ -104,7 +103,9 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
 
     private FullItemImpl createTranslationResult(String name, String description) {
         this.translationIcon = getInputStreamFromClasspath("translation/translate.png");
-        FullItemImpl fullItem = new FullItemImpl.Builder(name).description(description).iconInputStream(translationIcon).build();
+        FullItemImpl fullItem = new FullItemImpl.Builder(name)
+                .description(description)
+                .iconInputStream(translationIcon).build();
         return fullItem;
     }
 
@@ -113,13 +114,13 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
     }
 
     private void showConfigError() {
-        TextItemImpl tip = new TextItemImpl.Builder("To use translation command," +
-                "you are expected to provide own keyfrom and apikey "
+        TextItemImpl tip = new TextItemImpl.Builder("To use translation command,"
+                + "you are expected to provide own keyfrom and apikey "
         ).build();
 
-        TextItemImpl tips2 = new TextItemImpl.Builder("You can go to http://fanyi.youdao.com/openapi.do to apply for them"
-        ).build();
-
+        TextItemImpl tips2 = new TextItemImpl
+                .Builder("You can go to http://fanyi.youdao.com/openapi.do to apply for them")
+                .build();
         layout.updateItems(tip,tips2);
     }
 
@@ -132,7 +133,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
     }
 
     public void triggerHook() throws Exception {
-        if(checkConfig()){
+        if (checkConfig()) {
             layout.updateItems(createTriggerResult());
         }
     }
@@ -143,7 +144,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
     }
 
     public void filterHook(String content) throws Exception {
-        if(checkConfig()){
+        if (checkConfig()) {
             if (content.equals(" ")) {
                 triggerHook();
             }
@@ -213,8 +214,8 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
         if (node == null) {
             return;
         }
-        String keyfrom = XMLUtils.getChildNodeText(node, "keyfrom");
-        String apikey = XMLUtils.getChildNodeText(node, "apikey");
+        String keyfrom = XmlUtils.getChildNodeText(node, "keyfrom");
+        String apikey = XmlUtils.getChildNodeText(node, "apikey");
         this.keyfrom = keyfrom;
         this.apiKey = apikey;
     }
@@ -241,7 +242,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
             return getLastWord().equals(word);
         }
 
-        private void updateUI(Word word) {
+        private void updateUi(Word word) {
             if (currentWord()) {
                 update(word);
             }
@@ -261,11 +262,11 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
             if (!qualifySaveWord()) {
                 return;
             }
-            logger.info("save word {}", word);
+            LOGGER.info("save word {}", word);
             word.incrementQueryCount();
             word.updateQueryTime();
             repository.save();
-            logger.info("saved word", word);
+            LOGGER.info("saved word", word);
         }
 
         @Override
@@ -276,7 +277,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
                 }
                 Word wordObj = getWord(word);
                 if (wordObj != null) {
-                    updateUI(wordObj);
+                    updateUi(wordObj);
                     delayToUpdateWord(wordObj);
                     return;
                 }
@@ -286,7 +287,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
                     return;
                 }
 
-                String apirURL = "http://fanyi.youdao.com/openapi.do";
+                String apiUrl = "http://fanyi.youdao.com/openapi.do";
                 Map<String, String> params = new HashMap<>();
                 params.put("keyfrom", keyfrom);
                 params.put("key", apiKey);
@@ -305,16 +306,16 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
                 });
                 paramsStr.deleteCharAt(paramsStr.length() - 1);
                 HttpURLConnection urlConnection = null;
-                URL url = new URL(apirURL + "?" + paramsStr.toString());
-                logger.debug("fetch " + url);
+                URL url = new URL(apiUrl + "?" + paramsStr.toString());
+                LOGGER.debug("fetch " + url);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoOutput(true);
                 urlConnection.setDoInput(true);
                 urlConnection.connect();
                 InputStream inputStream = urlConnection.getInputStream();
-                String content = IOUtils.toString(inputStream);
+                String content = IoUtils.toString(inputStream);
                 wordObj = parseWord(content);
-                updateUI(wordObj);
+                updateUi(wordObj);
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -325,7 +326,7 @@ public class TranslationCommand extends PluginCommandSupport implements XMLConfi
                 }
             } catch (Exception e) {
                 showFailure();
-                logger.error("query fail", e);
+                LOGGER.error("query fail", e);
             }
         }
 

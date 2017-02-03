@@ -34,9 +34,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by zgq on 2017-01-09 09:50
  */
 public abstract class AbstractMode implements Mode {
-
-    private final Map<String, Action> NAMED_ACTIONS = new HashMap<>();
-    private final Map<Class<?>, List<Action>> HANDLERS_ACTIONS = new HashMap<>();
+    private final Map<String, Action> namedActios = new HashMap<>();
+    private final Map<Class<?>, List<Action>> actionHandlers = new HashMap<>();
     private final String name;
     private final Lock lock = new ReentrantLock();
     private final List<Mode> children = new ArrayList<>();
@@ -59,7 +58,7 @@ public abstract class AbstractMode implements Mode {
     }
 
     private void addNamedAction(Action action) {
-        NAMED_ACTIONS.put(action.getName(), action);
+        namedActios.put(action.getName(), action);
     }
 
     public final void registerAction(Action action) {
@@ -68,10 +67,10 @@ public abstract class AbstractMode implements Mode {
             if (handler == null) {
                 throw new ActionException("actions must have a handler");
             }
-            List<Action> actions = HANDLERS_ACTIONS.get(handler);
+            List<Action> actions = actionHandlers.get(handler);
             if (actions == null) {
                 actions = new ArrayList<>();
-                HANDLERS_ACTIONS.put(handler, actions);
+                actionHandlers.put(handler, actions);
             } else {
                 if (actions.contains(action)) {
                     throw new ActionException("Action should be registered once");
@@ -85,7 +84,7 @@ public abstract class AbstractMode implements Mode {
     @Override
     public final void updateActionHandler(ActionHandler actionHandler) {
         Class<? extends ActionHandler> clazz = actionHandler.getClass();
-        HANDLERS_ACTIONS.forEach((aClass, actions) -> {
+        actionHandlers.forEach((aClass, actions) -> {
                     if (aClass.isAssignableFrom(clazz)) {
                         for (Action action : actions) {
                             ActionManager.getInstance().updateActionHandler(action, actionHandler);
@@ -119,7 +118,7 @@ public abstract class AbstractMode implements Mode {
 
     @Nullable
     public final Action lookupAction(String actionName) {
-        Action action = NAMED_ACTIONS.get(actionName);
+        Action action = namedActios.get(actionName);
         if (action != null) {
             return action;
         }

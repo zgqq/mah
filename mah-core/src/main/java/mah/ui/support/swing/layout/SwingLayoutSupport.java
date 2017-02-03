@@ -23,7 +23,7 @@
  */
 package mah.ui.support.swing.layout;
 
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.event.EventHandler;
 import mah.ui.key.KeyEvent;
 import mah.ui.layout.LayoutSupport;
@@ -56,7 +56,7 @@ public abstract class SwingLayoutSupport extends LayoutSupport implements SwingL
                 try {
                     eventHandler.handle(keyEvent);
                 } catch (Exception e1) {
-                    throw new UIException(e1);
+                    throw new UiException(e1);
                 }
             }
         }
@@ -68,7 +68,7 @@ public abstract class SwingLayoutSupport extends LayoutSupport implements SwingL
                 try {
                     eventHandler.handle(keyEvent);
                 } catch (Exception e1) {
-                    throw new UIException(e1);
+                    throw new UiException(e1);
                 }
             }
         }

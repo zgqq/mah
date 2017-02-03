@@ -23,7 +23,7 @@
  */
 package mah.ui.support.swing.pane.item;
 
-import mah.ui.UIException;
+import mah.ui.UiException;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -35,7 +35,10 @@ import java.util.List;
  */
 public class HightlightHelper {
 
-    public static DefaultStyledDocument createHightlightDocument(String content, List<Integer> highlightIndexs, Style matchedStyle, Style generalStyle) {
+    public static DefaultStyledDocument createHightlightDocument(String content,
+                                                                 List<Integer> highlightIndexs,
+                                                                 Style matchedStyle,
+                                                                 Style generalStyle) {
         DefaultStyledDocument defaultStyledDocument = new DefaultStyledDocument();
         int j = 0;
         try {
@@ -52,7 +55,7 @@ public class HightlightHelper {
                 defaultStyledDocument.insertString(i, String.valueOf(c), generalStyle);
             }
         } catch (BadLocationException e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
         return defaultStyledDocument;
     }

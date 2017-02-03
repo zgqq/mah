@@ -28,7 +28,7 @@ import mah.action.ActionEvent;
 import mah.mode.AbstractMode;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
-import mah.ui.UIManager;
+import mah.ui.UiManager;
 import mah.ui.input.InputMode;
 import mah.ui.pane.Text;
 import mah.ui.util.ClipboardUtils;
@@ -73,7 +73,7 @@ public class ItemMode extends AbstractMode {
     }
 
 
-    static abstract class ItemAction extends AbstractAction {
+    abstract static class ItemAction extends AbstractAction {
 
         public ItemAction(String name) {
             super(name, ItemList.class);
@@ -131,7 +131,7 @@ public class ItemMode extends AbstractMode {
                 if (pendingItemIndex <= 0) {
                     return;
                 }
-                UIManager.getInstance().runLater(() -> {
+                UiManager.getInstance().runLater(() -> {
                     itemList.unpendingItemIndex(pendingItemIndex);
                     itemList.setPendingItemIndex(pendingItemIndex - 1);
                 });
@@ -152,7 +152,7 @@ public class ItemMode extends AbstractMode {
                 if (pendingItemIndex >= itemList.getItemCount() - 1) {
                     return;
                 }
-                UIManager.getInstance().runLater(() -> {
+                UiManager.getInstance().runLater(() -> {
                     itemList.unpendingItemIndex(pendingItemIndex);
                     itemList.setPendingItemIndex(pendingItemIndex + 1);
                 });
@@ -160,7 +160,7 @@ public class ItemMode extends AbstractMode {
         }
     }
 
-    static abstract class CopyAction extends ItemAction {
+    abstract static class CopyAction extends ItemAction {
 
         public CopyAction(String name) {
             super(name);

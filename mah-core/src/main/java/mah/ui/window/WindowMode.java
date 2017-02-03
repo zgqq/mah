@@ -31,11 +31,11 @@ import mah.command.CommandManager;
 import mah.mode.AbstractMode;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
-import mah.ui.UIManager;
+import mah.ui.UiManager;
 import mah.ui.input.TextState;
 import mah.ui.key.KeystateManager;
 import mah.ui.pane.input.InputPane;
-import mah.ui.util.UIUtils;
+import mah.ui.util.UiUtils;
 
 import java.util.List;
 
@@ -43,7 +43,6 @@ import java.util.List;
  * Created by zgq on 2017-01-09 09:49
  */
 public class WindowMode extends AbstractMode {
-
     public static final String NAME = "window_mode";
 
     public WindowMode(Mode parent) {
@@ -67,12 +66,12 @@ public class WindowMode extends AbstractMode {
     }
 
     public static Mode getOrRegisterMode() {
-        Mode window_mode = ModeManager.getInstance().getMode(NAME);
-        if (window_mode == null) {
-            window_mode = new WindowMode(NAME);
-            ModeManager.getInstance().registerMode(window_mode);
+        Mode windowMode = ModeManager.getInstance().getMode(NAME);
+        if (windowMode == null) {
+            windowMode = new WindowMode(NAME);
+            ModeManager.getInstance().registerMode(windowMode);
         }
-        return window_mode;
+        return windowMode;
     }
 
     public static Mode triggerMode() {
@@ -82,8 +81,7 @@ public class WindowMode extends AbstractMode {
     }
 
 
-    static abstract class WindowAction extends AbstractAction {
-
+    abstract static class WindowAction extends AbstractAction {
         public WindowAction(String name) {
             super(name, Window.class);
         }
@@ -92,7 +90,7 @@ public class WindowMode extends AbstractMode {
         public void actionPerformed(ActionEvent actionEvent) {
             Object source = actionEvent.getSource();
             Window window = (Window) source;
-            UIManager.getInstance().runLater(() -> actionPerformed(window));
+            UiManager.getInstance().runLater(() -> actionPerformed(window));
         }
 
         protected abstract void actionPerformed(Window window);
@@ -127,7 +125,7 @@ public class WindowMode extends AbstractMode {
                 List<String> maps = CommandManager.getInstance().findCommandMaps(lockedCommand);
                 if (!maps.isEmpty()) {
                     String triggerKey = maps.get(0) + " ";
-                    InputPane inputPane = UIUtils.getInputPane();
+                    InputPane inputPane = UiUtils.getInputPane();
                     if (inputPane != null) {
                         TextState.Builder builder = new TextState.Builder(triggerKey, triggerKey.length());
                         inputPane.setTextState(builder.build());
@@ -136,7 +134,6 @@ public class WindowMode extends AbstractMode {
             }
         }
     }
-
 
     static class MoveWindowToCenter extends WindowAction {
 
@@ -186,7 +183,6 @@ public class WindowMode extends AbstractMode {
             window.show();
         }
     }
-
 
     static class CenterWindowInSceenWithCursor extends WindowAction implements GlobalAction {
 

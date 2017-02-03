@@ -24,7 +24,7 @@
 package mah.plugin.config;
 
 import mah.app.config.Config;
-import mah.app.config.XMLConfig;
+import mah.app.config.XmlConfig;
 import mah.plugin.PluginException;
 import mah.plugin.PluginMetainfo;
 import org.w3c.dom.Document;
@@ -36,21 +36,20 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-08 19:58
  */
-public class XMLConfigReader {
+public class XmlConfigReader {
+    private XmlPluginMetainfoParser pluginMetainfosParser;
+    private XmlPluginConfigParser pluginConfigParser;
 
-    private XMLPluginMetainfoParser pluginMetainfosParser;
-    private XMLPluginConfigParser pluginConfigParser;
-
-    public XMLConfigReader(File pluginDir, Config config) {
-        if (!(config instanceof XMLConfig)) {
-            throw new IllegalStateException("Config must be XMLConfig!Actual:"+config);
+    public XmlConfigReader(File pluginDir, Config config) {
+        if (!(config instanceof XmlConfig)) {
+            throw new IllegalStateException("Config must be XmlConfig!Actual:" + config);
         }
-        XMLConfig xmlConfig = (XMLConfig) config;
+        XmlConfig xmlConfig = (XmlConfig) config;
         try {
             Document document = xmlConfig.getDocument();
             InputStream resource = getClass().getClassLoader().getResourceAsStream("META-INF/plugin.xml");
-            this.pluginMetainfosParser = new XMLPluginMetainfoParser(pluginDir,resource);
-            this.pluginConfigParser = new XMLPluginConfigParser(document);
+            this.pluginMetainfosParser = new XmlPluginMetainfoParser(pluginDir,resource);
+            this.pluginConfigParser = new XmlPluginConfigParser(document);
         } catch (Exception e) {
             throw new PluginException(e);
         }
@@ -73,5 +72,4 @@ public class XMLConfigReader {
     public List<? extends PluginConfig> parsePluginConfigs(List<String> pluginNames) {
         return pluginConfigParser.parsePluginConfigs(pluginNames);
     }
-
 }

@@ -35,13 +35,11 @@ import mah.ui.pane.item.Item;
  * Created by zgq on 16-12-25.
  */
 public class GithubMode extends AbstractMode {
-
     private static final GithubMode INSTANCE = new GithubMode("github_mode");
 
     public GithubMode(String name) {
         super(name);
     }
-
 
     public static GithubMode getInstance() {
         return INSTANCE;
@@ -60,7 +58,7 @@ public class GithubMode extends AbstractMode {
         }
 
         @Override
-        public void actionPerformed(ActionEvent actionEvent) throws Exception{
+        public void actionPerformed(ActionEvent actionEvent) throws Exception {
             actionPerformed((GithubModeHandler) actionEvent.getSource());
         }
 
@@ -70,7 +68,7 @@ public class GithubMode extends AbstractMode {
     }
 
 
-    static class ClearCache extends GithubAction{
+    static class ClearCache extends GithubAction {
 
         public ClearCache(String name) {
             super(name);
@@ -96,6 +94,4 @@ public class GithubMode extends AbstractMode {
             command.onGoGithubIssues(pendingItem);
         }
     }
-
-
 }

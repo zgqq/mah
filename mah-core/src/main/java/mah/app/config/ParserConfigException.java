@@ -45,7 +45,9 @@ public class ParserConfigException extends ApplicationException{
         super(cause);
     }
 
-    public ParserConfigException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ParserConfigException(String message, Throwable cause,
+                                 boolean enableSuppression,
+                                 boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

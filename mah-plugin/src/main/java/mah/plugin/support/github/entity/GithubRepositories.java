@@ -29,9 +29,8 @@ import java.util.List;
 import java.util.Set;
 
 public class GithubRepositories {
-
     private final List<GithubRepository> repositories;
-    private final List<Listener> listeners=new ArrayList<>(3);
+    private final List<Listener> listeners = new ArrayList<>(3);
 
     private HashSet<String> nameSet;
 
@@ -44,7 +43,7 @@ public class GithubRepositories {
     }
 
     private void updateRepository(boolean add, String name, String description) {
-        if (description!=null && description.length() > 50) {
+        if (description != null && description.length() > 50) {
             description = description.substring(0, 50);
         }
         GithubRepository githubRepository = new GithubRepository(name, description);

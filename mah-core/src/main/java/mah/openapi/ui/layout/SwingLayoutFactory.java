@@ -24,7 +24,7 @@
 package mah.openapi.ui.layout;
 
 import mah.command.Command;
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.layout.ClassicPostLayout;
 
 import javax.swing.*;
@@ -57,7 +57,7 @@ public class SwingLayoutFactory implements LayoutFactory {
                 });
             }
         } catch (Exception e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 

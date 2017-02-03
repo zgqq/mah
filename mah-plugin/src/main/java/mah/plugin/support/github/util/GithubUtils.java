@@ -31,9 +31,7 @@ import mah.plugin.support.github.entity.GithubRepository;
  */
 public final class GithubUtils {
 
-    private GithubUtils() {
-
-    }
+    private GithubUtils() {}
 
     public static void openRepository(GithubRepository repository) {
         String name = repository.getName();
@@ -43,8 +41,7 @@ public final class GithubUtils {
 
     public static void openRepositoryIssues(GithubRepository repository) {
         String name = repository.getName();
-        String url = "https://github.com/" + name+"/issues";
+        String url = "https://github.com/" + name + "/issues";
         DesktopUtils.openBrowser(url);
     }
-
 }

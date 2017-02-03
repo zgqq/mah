@@ -23,7 +23,6 @@
  */
 package mah.command;
 
-
 import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
 import mah.command.event.CommonFilterEvent;
@@ -52,10 +51,9 @@ import java.util.concurrent.Executors;
  * Created by zgq on 2017-01-08 20:32
  */
 public class CommandManager implements ApplicationListener {
-
     private static final CommandManager INSTANCE = new CommandManager();
-    private final static Logger logger = LoggerFactory.getLogger(CommandManager.class);
-    private final Map<String, Map<String, Command>> PLUGIN_COMMAND = new HashMap<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
+    private final Map<String, Map<String, Command>> pluginCommands = new HashMap<>();
     private final Map<String, Command> commands = new HashMap<>();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
     private volatile Command lockedCommand;
@@ -63,7 +61,8 @@ public class CommandManager implements ApplicationListener {
     private String currentTriggerKey;
     private String currentQuery;
 
-    private CommandManager() {}
+    private CommandManager() {
+    }
 
     public List<String> findCommandMaps(Command command) {
         List<String> maps = new ArrayList<>();
@@ -91,16 +90,16 @@ public class CommandManager implements ApplicationListener {
     }
 
     public synchronized void registerCommand(String plugin, Command command) {
-        Map<String, Command> commands = PLUGIN_COMMAND.get(plugin);
+        Map<String, Command> commands = pluginCommands.get(plugin);
         if (commands == null) {
             commands = new HashMap<>();
-            PLUGIN_COMMAND.put(plugin, commands);
+            pluginCommands.put(plugin, commands);
         }
         commands.put(command.getName(), command);
     }
 
     public synchronized Command findCommand(String plugin, String command) {
-        Map<String, Command> commands = PLUGIN_COMMAND.get(plugin);
+        Map<String, Command> commands = pluginCommands.get(plugin);
         if (commands == null) {
             return null;
         }
@@ -160,10 +159,10 @@ public class CommandManager implements ApplicationListener {
                         triggerCommand(command, key, input);
                         triggerSucc = true;
                         int index;
-                        if (input.equals(key)){
+                        if (input.equals(key)) {
                             index = key.length();
                             currentTriggerKey = key;
-                        }else {
+                        } else {
                             index = key.length() + 1;
                             currentTriggerKey = key + ' ';
                         }
@@ -221,7 +220,6 @@ public class CommandManager implements ApplicationListener {
     }
 
     static class TriggerCommandTask implements Runnable {
-
         private final Command command;
         private final String triggerKey;
 
@@ -239,13 +237,12 @@ public class CommandManager implements ApplicationListener {
                     triggerEventHandler.handle(triggerEvent);
                 }
             } catch (Exception e) {
-                logger.error("Command " + command + " failed to be executed", e);
+                LOGGER.error("Command " + command + " failed to be executed", e);
             }
         }
     }
 
     static class FilterCommandTask implements Runnable {
-
         private final Command command;
         private final String triggerKey;
         private final String content;
@@ -260,12 +257,13 @@ public class CommandManager implements ApplicationListener {
         public void run() {
             try {
                 CommonFilterEvent commonFilterEvent = new CommonFilterEvent(triggerKey, content);
-                List<EventHandler<? extends CommonFilterEvent>> commonFilterEventHandlers = command.getCommonFilterEventHandlers();
+                List<EventHandler<? extends CommonFilterEvent>> commonFilterEventHandlers = command
+                        .getCommonFilterEventHandlers();
                 for (EventHandler commonFilterEventHandler : commonFilterEventHandlers) {
                     commonFilterEventHandler.handle(commonFilterEvent);
                 }
             } catch (Exception e) {
-                logger.error("Command " + this.command + " failed to be filtered", e);
+                LOGGER.error("Command " + this.command + " failed to be filtered", e);
             }
         }
     }

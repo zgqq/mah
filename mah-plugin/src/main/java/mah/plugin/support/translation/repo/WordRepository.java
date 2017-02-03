@@ -24,9 +24,9 @@
 package mah.plugin.support.translation.repo;
 
 import com.alibaba.fastjson.JSON;
-import mah.common.json.JSONArr;
-import mah.common.json.JSONObj;
-import mah.common.util.IOUtils;
+import mah.common.json.JsonArr;
+import mah.common.json.JsonObj;
+import mah.common.util.IoUtils;
 import mah.common.util.StringUtils;
 import mah.plugin.support.translation.Word;
 
@@ -42,7 +42,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Created by zgq on 16-12-4.
  */
 public class WordRepository {
-
     private final List<Word> words = new ArrayList<>();
     private final String localFile;
     private static final ConcurrentHashMap<String, Object> FILE_LOCKS = new ConcurrentHashMap<>();
@@ -61,31 +60,31 @@ public class WordRepository {
     }
 
     public void init() {
-        JSONArr map = mah.common.json.JSONUtils.parseArrFromLocalFile(localFile);
+        JsonArr map = mah.common.json.JsonUtils.parseArrFromLocalFile(localFile);
         if (map == null) {
             return;
         }
         map.forEach(entry -> {
-            JSONObj wordObj = (JSONObj) entry;
+            JsonObj wordObj = (JsonObj) entry;
             Word word = new Word();
             word.setWord(wordObj.getString("word"));
-            JSONArr explainsObj = wordObj.getJSONArr("explains");
-            List<String> explains = JSONUtils.toExplains(explainsObj);
+            JsonArr explainsObj = wordObj.getJsonArr("explains");
+            List<String> explains = JsonUtils.toExplains(explainsObj);
             word.setExplains(explains);
             word.setLatestQueryTime(wordObj.getDate("latestQueryTime"));
-            JSONArr meaningPairArr = wordObj.getJSONArr("meaningPairs");
+            JsonArr meaningPairArr = wordObj.getJsonArr("meaningPairs");
             if (meaningPairArr != null) {
                 List<Word.MeaningPair> meaningPairs = new ArrayList<>();
                 for (int i = 0; i < meaningPairArr.size(); i++) {
-                    JSONObj jsonObj = (JSONObj) meaningPairArr.get(i);
+                    JsonObj jsonObj = (JsonObj) meaningPairArr.get(i);
                     String key = jsonObj.getString("key");
-                    List<String> value =jsonObj.getJSONArr("value");
+                    List<String> value = jsonObj.getJsonArr("value");
                     Word.MeaningPair meaningPair = new Word.MeaningPair(key, value);
                     meaningPairs.add(meaningPair);
                 }
                 word.setMeaningPairs(meaningPairs);
             }
-            JSONArr translations = wordObj.getJSONArr("translations");
+            JsonArr translations = wordObj.getJsonArr("translations");
             word.setTranslations(translations);
             words.add(word);
         });
@@ -94,7 +93,7 @@ public class WordRepository {
     public void save() {
         synchronized (fileLock) {
             try {
-                IOUtils.writeToFile(localFile, JSON.toJSONString(words));
+                IoUtils.writeToFile(localFile, JSON.toJSONString(words));
             } catch (IOException e) {
                 throw new RepositoryException(e);
             }
@@ -102,16 +101,17 @@ public class WordRepository {
     }
 
     public Word findWord(String wordStr) {
-        if (StringUtils.isEmpty(wordStr))
+        if (StringUtils.isEmpty(wordStr)) {
             return null;
+        }
         readLock.lock();
-        try{
+        try {
             for (Word word : words) {
                 if (word.getWord().equals(wordStr)) {
                     return word;
                 }
             }
-        }finally {
+        } finally {
             readLock.unlock();
         }
         return null;
@@ -119,7 +119,7 @@ public class WordRepository {
 
     public void addWord(Word word) {
         writeLock.lock();
-        try{
+        try {
             Word oldWord = findWord(word.getWord());
             if (oldWord != null) {
                 oldWord.incrementQueryCount();
@@ -138,6 +138,6 @@ public class WordRepository {
         if (count > words.size()) {
             return words;
         }
-        return words.subList(words.size()-count, words.size()-1);
+        return words.subList(words.size() - count, words.size() - 1);
     }
 }

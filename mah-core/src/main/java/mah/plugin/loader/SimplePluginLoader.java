@@ -48,14 +48,13 @@ import java.util.concurrent.*;
  * Created by zgq on 2017-01-08 19:51
  */
 public class SimplePluginLoader {
-
-    private final XMLConfigReader reader;
+    private final XmlConfigReader reader;
     private final ExecutorService executorService;
     private final ScheduledExecutorService scheduledExecutor;
     private final Logger logger = LoggerFactory.getLogger(SimplePluginLoader.class);
 
     public SimplePluginLoader(Config config) throws Exception {
-        this.reader = new XMLConfigReader(ApplicationManager.getInstance().getPluginDir(), config);
+        this.reader = new XmlConfigReader(ApplicationManager.getInstance().getPluginDir(), config);
         executorService = Executors.newCachedThreadPool();
         scheduledExecutor = Executors.newScheduledThreadPool(2);
     }
@@ -71,7 +70,8 @@ public class SimplePluginLoader {
     }
 
     private void setPluginDir(PluginMetainfo pluginMetainfo) {
-        pluginMetainfo.setPluginDataDir(ApplicationManager.getInstance().getPluginDataDir() + File.separator + pluginMetainfo.getName());
+        pluginMetainfo.setPluginDataDir(ApplicationManager.getInstance().getPluginDataDir()
+                + File.separator + pluginMetainfo.getName());
     }
 
     public final List<Plugin> loadPlugins(List<String> pluginNames) {
@@ -136,8 +136,8 @@ public class SimplePluginLoader {
                             loadTask.cancel(true);
                             logger.error("Plugin {} took too much time to load,already canceled", plugin);
                         }
-                    }
-                    , 50000, TimeUnit.MILLISECONDS);
+                    } ,
+                    50000, TimeUnit.MILLISECONDS);
         }
 
         try {
@@ -187,9 +187,9 @@ public class SimplePluginLoader {
     }
 
     private void configureCommand(Command command, CommandConfig commandConfig) {
-        if (command instanceof XMLConfigurable) {
-            XMLConfigurable xmlConfigurable = (XMLConfigurable) command;
-            XMLCommandConfig xmlCommandConfig = (XMLCommandConfig) commandConfig;
+        if (command instanceof XmlConfigurable) {
+            XmlConfigurable xmlConfigurable = (XmlConfigurable) command;
+            XmlCommandConfig xmlCommandConfig = (XmlCommandConfig) commandConfig;
             try {
                 xmlConfigurable.configure(xmlCommandConfig.getCustomConfig());
             } catch (Exception e) {

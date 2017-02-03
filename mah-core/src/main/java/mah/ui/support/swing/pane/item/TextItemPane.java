@@ -24,7 +24,7 @@
 package mah.ui.support.swing.pane.item;
 
 import mah.common.util.CollectionUtils;
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.pane.item.ItemPane;
 import mah.ui.pane.Text;
 import mah.ui.pane.item.TextItem;
@@ -45,7 +45,6 @@ import java.awt.*;
  * Created by zgq on 2017-01-14 13:36
  */
 public class TextItemPane implements ItemPane<TextItem>, SwingPane {
-
     private static final int TEXT_LEN = 150;
     private JPanel panel;
     private JPanel container;
@@ -77,7 +76,7 @@ public class TextItemPane implements ItemPane<TextItem>, SwingPane {
             this.item = item;
             reset(item, num);
         } catch (Exception e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 
@@ -97,15 +96,19 @@ public class TextItemPane implements ItemPane<TextItem>, SwingPane {
         return item;
     }
 
+    private void applyBackgroundToMiddlePanel(Color color) {
+        this.text.setBackground(color);
+        this.container.setBackground(color);
+        this.middlePanel.setBackground(color);
+    }
+
     private void applyBackground(Color color) {
         this.panel.setBackground(color);
         applyBackgroundToMiddlePanel(color);
     }
 
-    private void applyBackgroundToMiddlePanel(Color color) {
-        this.text.setBackground(color);
-        this.container.setBackground(color);
-        this.middlePanel.setBackground(color);
+    private void applyBackground(ItemPaneTheme theme) {
+        applyBackground(theme.getBackgroundColor());
     }
 
     @Override
@@ -121,7 +124,8 @@ public class TextItemPane implements ItemPane<TextItem>, SwingPane {
     private DefaultStyledDocument highlightText(java.util.List<Integer> highlightIndexs, Text textObj) {
         String text = textObj.getText();
         String con = StringUtils.getStrBySpecificLength(text, TEXT_LEN);
-        DefaultStyledDocument hightlightDocument = HightlightHelper.createHightlightDocument(con, highlightIndexs, theme.getHighlightStyle(), theme.getNormalTextStyle());
+        DefaultStyledDocument hightlightDocument = HightlightHelper.createHightlightDocument(con, highlightIndexs,
+                theme.getHighlightStyle(), theme.getNormalTextStyle());
         return hightlightDocument;
     }
 
@@ -158,7 +162,7 @@ public class TextItemPane implements ItemPane<TextItem>, SwingPane {
             document.insertString(0, text, style);
             return document;
         } catch (BadLocationException e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 
@@ -178,13 +182,7 @@ public class TextItemPane implements ItemPane<TextItem>, SwingPane {
         }
     }
 
-    private void applyBackground(ItemPaneTheme theme) {
-        applyBackground(theme.getBackgroundColor());
-    }
-
     private void decorateNum(ItemPaneTheme theme) {
         numLabel.setForeground(theme.getNumColor());
     }
-
-
 }

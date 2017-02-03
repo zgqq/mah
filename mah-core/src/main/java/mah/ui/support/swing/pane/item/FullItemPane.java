@@ -24,7 +24,7 @@
 package mah.ui.support.swing.pane.item;
 
 import mah.common.util.CollectionUtils;
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.pane.Text;
 import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.ItemListPane;
@@ -50,7 +50,6 @@ import java.io.InputStream;
  * Created by zgq on 2017-01-08 14:16
  */
 public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themeable {
-
     private JPanel panel;
     private JPanel container;
     private JLabel iconLabel;
@@ -91,7 +90,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
             initStyle(theme);
             reset(item, num);
         } catch (Exception e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 
@@ -127,7 +126,8 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         BufferedImage icon = ImageIO.read(iconInputStream);
         ImageIcon imageIcon = new ImageIcon(icon); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
-        Image newimg = image.getScaledInstance(ITEM_HEIGHT, ITEM_HEIGHT, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        // scale it the smooth way
+        Image newimg = image.getScaledInstance(ITEM_HEIGHT, ITEM_HEIGHT, java.awt.Image.SCALE_SMOOTH);
         imageIcon = new ImageIcon(newimg);  // transform it back
         iconLabel.setIcon(imageIcon);
         iconName = item.getIconName();
@@ -166,7 +166,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
             document.insertString(0, text, normalTextStyle);
             return document;
         } catch (BadLocationException e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 
@@ -211,7 +211,8 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private DefaultStyledDocument highlightText(java.util.List<Integer> highlightIndexs, Text textObj) {
         String text = textObj.getText();
         String con = StringUtils.getStrBySpecificLength(text, TEXT_LEN);
-        DefaultStyledDocument hightlightDocument = HightlightHelper.createHightlightDocument(con, highlightIndexs, matchedTextStyle, normalTextStyle);
+        DefaultStyledDocument hightlightDocument = HightlightHelper.createHightlightDocument(con, highlightIndexs,
+                matchedTextStyle, normalTextStyle);
         return hightlightDocument;
     }
 
@@ -243,7 +244,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
             setNum(num);
             this.item = item;
         } catch (Exception e) {
-            throw new UIException(e);
+            throw new UiException(e);
         }
     }
 

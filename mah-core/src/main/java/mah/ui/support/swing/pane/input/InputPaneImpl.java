@@ -23,7 +23,7 @@
  */
 package mah.ui.support.swing.pane.input;
 
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.event.EventHandler;
 import mah.ui.input.InputPaneFactoryBean;
 import mah.ui.input.InputTextChangedEvent;
@@ -49,7 +49,6 @@ import java.text.AttributedCharacterIterator;
  * Created by zgq on 2017-01-08 12:00
  */
 public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingPane {
-
     private JTextComponent input;
     private JPanel panel;
     private final int panelPrefWidth;
@@ -97,15 +96,14 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
     }
 
     private void listenInput(final JTextPane input) {
-        input.getDocument().
-
-                addDocumentListener(new DocumentListener() {
+        input.getDocument()
+                .addDocumentListener(new DocumentListener() {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
                         try {
                             fireTextChangedEvent(e.getDocument());
                         } catch (BadLocationException e1) {
-                            throw new UIException(e1);
+                            throw new UiException(e1);
                         }
                     }
 
@@ -114,18 +112,20 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
                         try {
                             fireTextChangedEvent(e.getDocument());
                         } catch (BadLocationException e1) {
-                            throw new UIException(e1);
+                            throw new UiException(e1);
                         }
                     }
 
                     private void fireTextChangedEvent(Document document) throws BadLocationException {
-                        TextState oldState = new TextState.Builder(document.getText(0, document.getLength()),
+                        TextState oldState = new TextState.Builder(document.getText(0,
+                                document.getLength()),
                                 input.getCaretPosition()).build();
                         SwingUtilities.invokeLater(() -> {
                             try {
                                 TextState newState = new TextState.Builder(document.getText(0,
                                         document.getLength()), input.getCaretPosition()).build();
-                                InputTextChangedEvent inputTextChangedEvent = new InputTextChangedEvent(newState,
+                                InputTextChangedEvent inputTextChangedEvent = new InputTextChangedEvent(
+                                        newState,
                                         oldState);
                                 for (EventHandler eventHandler : getInputTextChangedHandlers()) {
                                     eventHandler.handle(inputTextChangedEvent);
@@ -146,7 +146,8 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
         input.setStyledDocument(new DefaultStyledDocument() {
 
                                     @Override
-                                    public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                                    public void insertString(int offs, String str, AttributeSet a)
+                                            throws BadLocationException {
                                         String origin = getText(0, getLength());
                                         int index = StringUtils.getLen(origin, str, maxNumberOfCharacters);
                                         if (index > 0) {
@@ -271,7 +272,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
         try {
             input.getDocument().remove(off, len);
         } catch (BadLocationException e) {
-            throw new UIException("Remove failed,off " + off + ",len " + len + "", e);
+            throw new UiException("Remove failed,off " + off + ",len " + len + "", e);
         }
     }
 }

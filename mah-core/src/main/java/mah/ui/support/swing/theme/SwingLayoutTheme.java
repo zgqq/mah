@@ -23,7 +23,7 @@
  */
 package mah.ui.support.swing.theme;
 
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.theme.LayoutTheme;
 
 import java.awt.*;
@@ -49,7 +49,7 @@ public class SwingLayoutTheme implements LayoutTheme{
     public String findProperty(String key) {
         String property = properties.get(key);
         if (property == null) {
-            throw new UIException("Not found property " + key);
+            throw new UiException("Not found property " + key);
         }
         return property;
     }

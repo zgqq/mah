@@ -21,23 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.app.config;
-
-import org.w3c.dom.Document;
+package mah.common.json;
 
 /**
- * Created by zgq on 2017-01-08 20:24
+ * Created by zgq on 16-12-4.
  */
-public class XMLConfig implements Config {
+public class JsonException extends RuntimeException{
+    private JsonException() {}
 
-    private final Document document;
-
-    public XMLConfig(Document document) {
-        this.document = document;
+    public JsonException(String message) {
+        super(message);
     }
 
-    public Document getDocument() {
-        return document;
+    public JsonException(String message, Throwable cause) {
+        super(message, cause);
     }
 
+    public JsonException(Throwable cause) {
+        super(cause);
+    }
+
+    public JsonException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

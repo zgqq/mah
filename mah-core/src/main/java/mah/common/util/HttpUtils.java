@@ -36,7 +36,7 @@ public class HttpUtils {
     public static String getContent(String urlStr) {
         String content = null;
         try {
-            content = IOUtils.toString(getInputStream(urlStr));
+            content = IoUtils.toString(getInputStream(urlStr));
             return content;
         } catch (IOException e) {
             throw new RuntimeException(e);

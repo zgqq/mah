@@ -21,23 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.common.json;
+package mah.keybind.config;
 
-import java.util.List;
+import org.w3c.dom.Node;
 
 /**
- * Created by zgq on 16-12-4.
+ * Created by zgq on 2017-01-09 09:30
  */
-public interface JSONFactory {
+public class XmlKeybindParser {
+    protected KeybindConfig parseKeybind(Node item) {
+        return parseKeybind(item, null);
+    }
 
-//    JSONArr parseArrFromLocalFile(String file);
-
-//    JSONObj parseObjFromLocalFile(String file);
-
-    JSONObj parseObj(String text);
-
-    JSONArr parseArr(String text);
-
-   <T> List<T> parseArr(String json, Class<T> clazz);
-
+    protected KeybindConfig parseKeybind(Node item,String mode) {
+        Node bindAttr = item.getAttributes().getNamedItem("bind");
+        String keys = bindAttr.getNodeValue();
+        Node actionAttr = item.getAttributes().getNamedItem("action");
+        String action = actionAttr.getNodeValue();
+        KeybindConfig keybind = new KeybindConfig(mode,keys,action);
+        return keybind;
+    }
 }

@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.plugin.support.orgnote.source;
-
+package mah.common.json;
 
 /**
- * Created by zgq on 16-10-19.
+ * Created by zgq on 16-12-4.
  */
-public class OrgmodeToJSON {
+public abstract class AbstractJsonFactory implements JsonFactory {
 
 }

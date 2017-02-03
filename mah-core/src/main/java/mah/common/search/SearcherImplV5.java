@@ -26,6 +26,7 @@ package mah.common.search;
 
 
 import mah.common.util.StringUtils;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,6 +129,41 @@ public class SearcherImplV5 implements Searcher {
         }
     }
 
+    private List<Node> matchNodes(String text, String key, int offset) {
+        List<Node> matchedNodes = new ArrayList<>(3);
+        List<Node> curNodes = new ArrayList<>(3);
+        char keyFirstChar = key.charAt(0);
+        mat:
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            List<Integer> indexs;
+            if (compare(keyFirstChar, c, true)) {
+                indexs = new ArrayList<>();
+                // add new node when encountering first char
+                curNodes.add(new Node(0, indexs));
+            }
+            int longestNodeIndex = getLongestNodeIndex(key, offset, curNodes, i, c);
+            if (longestNodeIndex != -1) {
+                // remove those nodes that are prior to longest node
+                Node longestNode = curNodes.get(longestNodeIndex);
+                for (int k = longestNodeIndex - 1; k >= 0; k--) {
+                    curNodes.remove(k);
+                }
+                // retrieving completes if there is only node
+                List<Integer> mmi = longestNode.matchedIndexs;
+                if (mmi.size() == key.length()) {
+                    matchedNodes.add(longestNode);
+                    if (curNodes.size() == 1) {
+                        break mat;
+                    }
+                    // remove matched node
+                    curNodes.remove(longestNode);
+                }
+            }
+        }
+        return matchedNodes;
+    }
+
     private void computeProp(Node propNode, int prevLen) {
         List<Integer> matchedIndexs = propNode.matchedIndexs;
         List<Integer> realIndexs = new ArrayList();
@@ -181,41 +217,6 @@ public class SearcherImplV5 implements Searcher {
         return node;
     }
 
-    private List<Node> matchNodes(String text, String key, int offset) {
-        List<Node> matchedNodes = new ArrayList<>(3);
-        List<Node> curNodes = new ArrayList<>(3);
-        char keyFirstChar = key.charAt(0);
-        mat:
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            List<Integer> indexs;
-            if (compare(keyFirstChar, c, true)) {
-                indexs = new ArrayList<>();
-                // add new node when encountering first char
-                curNodes.add(new Node(0, indexs));
-            }
-            int longestNodeIndex = getLongestNodeIndex(key, offset, curNodes, i, c);
-            if (longestNodeIndex != -1) {
-                // remove those nodes that are prior to longest node
-                Node longestNode = curNodes.get(longestNodeIndex);
-                for (int k = longestNodeIndex - 1; k >= 0; k--) {
-                    curNodes.remove(k);
-                }
-                // retrieving completes if there is only node
-                List<Integer> mmi = longestNode.matchedIndexs;
-                if (mmi.size() == key.length()) {
-                    matchedNodes.add(longestNode);
-                    if (curNodes.size() == 1) {
-                        break mat;
-                    }
-                    // remove matched node
-                    curNodes.remove(longestNode);
-                }
-            }
-        }
-        return matchedNodes;
-    }
-
     private int getLongestNodeIndex(String key, int offset, List<Node> curNodes, int i, char c) {
         int longestNodeIndex = -1;
         int maxSize = -1;
@@ -239,7 +240,6 @@ public class SearcherImplV5 implements Searcher {
         return longestNodeIndex;
     }
 
-    //abcd abcd
     public final int[] computeOptimalMatchedIndexs(String str, String key) {
         if (key == null) {
             throw new NullPointerException("key could not be null");

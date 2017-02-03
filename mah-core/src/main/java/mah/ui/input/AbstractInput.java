@@ -28,13 +28,11 @@ import java.util.LinkedList;
 /**
  * Created by zgq on 2017-01-09 14:03
  */
-public abstract class AbstractInput implements Input{
-
+public abstract class AbstractInput implements Input {
     private final LinkedList<TextState> undoStack = new LinkedList<>();
     private final LinkedList<TextState> redoStack = new LinkedList<>();
-    private boolean fireEvent=true;
+    private boolean fireEvent = true;
     private TextState textState;
-
 
     protected boolean canBackward() {
         return getCaretPosition() > 0;
@@ -163,7 +161,7 @@ public abstract class AbstractInput implements Input{
         int origin = getCaretPosition();
         int forward = forwardByWord();
         if (forward > origin) {
-            remove(origin,forward-origin);
+            remove(origin,forward - origin);
             push();
         }
     }
@@ -183,7 +181,7 @@ public abstract class AbstractInput implements Input{
         String text = getText();
         if (caret < text.length()) {
             push();
-            remove(caret,text.length()-caret);
+            remove(caret,text.length() - caret);
         }
     }
 
@@ -198,7 +196,7 @@ public abstract class AbstractInput implements Input{
             return;
         }
         push();
-        remove(backwardWord,origin-backwardWord);
+        remove(backwardWord,origin - backwardWord);
     }
 
     @Override
@@ -208,8 +206,8 @@ public abstract class AbstractInput implements Input{
         }
         push();
         int caret = getCaretPosition();
-        remove(caret-1,1);
-        setCaretPosition(caret-1);
+        remove(caret - 1,1);
+        setCaretPosition(caret - 1);
     }
 
     @Override

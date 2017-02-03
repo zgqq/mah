@@ -25,7 +25,7 @@ package mah.ui.support.swing.layout;
 
 import mah.mode.Mode;
 import mah.mode.ModeManager;
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.event.EventHandler;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.layout.ModeListener;
@@ -46,8 +46,8 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-08 13:51
  */
-public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper implements ClassicItemListLayout, SwingLayout, Themeable {
-
+public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
+        implements ClassicItemListLayout,SwingLayout, Themeable {
     private static final String NAME = "classic_item_list_layout";
     private final List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
     private final ItemListPaneFactory factory;
@@ -96,19 +96,19 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         }
     }
 
+    @Override
+    public void updateItems(Item... items) {
+        if (items == null) {
+            throw new UiException("The items should not be null in layout " + getName());
+        }
+        applyTheme();
+        updateItems(Arrays.asList(items));
+    }
+
     private void triggerMode() {
         ItemMode itemMode = ItemMode.triggerMode();
         itemMode.updateActionHandler(this);
         LayoutUtils.triggerMode(mode, modeListeners);
-    }
-
-    @Override
-    public void updateItems(Item... items) {
-        if (items == null) {
-            throw new UIException("The items should not be null in layout " + getName());
-        }
-        applyTheme();
-        updateItems(Arrays.asList(items));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     @Override
     public void updateItem(Item item, int num) {
         if (this.itemListPane == null) {
-            throw new UIException("Unable to update item");
+            throw new UiException("Unable to update item");
         }
         triggerMode();
         this.itemListPane.updateItem(item, num);

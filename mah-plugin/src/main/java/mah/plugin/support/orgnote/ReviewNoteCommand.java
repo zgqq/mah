@@ -33,7 +33,7 @@ import mah.plugin.PluginException;
 import mah.plugin.command.PluginCommandSupport;
 import mah.plugin.support.orgnote.config.Config;
 import mah.plugin.support.orgnote.source.Orgmode2;
-import mah.plugin.support.orgnote.util.IOUtil;
+import mah.common.util.IoUtils;
 import mah.ui.layout.ClassicPostLayout;
 import mah.ui.pane.post.PostImpl;
 import mah.ui.window.Window;
@@ -53,8 +53,7 @@ import java.util.List;
  * Created by zgq on 16-12-19.
  */
 public class ReviewNoteCommand extends PluginCommandSupport {
-
-    private static final Logger logger = LoggerFactory.getLogger(ReviewNoteCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReviewNoteCommand.class);
     private ClassicPostLayout layout;
 
     public ReviewNoteCommand() {
@@ -64,13 +63,13 @@ public class ReviewNoteCommand extends PluginCommandSupport {
     private void init() {
         addInitializeEventHandler(event -> {
             layout = getLayoutFactory().createClassicPostLayout();
-            layout.registerMode(new OrgnoteReviewMode(),event1 -> event1.getMode().updateActionHandler(ReviewNoteCommand.this));
+            layout.registerMode(new OrgnoteReviewMode(),event1 -> event1.getMode()
+                    .updateActionHandler(ReviewNoteCommand.this));
         });
         addTriggerEventHandler(event -> {
             trigger();
         });
     }
-
 
     private static JSONObject selectNode(List<JSONObject> list, Config config) {
         for (int i = config.getNodeIndex(); i < list.size(); i++) {
@@ -110,14 +109,14 @@ public class ReviewNoteCommand extends PluginCommandSupport {
         if (importDataDir.isDirectory()) {
             int importQuantity = 0;
             for (File dataFile : importDataDir.listFiles()) {
-                String filename = IOUtil.getFilename(dataFile.getName());
+                String filename = IoUtils.getFilename(dataFile.getName());
                 if (!config.contains(filename + ".json")) {
                     String content;
                     try {
                         content = Orgmode2.toJson(dataFile.getAbsolutePath());
                         String filepath = getDataDir() + filename + ".json";
-                        IOUtil.createFileIfNotExists(filepath);
-                        IOUtil.writeToFile(filepath, content);
+                        IoUtils.createFileIfNotExists(filepath);
+                        IoUtils.writeToFile(filepath, content);
                         config.addDataFilename(filename + ".json");
                         ++importQuantity;
                     } catch (IOException e) {
@@ -137,7 +136,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
     private Config readConfig() {
         Config config;
         try {
-            String con = IOUtil.toString(getConfigFile());
+            String con = IoUtils.toString(getConfigFile());
             config = JSONObject.parseObject(con, Config.class);
             if (config == null) {
                 config = new Config();
@@ -145,7 +144,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
         } catch (IOException e) {
             if (e instanceof FileNotFoundException) {
                 try {
-                    IOUtil.createFileIfNotExists(getConfigFile());
+                    IoUtils.createFileIfNotExists(getConfigFile());
                     config = new Config();
                 } catch (IOException e1) {
                     throw new RuntimeException("Run error!", e1);
@@ -171,7 +170,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
 
     private void trigger() {
         synchronized (this) {
-            logger.info("trigger note command");
+            LOGGER.info("trigger note command");
             checkInstallDir();
             nextNode();
         }
@@ -189,7 +188,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
         } else {
             String reviewContent = null;
             try {
-                reviewContent = IOUtil.toString(getDataDir() + config.getCurrentFilename());
+                reviewContent = IoUtils.toString(getDataDir() + config.getCurrentFilename());
             } catch (IOException e) {
                 throw new PluginException(e);
             }
@@ -205,7 +204,7 @@ public class ReviewNoteCommand extends PluginCommandSupport {
         JSONArray contentLine = note.getJSONArray("contentLines");
         final StringBuilder contentsb = new StringBuilder();
         if (contentLine != null) {
-            contentLine.forEach(str->contentsb.append(str).append("\n"));
+            contentLine.forEach(str -> contentsb.append(str).append("\n"));
         }
         PostImpl post = new PostImpl.Builder(note.getString("title"), contentsb.toString()).build();
         layout.setPost(post);
@@ -308,5 +307,4 @@ public class ReviewNoteCommand extends PluginCommandSupport {
             source.nextNode();
         }
     }
-
 }

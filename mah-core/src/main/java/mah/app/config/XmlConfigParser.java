@@ -21,23 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.plugin.config;
+package mah.app.config;
 
+import org.w3c.dom.Document;
 
-import org.w3c.dom.Node;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 
 /**
- * Created by zgq on 2017-01-08 20:35
+ * Created by zgq on 2017-01-09 10:04
  */
-public interface XMLConfigurable {
+public class XmlConfigParser {
 
-    /**
-     * Will be invoked before method(configure) of the plugin implementing this interface.
-     * In other words,this method will be invoked very early.
-     * @param node
-     * @throws Exception
-     */
-    void configure(Node node) throws Exception;
+    private final String path;
 
+    public XmlConfigParser(String path) {
+        this.path = path;
+    }
 
+    public Config parse() {
+        File file = new File(path);
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(file);
+            return new XmlConfig(doc);
+        } catch (Exception e) {
+            throw new ParserConfigException(e);
+        }
+    }
 }

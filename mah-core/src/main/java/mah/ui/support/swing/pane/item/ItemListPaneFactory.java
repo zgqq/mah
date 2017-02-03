@@ -23,7 +23,7 @@
  */
 package mah.ui.support.swing.pane.item;
 
-import mah.ui.UIException;
+import mah.ui.UiException;
 import mah.ui.event.EventHandler;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemListPane;
@@ -41,7 +41,9 @@ public class ItemListPaneFactory {
 
     private static final Map<CacheKey, ItemListPane> ITEMSPANE = new HashMap<>();
 
-    public ItemListPane createItemListPane(List<? extends Item> items, List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers, SwingLayoutTheme theme) {
+    public ItemListPane createItemListPane(List<? extends Item> items,
+                                           List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers,
+                                           SwingLayoutTheme theme) {
         ItemListPane itemListPane = createItemListPane(items, theme);
         for (EventHandler<? extends ItemSelectedEvent> itemSelectedEventHandler : itemSelectedEventHandlers) {
             itemListPane.setOnItemSelected(itemSelectedEventHandler);
@@ -51,7 +53,7 @@ public class ItemListPaneFactory {
 
     public ItemListPane createItemListPane(List<? extends Item> items, SwingLayoutTheme theme) {
         if (items == null) {
-            throw new UIException("items could not be null");
+            throw new UiException("items could not be null");
         }
         CacheKey cacheKey = new CacheKey(items);
         ItemListPane itemListPane;
@@ -74,8 +76,12 @@ public class ItemListPaneFactory {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
 
             CacheKey cacheKey = (CacheKey) o;
             List<? extends Item> items2 = cacheKey.items;
@@ -96,8 +102,9 @@ public class ItemListPaneFactory {
         @Override
         public int hashCode() {
             int hashCode = 1;
-            for (Item e : items)
+            for (Item e : items) {
                 hashCode = 31 * hashCode + (e == null ? 0 : e.getClass().hashCode());
+            }
             return hashCode;
         }
     }

@@ -31,11 +31,7 @@ import java.util.List;
  * Created by zgq on 2017-01-12 14:54
  */
 public final class ScreenUtils {
-
-    private ScreenUtils() {
-
-    }
-
+    private ScreenUtils() {}
 
     public static Rectangle getScreenBoundsAt(Point pos) {
         GraphicsDevice gd = getGraphicsDeviceAt(pos);
@@ -50,7 +46,7 @@ public final class ScreenUtils {
     public List<Rectangle> getScreenBounds() {
         List<Rectangle> bounds = new ArrayList<>(25);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice lstGDs[] = ge.getScreenDevices();
+        GraphicsDevice[] lstGDs = ge.getScreenDevices();
         for (GraphicsDevice gd : lstGDs) {
             GraphicsConfiguration gc = gd.getDefaultConfiguration();
             Rectangle screenBounds = gc.getBounds();
@@ -69,8 +65,7 @@ public final class ScreenUtils {
     public static GraphicsDevice getGraphicsDeviceAt(Point pos) {
         GraphicsDevice device = null;
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice lstGDs[] = ge.getScreenDevices();
-
+        GraphicsDevice[] lstGDs = ge.getScreenDevices();
         ArrayList<GraphicsDevice> lstDevices = new ArrayList<>(lstGDs.length);
         for (GraphicsDevice gd : lstGDs) {
             Rectangle screenBounds = getDeviceBounds(gd);
@@ -82,8 +77,5 @@ public final class ScreenUtils {
             device = lstDevices.get(0);
         }
         return device;
-
     }
-
-
 }

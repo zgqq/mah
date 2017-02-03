@@ -23,9 +23,9 @@
  */
 package mah.common.json;
 
-import mah.common.json.support.fastjson.FastjsonJSONFactory;
+import mah.common.json.support.fastjson.FastjsonJsonFactory;
 import mah.common.util.HttpUtils;
-import mah.common.util.IOUtils;
+import mah.common.util.IoUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,48 +33,45 @@ import java.util.List;
 /**
  * Created by zgq on 17-1-2 3:58.
  */
-public class JSONUtils {
+public class JsonUtils {
+    private static final JsonFactory FACTORY = new FastjsonJsonFactory();
 
-    private static final JSONFactory FACTORY = new FastjsonJSONFactory();
-
-    private JSONUtils() {
-
+    private JsonUtils() {
     }
 
-
-    public static JSONObj getJSON(String url) {
+    public static JsonObj getJson(String url) {
         String content = HttpUtils.getContent(url);
         return FACTORY.parseObj(content);
     }
 
     public static <T> List<T> parseArrFromLocalFile(String file, Class<T> clazz) {
         try {
-            String text = IOUtils.getStringByFilename(file);
+            String text = IoUtils.getStringByFilename(file);
             return FACTORY.parseArr(text, clazz);
         } catch (Exception e) {
-            throw new JSONException(e);
+            throw new JsonException(e);
         }
     }
 
-    public static JSONArr parseArrFromLocalFile(String file) {
+    public static JsonArr parseArrFromLocalFile(String file) {
         try {
-            String content = IOUtils.getStringByFilename(file);
+            String content = IoUtils.getStringByFilename(file);
             return parseArr(content);
         } catch (IOException e) {
-            throw new JSONException(e);
+            throw new JsonException(e);
         }
     }
 
-    public JSONObj parseObjFromLocalFile(String file) {
+    public JsonObj parseObjFromLocalFile(String file) {
         try {
-            String content = IOUtils.getStringByFilename(file);
+            String content = IoUtils.getStringByFilename(file);
             return parseObj(content);
         } catch (IOException e) {
-            throw new JSONException(e);
+            throw new JsonException(e);
         }
     }
 
-    private JSONObj parseObj(String text) {
+    private JsonObj parseObj(String text) {
         return FACTORY.parseObj(text);
     }
 
@@ -82,7 +79,7 @@ public class JSONUtils {
         return FACTORY.parseArr(text, clazz);
     }
 
-    public static JSONArr parseArr(String text) {
+    public static JsonArr parseArr(String text) {
         return FACTORY.parseArr(text);
     }
 }

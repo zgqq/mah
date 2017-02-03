@@ -21,37 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.common.json.support.fastjson;
+package mah.common.json;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import mah.common.json.AbstractJSONFactory;
-import mah.common.json.JSONArr;
-import mah.common.json.JSONFactory;
-import mah.common.json.JSONObj;
-
-import java.util.List;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by zgq on 16-12-4.
  */
-public class FastjsonJSONFactory extends AbstractJSONFactory implements JSONFactory {
+public interface JsonObj extends Map<String,Object> {
 
-    @Override
-    public JSONObj parseObj(String content) {
-        JSONObject jsonObject = JSON.parseObject(content);
-        return JSONUtils.createJSONObj(jsonObject);
-    }
+    String getString(String key);
 
-    @Override
-    public JSONArr parseArr(String content) {
-        JSONArray jsonArray = JSON.parseArray(content);
-        return JSONUtils.createJSONArr(jsonArray);
-    }
+    JsonObj getJsonObj(String key);
 
-    @Override
-    public <T> List<T> parseArr(String text, Class<T> clazz) {
-        return JSON.parseArray(text,clazz);
-    }
+    JsonArr getJsonArr(String key);
+
+    Date getDate(String key);
+
+    int getInt(String key);
 }

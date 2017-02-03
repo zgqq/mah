@@ -48,12 +48,11 @@ public interface Layout {
         throw new UnsupportedOperationException("Unable to set default mode");
     }
 
-    default Mode getMode(){
+    default Mode getMode() {
         throw new UnsupportedOperationException("Unable to get mode");
     }
 
-    default void registerMode(Mode mode,ModeListener modeListener){
+    default void registerMode(Mode mode,ModeListener modeListener) {
         throw new UnsupportedOperationException("Unsupport register mode");
     }
-
 }

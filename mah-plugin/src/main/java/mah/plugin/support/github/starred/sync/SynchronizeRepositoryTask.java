@@ -26,7 +26,7 @@ package mah.plugin.support.github.starred.sync;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import mah.common.util.IOUtils;
+import mah.common.util.IoUtils;
 import mah.plugin.support.github.entity.GithubRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +37,16 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 public class SynchronizeRepositoryTask implements Callable<UpdateResult> {
-
     private final GithubRepositories starredRepositories;
     private Logger logger = LoggerFactory.getLogger(SynchronizeRepositoryTask.class);
-    private String syncURL;
+    private String syncUrl;
 
-    public SynchronizeRepositoryTask(GithubRepositories starredRepositories, String syncURL) {
+    public SynchronizeRepositoryTask(GithubRepositories starredRepositories, String syncUrl) {
         if (starredRepositories == null) {
             throw new NullPointerException("User store wrapper is null");
         }
         this.starredRepositories = starredRepositories;
-        this.syncURL = syncURL;
+        this.syncUrl = syncUrl;
     }
 
     @Override
@@ -66,13 +65,13 @@ public class SynchronizeRepositoryTask implements Callable<UpdateResult> {
         while (true) {
             URL starredUrl;
             ++pageIndex;
-            starredUrl = new URL(this.syncURL + "&page=" + pageIndex + "&per_page=5");
-            HttpURLConnection httpURLConnection = (HttpURLConnection) starredUrl.openConnection();
-            httpURLConnection.setDoInput(true);
-            httpURLConnection.setDoOutput(true);
-            httpURLConnection.connect();
-            InputStream inputStream = httpURLConnection.getInputStream();
-            String content = IOUtils.toString(inputStream);
+            starredUrl = new URL(this.syncUrl + "&page=" + pageIndex + "&per_page=5");
+            HttpURLConnection connection = (HttpURLConnection) starredUrl.openConnection();
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.connect();
+            InputStream inputStream = connection.getInputStream();
+            String content = IoUtils.toString(inputStream);
             JSONArray reps = JSON.parseArray(content);
             if ((reps.size() <= 0)) {
                 break loop;
@@ -95,12 +94,11 @@ public class SynchronizeRepositoryTask implements Callable<UpdateResult> {
                     addCount++;
                 }
             }
-            httpURLConnection.disconnect();
+            connection.disconnect();
         }
         logger.info("Updated {} repositorys", addCount);
         UpdateResult updateResult = new UpdateResult(addCount, starredRepositories);
         return updateResult;
     }
-
 }
 

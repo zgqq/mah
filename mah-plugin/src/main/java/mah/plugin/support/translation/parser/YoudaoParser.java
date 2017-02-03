@@ -23,11 +23,11 @@
  */
 package mah.plugin.support.translation.parser;
 
-import mah.common.json.JSONArr;
-import mah.common.json.JSONFactory;
-import mah.common.json.JSONObj;
+import mah.common.json.JsonArr;
+import mah.common.json.JsonFactory;
+import mah.common.json.JsonObj;
 import mah.plugin.support.translation.Word;
-import mah.plugin.support.translation.repo.JSONUtils;
+import mah.plugin.support.translation.repo.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,29 +37,29 @@ import java.util.List;
  */
 public class YoudaoParser implements WordParser {
 
-    private JSONFactory jsonFactory;
+    private JsonFactory jsonFactory;
 
-    public YoudaoParser(JSONFactory jsonFactory) {
+    public YoudaoParser(JsonFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
     }
 
     @Override
     public Word parseWord(String content) {
-        JSONObj jsonObj = jsonFactory.parseObj(content);
+        JsonObj jsonObj = jsonFactory.parseObj(content);
         Word word = new Word();
         word.setWord(jsonObj.getString("query"));
-        List<String> translation = jsonObj.getJSONArr("translation");
+        List<String> translation = jsonObj.getJsonArr("translation");
         word.setTranslations(translation);
-        JSONObj basic = jsonObj.getJSONObj("basic");
+        JsonObj basic = jsonObj.getJsonObj("basic");
         if (basic != null) {
-            word.setExplains(JSONUtils.toExplains(basic.getJSONArr("explains")));
+            word.setExplains(JsonUtils.toExplains(basic.getJsonArr("explains")));
         }
-        JSONArr web = jsonObj.getJSONArr("web");
+        JsonArr web = jsonObj.getJsonArr("web");
         if (web != null) {
             List<Word.MeaningPair> meaningPairs = new ArrayList<>();
             for (int i = 0; i < web.size(); i++) {
-                JSONObj o = (JSONObj) web.get(i);
-                Word.MeaningPair meaning = new Word.MeaningPair(o.getString("key"),o.getJSONArr("value"));
+                JsonObj o = (JsonObj) web.get(i);
+                Word.MeaningPair meaning = new Word.MeaningPair(o.getString("key"),o.getJsonArr("value"));
                 meaningPairs.add(meaning);
             }
             word.setMeaningPairs(meaningPairs);

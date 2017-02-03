@@ -25,7 +25,7 @@ package mah.mode.config;
 
 import mah.common.util.StringUtils;
 import mah.keybind.config.KeybindConfig;
-import mah.keybind.config.XMLKeybindParser;
+import mah.keybind.config.XmlKeybindParser;
 import mah.mode.ModeException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -39,11 +39,11 @@ import java.util.Map;
 /**
  * Created by zgq on 2017-01-09 13:43
  */
-public class XMLModeParser extends XMLKeybindParser {
+public class XmlModeParser extends XmlKeybindParser {
 
     private final Document document;
 
-    public XMLModeParser(Document document) {
+    public XmlModeParser(Document document) {
         this.document = document;
     }
 

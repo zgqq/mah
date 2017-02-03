@@ -32,9 +32,9 @@ import mah.action.GlobalAction;
 import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
 import mah.app.config.Config;
-import mah.app.config.XMLConfig;
+import mah.app.config.XmlConfig;
 import mah.keybind.config.GlobalKeybindConfig;
-import mah.keybind.config.XMLGlobalKeybindParser;
+import mah.keybind.config.XmlGlobalKeybindParser;
 import mah.keybind.listener.GlobalKeybindListener;
 import mah.keybind.listener.KeyPressedHandler;
 import mah.keybind.util.SimpleParser;
@@ -56,19 +56,18 @@ import java.util.Map;
  * Created by zgq on 2017-01-09 09:21
  */
 public class KeybindManager implements ApplicationListener {
-
-    private final Map<String, List<Keybind>> KEYBINDS = new HashMap<>();
-    private static final Logger logger = LoggerFactory.getLogger(KeybindManager.class);
-    private final List<Keybind> GLOBAL_KEYBINDS = new ArrayList<>();
+    private final Map<String, List<Keybind>> keybinds = new HashMap<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeybindManager.class);
+    private final List<Keybind> globalKeybinds = new ArrayList<>();
     private Mode currentMode;
     private static final KeybindManager INSTANCE = new KeybindManager();
     private final KeybindMatcher keybindMatcher = new KeybindMatcher();
 
     public void addKeybind(String mod, Keybind keybind) {
-        List<Keybind> keybindings = KEYBINDS.get(mod);
+        List<Keybind> keybindings = keybinds.get(mod);
         if (keybindings == null) {
             keybindings = new ArrayList<>();
-            KEYBINDS.put(mod, keybindings);
+            keybinds.put(mod, keybindings);
         }
         keybindings.add(keybind);
     }
@@ -78,7 +77,7 @@ public class KeybindManager implements ApplicationListener {
     }
 
     public void addGlobalKeybind(Keybind keybind) {
-        GLOBAL_KEYBINDS.add(keybind);
+        globalKeybinds.add(keybind);
     }
 
     private void consumeKeystroke(KeyStroke keyStroke) {
@@ -90,7 +89,7 @@ public class KeybindManager implements ApplicationListener {
     }
 
     private void registerGlobalKeybinds(Document document) {
-        XMLGlobalKeybindParser globalKeybindParser = new XMLGlobalKeybindParser(document);
+        XmlGlobalKeybindParser globalKeybindParser = new XmlGlobalKeybindParser(document);
         List<GlobalKeybindConfig> globalKeybindConfigs = globalKeybindParser.parseGlobalKeybinds();
         globalKeybindConfigs.forEach(keybind -> {
             Keybind keybinding = new Keybind();
@@ -117,15 +116,15 @@ public class KeybindManager implements ApplicationListener {
     @Override
     public void afterStart(ApplicationEvent event) {
         Config config = event.getConfig();
-        if (config instanceof XMLConfig) {
-            XMLConfig xmlConfig = (XMLConfig) config;
+        if (config instanceof XmlConfig) {
+            XmlConfig xmlConfig = (XmlConfig) config;
             registerGlobalKeybinds(xmlConfig.getDocument());
         }
     }
 
     @Nullable
     private Action findAction(Mode mode, KeyStroke pressedKeyStroke) {
-        List<Keybind> keybinds = KEYBINDS.get(mode.getName());
+        List<Keybind> keybinds = this.keybinds.get(mode.getName());
         if (keybinds != null) {
             Action action = keybindMatcher.addPendingKeybindIfNotFoundAction(keybinds, pressedKeyStroke);
             if (action != null) {
@@ -173,7 +172,7 @@ public class KeybindManager implements ApplicationListener {
     }
 
     private Action findGlobalAction(KeyStroke pressedKeyStroke) {
-        return findAction(GLOBAL_KEYBINDS, pressedKeyStroke);
+        return findAction(globalKeybinds, pressedKeyStroke);
     }
 
     public void tryExecuteGlobalAction(KeyStroke keyStroke) {

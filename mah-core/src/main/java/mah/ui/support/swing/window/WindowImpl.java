@@ -40,7 +40,6 @@ import java.awt.*;
  * Created by zgq on 17-1-8 11:25.
  */
 public class WindowImpl extends WindowSupport {
-
     private final WindowProperties properties;
     private WindowFrame frame;
     private DefaultLayout defaultLayout;
@@ -101,8 +100,9 @@ public class WindowImpl extends WindowSupport {
     }
 
     private void removeLayout() {
-        if (currentLayout != null)
+        if (currentLayout != null) {
             frame.getContentPane().remove(currentLayout.getPanel());
+        }
     }
 
     @Override
@@ -124,7 +124,7 @@ public class WindowImpl extends WindowSupport {
     public void moveToRight() {
         Rectangle currentScreen = getCurrentScreen();
         int y = getY(currentScreen.getHeight());
-        frame.setLocation((int) (currentScreen.getX()+ currentScreen.getWidth()- getWindowWidth()), y);
+        frame.setLocation((int) (currentScreen.getX() + currentScreen.getWidth() - getWindowWidth()), y);
     }
 
     @Override
