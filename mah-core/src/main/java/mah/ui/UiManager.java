@@ -27,6 +27,7 @@ import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
 import mah.app.system.SystemMode;
 import mah.mode.ModeManager;
+import mah.ui.font.FontManager;
 import mah.ui.input.InputMode;
 import mah.ui.pane.item.ItemMode;
 import mah.ui.support.swing.FactoryHelper;
@@ -61,6 +62,7 @@ public class UiManager implements ApplicationListener {
     public void start(ApplicationEvent applicationEvent) {
         registerMode();
         ThemeManager.getInstance().start(applicationEvent);
+        FontManager.getInstance().start(applicationEvent);
     }
 
     @Override

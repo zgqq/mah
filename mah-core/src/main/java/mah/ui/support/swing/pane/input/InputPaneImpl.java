@@ -25,6 +25,7 @@ package mah.ui.support.swing.pane.input;
 
 import mah.ui.UiException;
 import mah.ui.event.EventHandler;
+import mah.ui.font.FontManager;
 import mah.ui.input.InputPaneFactoryBean;
 import mah.ui.input.InputTextChangedEvent;
 import mah.ui.input.TextState;
@@ -83,8 +84,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
         input.setBorder(BorderFactory.createCompoundBorder(
                 input.getBorder(),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-        input.setFont(new Font(null, Font.PLAIN, 25));
-
+        input.setFont(new Font(FontManager.getInstance().getCurrentFontName(), Font.PLAIN, 24));
         limitInputCharacterNum(input);
         listenInputMethod(input);
         listenInput(input);

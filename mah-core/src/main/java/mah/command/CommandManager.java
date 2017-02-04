@@ -61,8 +61,7 @@ public class CommandManager implements ApplicationListener {
     private String currentTriggerKey;
     private String currentQuery;
 
-    private CommandManager() {
-    }
+    private CommandManager() {}
 
     public List<String> findCommandMaps(Command command) {
         List<String> maps = new ArrayList<>();

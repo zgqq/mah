@@ -25,6 +25,7 @@ package mah.ui.support.swing.pane.item;
 
 import mah.common.util.CollectionUtils;
 import mah.ui.UiException;
+import mah.ui.font.FontManager;
 import mah.ui.pane.Text;
 import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.ItemListPane;
@@ -99,11 +100,15 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         this.container.add(this.numLabel);
     }
 
+    private Font descriptionFont;
+
     private void initDescription() {
         this.description = new JTextPane();
         this.description.setEditable(false);
         this.middlePanel.add(this.description);
     }
+
+    private Font contentFont;
 
     private void initContent() {
         this.content = new JTextPane();
@@ -225,6 +230,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         matchedTextStyle = description.addStyle("matchedText", null);
         StyleConstants.setForeground(matchedTextStyle, highlightForegroundColor);
         StyleConstants.setBackground(matchedTextStyle, highlightBackgroundColor);
+        StyleConstants.setFontFamily(matchedTextStyle,FontManager.getInstance().getCurrentFontName());
         StyleConstants.setFontSize(matchedTextStyle, 14);
 
         Color foregroundColor = Color.decode(theme.findProperty("text-foreground-color"));
@@ -232,6 +238,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         normalTextStyle = description.addStyle("normalText", null);
         StyleConstants.setForeground(normalTextStyle, foregroundColor);
         StyleConstants.setBackground(normalTextStyle, backgroundColor);
+        StyleConstants.setFontFamily(normalTextStyle, FontManager.getInstance().getCurrentFontName());
         StyleConstants.setFontSize(normalTextStyle, 14);
     }
 
