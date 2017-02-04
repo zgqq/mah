@@ -13,7 +13,7 @@ Mah is totally based on plugin.Thinks to java ecosystem,you can develop a plugin
 
 # Getting Started
 ## Installation
-Mah doesn't provide binary package to user as there are some efforts to do this.So to use
+Mah doesn't provide any binary package for user as there are some efforts to do this.So to use
 Mah,you must compile it yourself;it is not a big deal,only tough thing is to install jdk8.Once installed,the rest is easy.
 
     git clone https://github.com/zgqq/mah && cd mah 
