@@ -76,6 +76,7 @@ Open /home/{username}/.config/mah/conf.xml with editor,you will see
 
 Above is most basic configuration,mah will generate it automatically,you can modify it freely.
 
+
 ### Translation plugin
 First,you need to apply api pair http://fanyi.youdao.com/openapi?path=data-mode
 
@@ -110,6 +111,21 @@ First,you need to apply api pair http://fanyi.youdao.com/openapi?path=data-mode
 
 ![weather plugin](./screenshot/weather.gif "weather")
 
+### KeyRecorder plugin
+KeyRecorder will record all key strokes with modifier such as Control+c,helping you find out those key strokes pressed most.
+
+    <plugs>
+            <name>KeyRecorder</name>
+    </plugs>
+    <plug name="KeyRecorder">
+        <command name="TopKeystroke">
+            <trigger key="tk" />
+        </command>
+    </plug>
+
+![github plugin](./screenshot/KeyRecorder.gif "github")
+
+
 ### github plugin
 First, go to https://github.com/settings/tokens to generate a token
 
@@ -138,3 +154,5 @@ First, go to https://github.com/settings/tokens to generate a token
 ### More plugins
 Java libraries are so powerful that it is easy to develop a plugin.
 
+### Configuration example 
+[conf.xml](https://github.com/zgqq/dotfiles/blob/master/mah/conf.xml)

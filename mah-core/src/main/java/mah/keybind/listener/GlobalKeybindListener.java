@@ -34,6 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,8 +44,8 @@ import java.util.logging.Logger;
  * Created by zgq on 2017-01-09 09:36
  */
 public class GlobalKeybindListener extends SwingKeyAdapter {
-
     private org.slf4j.Logger logger = LoggerFactory.getLogger(GlobalKeybindListener.class);
+    private List<GlobalKeyListener> keyListeners = new CopyOnWriteArrayList<>();
 
     public void start() {
         try {
@@ -64,10 +67,6 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
-        Window window = WindowManager.getInstance().getCurrentWindow();
-        if (window != null && window.isShowing() && window.isFocused()) {
-            return;
-        }
         KeystateManager keyState = KeystateManager.getInstance();
         int keyCode = e.getKeyCode();
         if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
@@ -98,8 +97,11 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
             mask |= KeyEvent.META_MASK;
         }
         KeyStroke keyStroke = KeyStroke.getKeyStroke(javaKeyCode, mask);
+        for (GlobalKeyListener keyListener : keyListeners) {
+            GlobalKeyEvent globalKeyEvent = new GlobalKeyEvent(keyStroke);
+            keyListener.keyPressed(globalKeyEvent);
+        }
         logger.trace("press " + keyStroke);
-        KeybindManager.getInstance().tryExecuteGlobalAction(keyStroke);
     }
 
     public void nativeKeyReleased(NativeKeyEvent e) {
@@ -122,4 +124,8 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
     }
 
     public void nativeKeyTyped(NativeKeyEvent e) {}
+
+    public void addListener(GlobalKeyListener globalKeyListener) {
+        keyListeners.add(globalKeyListener);
+    }
 }

@@ -46,6 +46,7 @@ public class TextItemImpl implements TextItem{
         return attachment;
     }
 
+
     public static class Builder {
         private Text text;
         public Object attachment;

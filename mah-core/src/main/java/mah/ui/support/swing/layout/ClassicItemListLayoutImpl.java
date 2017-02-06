@@ -109,10 +109,6 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         updateItems((List<? extends Item>) Arrays.asList(items));
     }
 
-    @Override
-    public void updateItem(Item item) {
-        updateItems(Arrays.asList(item), false);
-    }
 
     private void triggerMode() {
         ItemMode itemMode = ItemMode.triggerMode();
@@ -142,6 +138,11 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
         triggerMode();
         this.itemListPane.updateItem(item, num);
         getLayout().updatePane(this.itemListPane);
+    }
+
+    @Override
+    public void updateItem(Item item) {
+        updateItems(Arrays.asList(item), false);
     }
 
     @Override

@@ -24,11 +24,15 @@
 package mah.common.util;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by zgq on 2017-01-11 20:20
  */
-public class CollectionUtils {
+public final class CollectionUtils {
+
+    private CollectionUtils() {}
 
     public static boolean isNotEmpty(Collection<?> collection) {
         return collection != null && !collection.isEmpty();
@@ -38,4 +42,20 @@ public class CollectionUtils {
         return collection == null || collection.isEmpty();
     }
 
+    public static <T> List<T> subList(List<T> list, int len) {
+        if (list == null) {
+            throw new NullPointerException();
+        }
+        if (list.isEmpty()) {
+            return list;
+        }
+        if (len == 0 || list.size() < len) {
+            return list.subList(0, list.size() - 1);
+        }
+        return list.subList(0, len - 1);
+    }
+
+    public static int getSize(List<?> list, int len) {
+        return list.size() > len ? len : list.size();
+    }
 }

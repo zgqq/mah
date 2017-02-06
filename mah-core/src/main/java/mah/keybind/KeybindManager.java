@@ -35,12 +35,16 @@ import mah.app.config.Config;
 import mah.app.config.XmlConfig;
 import mah.keybind.config.GlobalKeybindConfig;
 import mah.keybind.config.XmlGlobalKeybindParser;
+import mah.keybind.listener.GlobalKeyEvent;
+import mah.keybind.listener.GlobalKeyListener;
 import mah.keybind.listener.GlobalKeybindListener;
 import mah.keybind.listener.KeyPressedHandler;
 import mah.keybind.util.SimpleParser;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.layout.LayoutFactoryBean;
+import mah.ui.window.Window;
+import mah.ui.window.WindowManager;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,17 +55,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by zgq on 2017-01-09 09:21
  */
-public class KeybindManager implements ApplicationListener {
+public class KeybindManager implements ApplicationListener, GlobalKeyListener {
     private final Map<String, List<Keybind>> keybinds = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(KeybindManager.class);
     private final List<Keybind> globalKeybinds = new ArrayList<>();
     private Mode currentMode;
     private static final KeybindManager INSTANCE = new KeybindManager();
     private final KeybindMatcher keybindMatcher = new KeybindMatcher();
+    private final GlobalKeybindListener globalListener = new GlobalKeybindListener();
 
     public void addKeybind(String mod, Keybind keybind) {
         List<Keybind> keybindings = keybinds.get(mod);
@@ -109,7 +117,7 @@ public class KeybindManager implements ApplicationListener {
     @Override
     public void start(ApplicationEvent event) {
         LayoutFactoryBean.getInstance().setOnKeyPressed(new KeyPressedHandler());
-        GlobalKeybindListener globalListener = new GlobalKeybindListener();
+        globalListener.addListener(this);
         globalListener.start();
     }
 
@@ -180,5 +188,18 @@ public class KeybindManager implements ApplicationListener {
         if (action != null) {
             ActionManager.getInstance().handleAction(action);
         }
+    }
+
+    public void addGlobalKeyListener(GlobalKeyListener globalKeyListener) {
+        globalListener.addListener(globalKeyListener);
+    }
+
+    @Override
+    public void keyPressed(GlobalKeyEvent keyEvent) {
+        Window window = WindowManager.getInstance().getCurrentWindow();
+        if (window != null && window.isShowing() && window.isFocused()) {
+            return;
+        }
+        KeybindManager.getInstance().tryExecuteGlobalAction(keyEvent.getKeyStroke());
     }
 }

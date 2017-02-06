@@ -72,6 +72,9 @@ public class FullItemImpl implements FullItem{
         return description;
     }
 
+    public static Builder builder(String content) {
+        return new Builder(content);
+    }
 
     public static class Builder {
         private InputStream iconInputStream;

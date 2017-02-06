@@ -36,6 +36,7 @@ import mah.ui.support.swing.util.StringUtils;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.Themeable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -63,7 +64,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private static final int ITEM_HEIGHT = 58;
     private static final int TEXT_LEN = 60;
 
-    public FullItemPane(FullItem fullItem, int num,SwingLayoutTheme theme) {
+    public FullItemPane(FullItem fullItem, int num, SwingLayoutTheme theme) {
         if (theme == null) {
             throw new NullPointerException();
         }
@@ -71,7 +72,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         this.theme = theme;
     }
 
-    private void init(FullItem item, int num,SwingLayoutTheme theme) {
+    private void init(FullItem item, int num, SwingLayoutTheme theme) {
         try {
             this.panel = new JPanel();
             this.panel.setLayout(new BorderLayout());
@@ -157,12 +158,21 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     }
 
     private void setNormalDescription() {
-        setNormalDescription(item.getDescription().getText());
+        final Text text = getDescription();
+        if (text == null) {
+            return;
+        }
+        setNormalDescription(text.getText());
     }
 
     private void setNormalDescription(String text) {
         String qualifyStr = StringUtils.getStrBySpecificLength(text, TEXT_LEN);
         this.description.setDocument(createNormalDocument(qualifyStr));
+    }
+
+    @Nullable
+    private Text getDescription() {
+        return item.getDescription();
     }
 
     private StyledDocument createNormalDocument(String text) {
@@ -230,7 +240,7 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
         matchedTextStyle = description.addStyle("matchedText", null);
         StyleConstants.setForeground(matchedTextStyle, highlightForegroundColor);
         StyleConstants.setBackground(matchedTextStyle, highlightBackgroundColor);
-        StyleConstants.setFontFamily(matchedTextStyle,FontManager.getInstance().getCurrentFontName());
+        StyleConstants.setFontFamily(matchedTextStyle, FontManager.getInstance().getCurrentFontName());
         StyleConstants.setFontSize(matchedTextStyle, 14);
 
         Color foregroundColor = Color.decode(theme.findProperty("text-foreground-color"));

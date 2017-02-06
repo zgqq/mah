@@ -104,13 +104,6 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
     }
 
     @Override
-    public void updateItem(Item item, int num) {
-        updateWholeLayout(() -> {
-            getLayout().updateItem(item,num);
-        });
-    }
-
-    @Override
     public void updateItems(List<? extends Item> items) {
         updateWholeLayout(() -> {
             getLayout().updateItems(items);
@@ -128,6 +121,13 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
     public void updateItem(Item item) {
         updateWholeLayout(() -> {
             getLayout().updateItem(item);
+        });
+    }
+
+    @Override
+    public void updateItem(Item item, int num) {
+        updateWholeLayout(() -> {
+            getLayout().updateItem(item,num);
         });
     }
 

@@ -24,4 +24,10 @@
         <description>Review note for orgmode</description>
         <class>mah.plugin.support.orgnote.OrgnotePlugin</class>
     </plugin>
+    <plugin>
+        <name>KeyRecorder</name>
+        <author>zgq</author>
+        <description>Record global key</description>
+        <class>mah.plugin.support.keyrecorder.KeyRecorderPlugin</class>
+    </plugin>
 </plugins>

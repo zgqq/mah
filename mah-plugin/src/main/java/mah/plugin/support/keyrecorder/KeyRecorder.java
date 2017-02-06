@@ -21,19 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.command.event;
+package mah.plugin.support.keyrecorder;
 
 /**
- * Created by zgq on 2017-01-10 10:52
+ * Created by zgq on 2/6/17.
  */
-public class TriggerEvent {
-    private final String triggerKey;
+public class KeyRecorder {
 
-    public TriggerEvent(String triggerKey) {
-        this.triggerKey = triggerKey;
+    private String key;
+    private int pressedCount;
+
+    public KeyRecorder() {
     }
 
-    public String getTriggerKey() {
-        return triggerKey;
+    public KeyRecorder(String key, int pressedCount) {
+        this.key = key;
+        this.pressedCount = pressedCount;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public int getPressedCount() {
+        return pressedCount;
+    }
+
+    public void setPressedCount(int pressedCount) {
+        this.pressedCount = pressedCount;
     }
 }

@@ -21,19 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.command.event;
+package mah.keybind.listener;
 
 /**
- * Created by zgq on 2017-01-10 10:52
+ * Created by zgq on 2/6/17.
  */
-public class TriggerEvent {
-    private final String triggerKey;
-
-    public TriggerEvent(String triggerKey) {
-        this.triggerKey = triggerKey;
-    }
-
-    public String getTriggerKey() {
-        return triggerKey;
-    }
+public interface GlobalKeyListener {
+    void keyPressed(GlobalKeyEvent keyEvent);
 }
