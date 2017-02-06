@@ -125,6 +125,13 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
     }
 
     @Override
+    public void updateItem(Item item) {
+        updateWholeLayout(() -> {
+            getLayout().updateItem(item);
+        });
+    }
+
+    @Override
     public int getItemCount() {
         return getValue(() -> getLayout().getItemCount());
     }

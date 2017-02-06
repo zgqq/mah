@@ -282,6 +282,8 @@ public class TranslationCommand extends PluginCommandSupport implements XmlConfi
                     return;
                 }
 
+                layout.updateItem(new FullItemImpl.Builder(word).description("正在查询中...").build());
+
                 Thread.sleep(300);
                 if (!currentWord()) {
                     return;

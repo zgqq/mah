@@ -22,7 +22,7 @@ Mah,you must compile it yourself;it is not a big deal,only tough thing is to ins
 ## Configuration
 Open /home/{username}/.config/mah/conf.xml with editor,you will see
    
-    <?xml version="1.0" encoding="UTF-8"?>
+     <?xml version="1.0" encoding="UTF-8"?>
       <config>
        <global>
            <globalKeybind listen="M-space" consume="M-space" action="FocusWindow" />
@@ -72,7 +72,7 @@ Open /home/{username}/.config/mah/conf.xml with editor,you will see
                <keybind bind="M-9" action="SelectItem9" />
        </mode>
        <theme>dark</theme>
-       </config>
+    </config>
 
 Above is most basic configuration,mah will generate it automatically,you can modify it freely.
 

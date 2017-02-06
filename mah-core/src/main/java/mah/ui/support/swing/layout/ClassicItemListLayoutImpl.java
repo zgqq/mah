@@ -87,11 +87,15 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
     @Override
     public void updateItems(List<? extends Item> items) {
+        updateItems(items,true);
+    }
+
+    private void updateItems(List<? extends Item> items,boolean pending) {
         triggerMode();
         SwingLayoutTheme layoutTheme = applyTheme();
         this.itemListPane = factory.createItemListPane(items, itemSelectedEventHandlers,layoutTheme);
         getLayout().updatePane(this.itemListPane);
-        if (items != null && items.size() > 0) {
+        if (items != null && items.size() > 0 && pending) {
             this.itemListPane.setPendingItemIndex(0);
         }
     }
@@ -102,7 +106,12 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
             throw new UiException("The items should not be null in layout " + getName());
         }
         applyTheme();
-        updateItems(Arrays.asList(items));
+        updateItems((List<? extends Item>) Arrays.asList(items));
+    }
+
+    @Override
+    public void updateItem(Item item) {
+        updateItems(Arrays.asList(item), false);
     }
 
     private void triggerMode() {
