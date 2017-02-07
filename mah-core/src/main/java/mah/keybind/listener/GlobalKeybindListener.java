@@ -23,10 +23,7 @@
  */
 package mah.keybind.listener;
 
-import mah.keybind.KeybindManager;
 import mah.ui.key.KeystateManager;
-import mah.ui.window.Window;
-import mah.ui.window.WindowManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -34,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -44,8 +40,9 @@ import java.util.logging.Logger;
  * Created by zgq on 2017-01-09 09:36
  */
 public class GlobalKeybindListener extends SwingKeyAdapter {
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(GlobalKeybindListener.class);
-    private List<GlobalKeyListener> keyListeners = new CopyOnWriteArrayList<>();
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(GlobalKeybindListener.class);
+    private final List<GlobalKeyListener> keyListeners = new CopyOnWriteArrayList<>();
+    private final KeystateManager keyState = new KeystateManager();
 
     public void start() {
         try {
@@ -59,7 +56,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
 
         GlobalScreen.addNativeKeyListener(this);
 
-        // Get the logger for "org.jnativehook" and set the level to off.
+        // Get the LOGGER for "org.jnativehook" and set the level to off.
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         // Don't forget to disable the parent handlers.
@@ -67,19 +64,18 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
-        KeystateManager keyState = KeystateManager.getInstance();
         int keyCode = e.getKeyCode();
         if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(true);
-            logger.trace("press ctrl");
+            LOGGER.trace("press ctrl");
             return;
         } else if (keyCode == NativeKeyEvent.VC_ALT_L || keyCode == NativeKeyEvent.VC_ALT_R) {
             keyState.setAlt(true);
-            logger.trace("press alt");
+            LOGGER.trace("press alt");
             return;
         } else if (keyCode == NativeKeyEvent.VC_META_L || keyCode == NativeKeyEvent.VC_META_R) {
             keyState.setMeta(true);
-            logger.trace("press meta");
+            LOGGER.trace("press meta");
             return;
         }
 
@@ -101,11 +97,10 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
             GlobalKeyEvent globalKeyEvent = new GlobalKeyEvent(keyStroke);
             keyListener.keyPressed(globalKeyEvent);
         }
-        logger.trace("press " + keyStroke);
+        LOGGER.trace("press " + keyStroke);
     }
 
     public void nativeKeyReleased(NativeKeyEvent e) {
-        KeystateManager keyState = KeystateManager.getInstance();
         int keyCode = e.getKeyCode();
         if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(false);

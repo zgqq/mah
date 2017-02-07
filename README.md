@@ -6,7 +6,7 @@ Mah is a alternative to alfred,written in java.
 For example,it will take long time to synchronize github repositories you starred;
 you can execute other actions like translation while synchronizing.
 ## Configurable
-Configuration is the one of important features,you can configure keybind,plugin,and so on.To configure keybind,you should know what is Mode.Mode is a collection of keybinds,allowing same keybind to execute different actions.For instance,TranslationCommand will trigger translation_mode,within which CopyWord and CopyExplains actions are defined;then you can press alt+w (i defined,you can configure it freely in conf.xml) to execute CopyWord
+Configuration is the one of important features,you can configure keybind,plugin,and so on.To configure keybind,you should know what is Mode.Mode is a collection of keybinds,allowing same keybind to execute different actions.For instance,TranslationCommand will trigger translation_mode,in which CopyWord and CopyExplains actions are defined;then you can press alt+w (i defined,you can configure it freely in conf.xml) to execute CopyWord
  action;as a result,translated word will be copied.
 ## Plugin support
 Mah is totally based on plugin.Thinks to java ecosystem,you can develop a plugin with powerful abilities.
@@ -76,6 +76,20 @@ Open /home/{username}/.config/mah/conf.xml with editor,you will see
 
 Above is most basic configuration,mah will generate it automatically,you can modify it freely.
 
+### KeyRecorder plugin
+KeyRecorder will record all key strokes with modifier such as Control+c,helping you find out those key strokes pressed most.
+
+    <plugs>
+            <name>KeyRecorder</name>
+    </plugs>
+    <plug name="KeyRecorder">
+        <command name="TopKeystroke">
+            <trigger key="tk" />
+        </command>
+    </plug>
+
+![github plugin](./screenshot/KeyRecorder.gif "github")
+
 
 ### Translation plugin
 First,you need to apply api pair http://fanyi.youdao.com/openapi?path=data-mode
@@ -110,21 +124,6 @@ First,you need to apply api pair http://fanyi.youdao.com/openapi?path=data-mode
     </plug>
 
 ![weather plugin](./screenshot/weather.gif "weather")
-
-### KeyRecorder plugin
-KeyRecorder will record all key strokes with modifier such as Control+c,helping you find out those key strokes pressed most.
-
-    <plugs>
-            <name>KeyRecorder</name>
-    </plugs>
-    <plug name="KeyRecorder">
-        <command name="TopKeystroke">
-            <trigger key="tk" />
-        </command>
-    </plug>
-
-![github plugin](./screenshot/KeyRecorder.gif "github")
-
 
 ### github plugin
 First, go to https://github.com/settings/tokens to generate a token

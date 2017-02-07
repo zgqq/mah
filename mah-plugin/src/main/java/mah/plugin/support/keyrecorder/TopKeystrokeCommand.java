@@ -85,8 +85,8 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
                 List<FullItem> items = new ArrayList<>();
                 for (int i = 0; i < size; i++) {
                     KeyRecorder keyRecorder = keyRecorders.get(i);
-                    FullItemImpl item = FullItemImpl.builder(keyRecorder.getKey() + "   次数:"
-                            + keyRecorder.getPressedCount())
+                    FullItemImpl item = FullItemImpl.builder(keyRecorder.getKey()).description("已经被击中"
+                            + keyRecorder.getPressedCount() + "次")
                             .iconInputStream(getInputStreamFromClasspath("icon.png")).build();
                     items.add(item);
                 }
