@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <global>
-        <globalKeybind bind="M-space" action="FocusWindow" />
+        <globalKeybind listen="M-space" consume="M-space" action="FocusWindow" />
     </global>
     <mode name="system_mode">
         <keybind bind="C-x C-c" action="ExitSystem" />
