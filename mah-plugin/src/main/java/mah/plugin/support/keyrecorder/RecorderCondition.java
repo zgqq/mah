@@ -24,30 +24,11 @@
 package mah.plugin.support.keyrecorder;
 
 import mah.keybind.listener.GlobalKeyEvent;
-import mah.openapi.plugin.PluginSupport;
-
-import javax.swing.*;
+import mah.ui.key.KeyEvent;
 
 /**
- * Created by zgq on 2/6/17.
+ * Created by zgq on 2/7/17.
  */
-public class KeyRecorderPlugin extends PluginSupport {
-    @Override
-    public void prepare() {
-        registerCommand(new TopKeystrokeCommand("keystrokes.json", "TopKeystroke", new RecorderCondition() {
-            @Override
-            public boolean shouldRecord(GlobalKeyEvent keyEvent) {
-                final KeyStroke keyStroke = keyEvent.getKeyStroke();
-                return !(keyStroke.getModifiers() == 0);
-            }
-        }));
-
-        registerCommand(new TopKeystrokeCommand("keys.json", "TopKey", new RecorderCondition() {
-            @Override
-            public boolean shouldRecord(GlobalKeyEvent keyEvent) {
-                final KeyStroke keyStroke = keyEvent.getKeyStroke();
-                return (keyStroke.getModifiers() == 0);
-            }
-        }));
-    }
+public interface RecorderCondition {
+    boolean shouldRecord(GlobalKeyEvent keyEvent);
 }

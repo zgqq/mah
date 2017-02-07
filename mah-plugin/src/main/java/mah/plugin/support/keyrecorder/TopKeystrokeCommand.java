@@ -54,9 +54,15 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
     private final Map<String, KeyRecorder> keyRecorderMap = new HashMap<>();
     private final List<KeyRecorder> keyRecorders = new ArrayList();
     private ClassicItemListLayout layout;
-    private String localFile = "";
+    private final String pluginFile;
+    private final String name;
+    private final RecorderCondition condition;
+    private String localFile;
 
-    TopKeystrokeCommand() {
+    TopKeystrokeCommand(String pluginFile, String name, RecorderCondition condition) {
+        this.pluginFile = pluginFile;
+        this.name = name;
+        this.condition = condition;
         init();
     }
 
@@ -65,7 +71,7 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
             @Override
             public void handle(InitializeEvent event) throws Exception {
                 layout = getLayoutFactory().createClassicItemListLayout();
-                localFile = getFileStoredInPluginDataDir("keystrokes.json");
+                localFile = getFileStoredInPluginDataDir(pluginFile);
                 readKeystrokes();
                 KeybindManager.getInstance().addGlobalKeyListener(TopKeystrokeCommand.this);
             }
@@ -125,15 +131,15 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
 
     @Override
     public String getName() {
-        return "TopKeystroke";
+        return name;
     }
 
     @Override
     public void keyPressed(GlobalKeyEvent keyEvent) {
-        KeyStroke keyStroke = keyEvent.getKeyStroke();
-        if (keyStroke.getModifiers() == 0) {
-            return;
+        if (!condition.shouldRecord(keyEvent)) {
+           return;
         }
+        final KeyStroke keyStroke = keyEvent.getKeyStroke();
         KeyRecorder keyRecorder = keyRecorderMap.get(keyStroke.toString());
         if (keyRecorder == null) {
             keyRecorder = new KeyRecorder(keyStroke.toString(), 1);
