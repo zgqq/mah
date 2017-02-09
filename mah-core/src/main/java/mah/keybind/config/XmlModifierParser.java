@@ -23,7 +23,7 @@
  */
 package mah.keybind.config;
 
-import mah.common.util.XmlUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -32,31 +32,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zgq on 2017-01-09 09:32
+ * Created by zgq on 2/9/17.
  */
-public class XmlGlobalKeybindParser {
+public class XmlModifierParser {
     private final Document document;
 
-    public XmlGlobalKeybindParser(Document document) {
+    public XmlModifierParser(Document document) {
         this.document = document;
     }
 
-    public List<GlobalKeybindConfig> parseGlobalKeybinds() {
-        Document document = this.document;
-        NodeList globalKeybinds = document.getElementsByTagName("globalKeybind");
-        int globalKeybindsLength = globalKeybinds.getLength();
-        List<GlobalKeybindConfig> globalKeybindConfigs = new ArrayList<>();
+    public List<ModifierConfig> parseModifiers() {
+        final Document document = this.document;
+        final NodeList globalKeybinds = document.getElementsByTagName("modifier");
+        final int globalKeybindsLength = globalKeybinds.getLength();
+        final List<ModifierConfig> globalKeybindConfigs = new ArrayList<>();
         for (int i = 0; i < globalKeybindsLength; i++) {
             Node item = globalKeybinds.item(i);
-            GlobalKeybindConfig keybind = parseKeybind(item);
-            globalKeybindConfigs.add(keybind);
+            ModifierConfig modifierConfig = parseModifier(item);
+            globalKeybindConfigs.add(modifierConfig);
         }
         return globalKeybindConfigs;
     }
 
-    private GlobalKeybindConfig parseKeybind(Node item) {
-        String listen = XmlUtils.getAttribute(item, "listen");
-        String action = XmlUtils.getAttribute(item, "action");
-        return new GlobalKeybindConfig(listen, action);
+    private ModifierConfig parseModifier(Node item) {
+        final Node nameNode = item.getAttributes().getNamedItem("name");
+        final String modifier = nameNode.getNodeValue();
+        final Node asNode = item.getAttributes().getNamedItem("as");
+        final String as = asNode.getNodeValue();
+        return ModifierConfig.of(modifier, as);
     }
 }

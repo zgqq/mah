@@ -273,6 +273,7 @@ public class TranslationCommand extends PluginCommandSupport implements XmlConfi
         public void run() {
             try {
                 if (StringUtils.isEmpty(word)) {
+                    layout.clear();
                     return;
                 }
                 Word wordObj = getWord(word);

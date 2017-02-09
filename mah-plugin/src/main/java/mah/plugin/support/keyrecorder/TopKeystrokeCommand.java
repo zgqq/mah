@@ -59,6 +59,12 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
     private final String name;
     private final RecorderCondition condition;
     private String localFile;
+    private final Comparator<KeyRecorder> comparator = new Comparator<KeyRecorder>() {
+        @Override
+        public int compare(KeyRecorder o1, KeyRecorder o2) {
+            return (o1.getPressedCount() < o2.getPressedCount()) ? 1 : -1;
+        }
+    };
 
     TopKeystrokeCommand(String pluginFile, String name, RecorderCondition condition) {
         this.pluginFile = pluginFile;
@@ -77,29 +83,27 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
                 KeybindManager.getInstance().addGlobalKeyListener(TopKeystrokeCommand.this);
             }
         });
-        final Comparator<KeyRecorder> comparator = new Comparator<KeyRecorder>() {
-            @Override
-            public int compare(KeyRecorder o1, KeyRecorder o2) {
-                return (o1.getPressedCount() < o2.getPressedCount()) ? 1 : -1;
-            }
-        };
         addTriggerEventHandler(new EventHandler<TriggerEvent>() {
             @Override
             public void handle(TriggerEvent event) throws Exception {
-                ArrayList<KeyRecorder> keyRecorders = new ArrayList<>(TopKeystrokeCommand.this.keyRecorders);
-                keyRecorders.sort(comparator);
-                int size = CollectionUtils.getSize(keyRecorders, 9);
-                List<FullItem> items = new ArrayList<>();
-                for (int i = 0; i < size; i++) {
-                    KeyRecorder keyRecorder = keyRecorders.get(i);
-                    FullItemImpl item = FullItemImpl.builder(keyRecorder.getKey()).description("已经被击中"
-                            + keyRecorder.getPressedCount() + "次")
-                            .icon(Icon.valueOf("icon.png")).build();
-                    items.add(item);
-                }
-                layout.updateItems(items);
+                showTopkey();
             }
         });
+    }
+
+    private void showTopkey() {
+        ArrayList<KeyRecorder> keyRecorders = new ArrayList<>(TopKeystrokeCommand.this.keyRecorders);
+        keyRecorders.sort(comparator);
+        int size = CollectionUtils.getSize(keyRecorders, 9);
+        List<FullItem> items = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            KeyRecorder keyRecorder = keyRecorders.get(i);
+            FullItemImpl item = FullItemImpl.builder(keyRecorder.getKey()).description("已经被击中"
+                    + keyRecorder.getPressedCount() + "次")
+                    .icon(Icon.valueOf("icon.png")).build();
+            items.add(item);
+        }
+        layout.updateItems(items);
     }
 
     public void readKeystrokes() {

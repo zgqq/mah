@@ -34,7 +34,9 @@ import mah.app.ApplicationListener;
 import mah.app.config.Config;
 import mah.app.config.XmlConfig;
 import mah.keybind.config.GlobalKeybindConfig;
+import mah.keybind.config.ModifierConfig;
 import mah.keybind.config.XmlGlobalKeybindParser;
+import mah.keybind.config.XmlModifierParser;
 import mah.keybind.listener.GlobalKeyEvent;
 import mah.keybind.listener.GlobalKeyListener;
 import mah.keybind.listener.GlobalKeybindListener;
@@ -107,7 +109,7 @@ public class KeybindManager implements ApplicationListener, GlobalKeyListener {
             }
             keybinding.setAction(action);
             List<KeyStroke> keyStrokes = SimpleParser.parse(keybind.getListen());
-            List<KeyStroke> consumeKeyStrokes = SimpleParser.parse(keybind.getConsume());
+            List<KeyStroke> consumeKeyStrokes = SimpleParser.parse(keybind.getListen());
             keybinding.setKeyStrokes(keyStrokes);
             KeybindManager.getInstance().addGlobalKeybind(keybinding);
             consumeKeystroke(consumeKeyStrokes.get(0));
@@ -118,7 +120,8 @@ public class KeybindManager implements ApplicationListener, GlobalKeyListener {
     public void start(ApplicationEvent event) {
         LayoutFactoryBean.getInstance().setOnKeyPressed(new KeyPressedHandler());
         globalListener.addListener(this);
-        globalListener.start();
+        final XmlModifierParser parser = new XmlModifierParser(((XmlConfig) event.getConfig()).getDocument());
+        globalListener.start(parser.parseModifiers());
     }
 
     @Override

@@ -371,7 +371,7 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
                 break;
 
 
-            // Begin Edit Key Zone
+            // Begin Edit ModifierConfig Zone
             case NativeKeyEvent.VC_INSERT:
                 keyCode = KeyEvent.VK_INSERT;
                 break;
@@ -395,7 +395,7 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
             case NativeKeyEvent.VC_PAGE_DOWN:
                 keyCode = KeyEvent.VK_PAGE_DOWN;
                 break;
-            // End Edit Key Zone
+            // End Edit ModifierConfig Zone
 
             case NativeKeyEvent.VC_POWER:
             case NativeKeyEvent.VC_SLEEP:
@@ -421,7 +421,7 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
             case NativeKeyEvent.VC_BROWSER_REFRESH:
             case NativeKeyEvent.VC_BROWSER_FAVORITES:
 
-                // Begin Cursor Key Zone
+                // Begin Cursor ModifierConfig Zone
             case NativeKeyEvent.VC_UP:
                 keyCode = KeyEvent.VK_UP;
                 break;
@@ -434,7 +434,7 @@ public abstract class SwingKeyAdapter implements NativeKeyListener {
             case NativeKeyEvent.VC_DOWN:
                 keyCode = KeyEvent.VK_DOWN;
                 break;
-            // End Cursor Key Zone
+            // End Cursor ModifierConfig Zone
 
 
             // Begin Numeric Zone

@@ -75,8 +75,8 @@ public class InputMode extends AbstractMode {
 
         registerAction(new Undo("Undo"));
         registerAction(new Redo("Redo"));
-        registerAction(new ClearTextPriorToTriggerKey("ClearTextPriorToTriggerKey"));
-        registerAction(new CopyArgumentText("CopyArgumentText"));
+        registerAction(new ClearQueryText("ClearQueryText"));
+        registerAction(new CopyQueryText("CopyQueryText"));
     }
 
     public static InputMode triggerMode() {
@@ -275,9 +275,9 @@ public class InputMode extends AbstractMode {
         }
     }
 
-    static class ClearTextPriorToTriggerKey extends InputAction {
+    static class ClearQueryText extends InputAction {
 
-        public ClearTextPriorToTriggerKey(String name) {
+        public ClearQueryText(String name) {
             super(name);
         }
 
@@ -292,9 +292,9 @@ public class InputMode extends AbstractMode {
         }
     }
 
-    static class CopyArgumentText extends InputAction {
+    static class CopyQueryText extends InputAction {
 
-        public CopyArgumentText(String name) {
+        public CopyQueryText(String name) {
             super(name);
         }
 

@@ -1,10 +1,14 @@
 # Mah
-Mah is a alternative to alfred,written in java.
+Mah is a alternative to alfred,written in java.The project is currently under development.
 
 # Features
 ## Asynchronous
 For example,it will take long time to synchronize github repositories you starred;
 you can execute other actions like translation while synchronizing.
+## Better keybind
+You can bind as many actions as you want.There are many useful actions in Mah.
+The mode (input_mode) provides a action named ClearQueryText,which is used to clear
+text prior to command.Try to imagine that you have translated a long sentence and want to translate another sentence or word,you need to clear input and input command again.Thanks to this action,you don't need to do so.
 ## Configurable
 Configuration is the one of important features,you can configure keybind,plugin,and so on.To configure keybind,you should know what is Mode.Mode is a collection of keybinds,allowing same keybind to execute different actions.For instance,TranslationCommand will trigger translation_mode,in which CopyWord and CopyExplains actions are defined;then you can press alt+w (i defined,you can configure it freely in conf.xml) to execute CopyWord
  action;as a result,translated word will be copied.
@@ -20,12 +24,12 @@ Mah,you must compile it yourself;it is not a big deal,only tough thing is to ins
     ./install
 
 ## Configuration
-Open /home/{username}/.config/mah/conf.xml with editor,you will see
+Open /{home}/.config/mah/conf.xml with editor,you will see
    
      <?xml version="1.0" encoding="UTF-8"?>
       <config>
        <global>
-           <globalKeybind listen="M-space" consume="M-space" action="FocusWindow" />
+           <globalKeybind listen="M-space" action="FocusWindow" />
        </global>
        <mode name="system_mode">
            <keybind bind="C-x C-c" action="ExitSystem" />
@@ -75,6 +79,12 @@ Open /home/{username}/.config/mah/conf.xml with editor,you will see
     </config>
 
 Above is most basic configuration,mah will generate it automatically,you can modify it freely.
+Note that you must tell mah if you change key location using tool like xmodmap 
+
+    <config>
+        <modifier name="Caplock" as="LControl" />
+        <modifier name="LControl" as="Caplock" />
+    </config>
 
 ### KeyRecorder plugin
 KeyRecorder will record all key strokes with modifier such as Control+c,helping you find out those key strokes pressed most.

@@ -23,27 +23,57 @@
  */
 package mah.keybind.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Created by zgq on 2017-01-25 21:48
+ * Created by zgq on 2/9/17.
  */
-public final class GlobalKeybindConfig {
+public class ModifierConfig {
+    private static final Map<String, Modifier> MODIFIERS = new HashMap<>();
 
-    private final String listen;
-    private final String action;
-
-    public GlobalKeybindConfig(String listen, String action) {
-        if (listen == null || action == null) {
-            throw new NullPointerException();
+    static {
+        for (Modifier modifier : Modifier.values()) {
+            MODIFIERS.put(modifier.getName(), modifier);
         }
-        this.listen = listen;
-        this.action = action;
     }
 
-    public String getListen() {
-        return listen;
+    private final Modifier origin;
+    private final Modifier as;
+
+
+    public enum Modifier {
+        CAPLOCK("Caplock"), L_CONTROL("LControl"), R_CONTROL("RControl"), L_ALT("LAlt"), R_ALT("RAlt"),
+        L_META("LMeta"), R_META("RMeta");
+        private final String name;
+
+        Modifier(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
-    public String getAction() {
-        return action;
+    private ModifierConfig(Modifier origin, Modifier as) {
+        this.origin = origin;
+        this.as = as;
+    }
+
+    public Modifier getOrigin() {
+        return origin;
+    }
+
+    public Modifier getAs() {
+        return as;
+    }
+
+    public static ModifierConfig of(String origin, String as) {
+        return new ModifierConfig(getModifier(origin), getModifier(as));
+    }
+
+    public static Modifier getModifier(String name) {
+        return MODIFIERS.get(name);
     }
 }

@@ -57,7 +57,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
     private final int maxNumberOfCharacters;
 
     private InputPaneImpl() {
-        this(600, 70, 30);
+        this(600, 70, 45);
     }
 
     private InputPaneImpl(int panelPrefWidth, int panelPrefHeight, int maxNumberOfCharacters) {

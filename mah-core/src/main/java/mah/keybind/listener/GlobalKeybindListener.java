@@ -23,15 +23,21 @@
  */
 package mah.keybind.listener;
 
+import mah.keybind.config.ModifierConfig;
+import mah.keybind.config.XmlModifierParser;
 import mah.ui.key.KeystateManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.lang.annotation.Native;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,22 +46,41 @@ import java.util.logging.Logger;
  * Created by zgq on 2017-01-09 09:36
  */
 public class GlobalKeybindListener extends SwingKeyAdapter {
+    private static final Map<ModifierConfig.Modifier, Integer> MODIFIER_CODE = new HashMap<>();
+    static {
+        MODIFIER_CODE.put(ModifierConfig.Modifier.CAPLOCK, NativeKeyEvent.VC_CAPS_LOCK);
+        MODIFIER_CODE.put(ModifierConfig.Modifier.L_CONTROL, NativeKeyEvent.VC_CONTROL_L);
+        MODIFIER_CODE.put(ModifierConfig.Modifier.R_CONTROL, NativeKeyEvent.VC_CONTROL_R);
+        MODIFIER_CODE.put(ModifierConfig.Modifier.L_ALT, NativeKeyEvent.VC_ALT_L);
+        MODIFIER_CODE.put(ModifierConfig.Modifier.R_ALT, NativeKeyEvent.VC_ALT_R);
+        MODIFIER_CODE.put(ModifierConfig.Modifier.L_META, NativeKeyEvent.VC_META_L);
+        MODIFIER_CODE.put(ModifierConfig.Modifier.R_META, NativeKeyEvent.VC_META_R);
+    }
+
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(GlobalKeybindListener.class);
     private final List<GlobalKeyListener> keyListeners = new CopyOnWriteArrayList<>();
     private final KeystateManager keyState = new KeystateManager();
+    private final Map<Integer, Integer> modifierMap = new HashMap<>();
 
-    public void start() {
+
+    private static Integer getKeycode(ModifierConfig.Modifier modifier) {
+        return MODIFIER_CODE.get(modifier);
+    }
+
+    public void start(final List<ModifierConfig> modifierConfigs) {
+        for (ModifierConfig modifierConfig : modifierConfigs) {
+            modifierMap.put(getKeycode(modifierConfig.getOrigin()), getKeycode(modifierConfig.getAs()));
+        }
+
         try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
-
             System.exit(1);
         }
 
         GlobalScreen.addNativeKeyListener(this);
-
         // Get the LOGGER for "org.jnativehook" and set the level to off.
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
@@ -64,7 +89,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
     }
 
     public void nativeKeyPressed(NativeKeyEvent e) {
-        int keyCode = e.getKeyCode();
+        int keyCode = getRealKeycode(e);
         if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(true);
             LOGGER.trace("press ctrl");
@@ -100,8 +125,15 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
         LOGGER.trace("press " + keyStroke);
     }
 
-    public void nativeKeyReleased(NativeKeyEvent e) {
+    private int getRealKeycode(NativeKeyEvent e) {
         int keyCode = e.getKeyCode();
+        Integer realKeycode = modifierMap.get(keyCode);
+        keyCode = realKeycode == null ? keyCode : realKeycode;
+        return keyCode;
+    }
+
+    public void nativeKeyReleased(NativeKeyEvent e) {
+        int keyCode = getRealKeycode(e);
         if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(false);
             return;
