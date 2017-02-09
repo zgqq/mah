@@ -44,6 +44,7 @@ import mah.plugin.support.github.starred.sync.RepositorySynchronizer;
 import mah.plugin.support.github.starred.sync.SynchronizerListener;
 import mah.plugin.support.github.starred.sync.UpdateResult;
 import mah.plugin.support.github.util.GithubUtils;
+import mah.ui.icon.Icon;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
 import mah.ui.pane.item.Item;
@@ -73,7 +74,6 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
     private String command;
     private Logger logger = LoggerFactory.getLogger(GithubStarredCommand.class);
     private RepositorySynchronizer synchronizer;
-    private static final String GITHUB_ICON = "github_icon";
 
     public GithubStarredCommand() {
         init();
@@ -137,8 +137,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
         FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName(), matchedResult.findMatchedIndex(0))//
                 .description(githubRepository.getDescription(), matchedResult.findMatchedIndex(1)) //
                 .attachment(githubRepository) //
-                .iconName(GITHUB_ICON) // will improve performance
-                .iconInputStream(getIconInputStream())
+                .icon(getIcon())
                 .build();
         return item;
     }
@@ -161,8 +160,13 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
         layout.compareAndUpdateItems(items,expect);
     }
 
+    @Deprecated
     private InputStream getIconInputStream() {
         return getInputStreamFromClasspath("github/icon.png");
+    }
+
+    private Icon getIcon() {
+        return Icon.valueOf("github/icon.png");
     }
 
 
@@ -242,7 +246,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
     private FullItemImpl createBlankItem() {
         FullItemImpl item = new FullItemImpl.Builder("Waiting data ")//
                 .description("Fetching data from github...") //
-                .iconInputStream(getIconInputStream()) //
+                .icon(getIcon()) //
                 .build();
         return item;
     }
@@ -250,7 +254,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
     private FullItemImpl createUpdatingItem() {
         FullItemImpl item = new FullItemImpl.Builder("Please waiting!")//
                 .description("Synchronizing repositories...") //
-                .iconInputStream(getIconInputStream()) //
+                .icon(getIcon()) //
                 .build();
         return item;
     }
@@ -267,7 +271,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
         private FullItemImpl createNoRepositoryTips() {
             FullItemImpl item = new FullItemImpl.Builder("No repository added!") //
                     .description("Is the github token configured?") //
-                    .iconInputStream(getIconInputStream()) //
+                    .icon(getIcon()) //
                     .build();
             return item;
         }
@@ -276,8 +280,7 @@ public class GithubStarredCommand extends PluginCommandSupport implements XmlCon
             FullItemImpl item = new FullItemImpl.Builder(githubRepository.getName())//
                     .description(githubRepository.getDescription()) //
                     .attachment(githubRepository) //
-                    .iconName(GITHUB_ICON) //
-                    .iconInputStream(getIconInputStream())
+                    .icon(getIcon())
                     .build();
             return item;
         }

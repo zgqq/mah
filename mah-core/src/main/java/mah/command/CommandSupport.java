@@ -78,6 +78,7 @@ public abstract class CommandSupport implements ActionHandler, Command {
         return getClass().getClassLoader().getResource(path);
     }
 
+    @Deprecated
     protected final InputStream getInputStreamFromClasspath(String path) {
         return CommandSupport.class.getClassLoader().getResourceAsStream(path);
     }

@@ -33,6 +33,7 @@ import mah.plugin.support.translation.parser.WordParser;
 import mah.plugin.support.translation.parser.YoudaoParser;
 import mah.plugin.support.translation.repo.JsonUtils;
 import mah.plugin.support.translation.repo.WordRepository;
+import mah.ui.icon.Icon;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
 import mah.ui.pane.item.TextItemImpl;
@@ -56,7 +57,6 @@ import java.util.Map;
  */
 public class TranslationCommand extends PluginCommandSupport implements XmlConfigurable {
     private ClassicItemListLayout layout;
-    private InputStream translationIcon;
     private String keyfrom ;
     private String apiKey;
     private static final Logger LOGGER = LoggerFactory.getLogger(TranslationCommand.class);
@@ -102,10 +102,10 @@ public class TranslationCommand extends PluginCommandSupport implements XmlConfi
 
 
     private FullItemImpl createTranslationResult(String name, String description) {
-        this.translationIcon = getInputStreamFromClasspath("translation/translate.png");
         FullItemImpl fullItem = new FullItemImpl.Builder(name)
                 .description(description)
-                .iconInputStream(translationIcon).build();
+                .icon(Icon.valueOf("translation/translate.png"))
+                .build();
         return fullItem;
     }
 

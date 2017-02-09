@@ -31,6 +31,7 @@ import mah.common.util.StringUtils;
 import mah.common.util.XmlUtils;
 import mah.plugin.command.PluginCommandSupport;
 import mah.plugin.config.XmlConfigurable;
+import mah.ui.icon.Icon;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItemImpl;
 import mah.ui.pane.item.TextItem;
@@ -77,13 +78,13 @@ public class QueryWeatherCommand extends PluginCommandSupport implements XmlConf
         String dayPictureUrl = weatherData.getString("dayPictureUrl");
         InputStream inputStream = downloadImage(dayPictureUrl);
         return new FullItemImpl.Builder(date + "    " + weather) //
-                .iconInputStream(inputStream) //
+                .icon(Icon.valueOf(dayPictureUrl)) //
                 .description(wind + "," + temperature).build();
     }
 
     private FullItemImpl createQueryingItem() {
         FullItemImpl.Builder builder = new FullItemImpl.Builder("Weather Query");
-        return builder.iconInputStream(getInputStreamFromClasspath("weather/querying.png"))
+        return builder.icon(Icon.valueOf("weather/querying.png"))
                 .description("querying")
                 .build();
     }
@@ -95,7 +96,7 @@ public class QueryWeatherCommand extends PluginCommandSupport implements XmlConf
     private void showError(JsonObj weatherData) {
         FullItemImpl errorItem = new FullItemImpl.Builder("Query error") //
                 .description(weatherData.getString("status")) //
-                .iconInputStream(getInputStreamFromClasspath("weather/unknown.png")).build();
+                .icon(Icon.valueOf("weather/unknown.png")).build();
         layout.updateItems(errorItem);
     }
 

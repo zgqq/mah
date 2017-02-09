@@ -23,6 +23,7 @@
  */
 package mah.ui.pane.item;
 
+import mah.ui.icon.Icon;
 import mah.ui.pane.Text;
 
 import java.io.InputStream;
@@ -31,8 +32,9 @@ import java.util.List;
 /**
  * Created by zgq on 2017-01-08 14:18
  */
-public class FullItemImpl implements FullItem{
+public class FullItemImpl implements FullItem {
 
+    private final Icon icon;
     private final InputStream iconInputItem;
     private final Text content;
     private final Text description;
@@ -45,6 +47,7 @@ public class FullItemImpl implements FullItem{
         this.iconInputItem = builder.iconInputStream;
         this.attachment = builder.attachment;
         this.iconName = builder.iconName;
+        this.icon = builder.icon;
     }
 
 
@@ -56,6 +59,11 @@ public class FullItemImpl implements FullItem{
     @Override
     public String getIconName() {
         return iconName;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return icon;
     }
 
     public InputStream getIconInputStream() {
@@ -78,6 +86,7 @@ public class FullItemImpl implements FullItem{
 
     public static class Builder {
         private InputStream iconInputStream;
+        private Icon icon;
         private Text content;
         private Text description;
         private Object attachment;
@@ -91,11 +100,18 @@ public class FullItemImpl implements FullItem{
             this.content = new Text(content);
         }
 
+        @Deprecated
         public Builder iconName(String iconName) {
             this.iconName = iconName;
             return this;
         }
 
+        public Builder icon(Icon icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        @Deprecated
         public Builder iconInputStream(InputStream inputStream) {
             this.iconInputStream = inputStream;
             return this;

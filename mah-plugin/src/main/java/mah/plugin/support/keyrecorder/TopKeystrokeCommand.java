@@ -38,6 +38,7 @@ import mah.keybind.KeybindManager;
 import mah.keybind.listener.GlobalKeyEvent;
 import mah.keybind.listener.GlobalKeyListener;
 import mah.plugin.command.PluginCommandSupport;
+import mah.ui.icon.Icon;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.FullItemImpl;
@@ -93,7 +94,7 @@ class TopKeystrokeCommand extends PluginCommandSupport implements GlobalKeyListe
                     KeyRecorder keyRecorder = keyRecorders.get(i);
                     FullItemImpl item = FullItemImpl.builder(keyRecorder.getKey()).description("已经被击中"
                             + keyRecorder.getPressedCount() + "次")
-                            .iconInputStream(getInputStreamFromClasspath("icon.png")).build();
+                            .icon(Icon.valueOf("icon.png")).build();
                     items.add(item);
                 }
                 layout.updateItems(items);

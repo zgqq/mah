@@ -26,23 +26,23 @@ package mah.ui.support.swing.pane.item;
 import mah.common.util.CollectionUtils;
 import mah.ui.UiException;
 import mah.ui.font.FontManager;
+import mah.ui.icon.*;
 import mah.ui.pane.Text;
 import mah.ui.pane.item.FullItem;
 import mah.ui.pane.item.ItemListPane;
 import mah.ui.pane.item.ItemPane;
 import mah.ui.support.swing.pane.SwingPane;
 import mah.ui.support.swing.theme.SwingLayoutTheme;
+import mah.ui.support.swing.util.ImageUtils;
 import mah.ui.support.swing.util.StringUtils;
 import mah.ui.support.swing.util.SwingUtils;
 import mah.ui.theme.LayoutTheme;
 import mah.ui.theme.Themeable;
 import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -120,23 +120,17 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
     private String iconName;
 
     private void setIcon(FullItem item) throws IOException {
-        if (iconName != null && iconName.equals(item.getIconName())) {
+        final mah.ui.icon.Icon icon = item.getIcon();
+        if (iconName != null && iconName.equals(icon.getKey())) {
             return;
         }
-        InputStream iconInputStream = item.getIconInputStream();
+        final InputStream iconInputStream = icon.getInputStream();
         if (iconInputStream == null) {
             iconLabel.setIcon(null);
             return;
         }
-
-        BufferedImage icon = ImageIO.read(iconInputStream);
-        ImageIcon imageIcon = new ImageIcon(icon); // load the image to a imageIcon
-        Image image = imageIcon.getImage(); // transform it
-        // scale it the smooth way
-        Image newimg = image.getScaledInstance(ITEM_HEIGHT, ITEM_HEIGHT, java.awt.Image.SCALE_SMOOTH);
-        imageIcon = new ImageIcon(newimg);  // transform it back
-        iconLabel.setIcon(imageIcon);
-        iconName = item.getIconName();
+        iconLabel.setIcon(ImageUtils.scale(iconInputStream, ITEM_HEIGHT, ITEM_HEIGHT));
+        iconName = icon.getKey();
     }
 
     private void setDescription(FullItem item) {

@@ -21,28 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.pane.item;
+package mah.ui.support.swing.util;
 
-import mah.ui.icon.*;
-import mah.ui.pane.Text;
-
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by zgq on 2017-01-11 10:57
+ * Created by zgq on 2/9/17.
  */
-public interface FullItem extends Item {
+public final class ImageUtils {
+    private ImageUtils() {}
 
-    @Deprecated
-    String getIconName();
-
-    Icon getIcon();
-
-    @Deprecated
-    InputStream getIconInputStream();
-
-    Text getContent();
-
-    Text getDescription();
-
+    public static ImageIcon scale(InputStream inputStream, int width, int height) throws IOException {
+        BufferedImage newIcon = ImageIO.read(inputStream);
+        ImageIcon imageIcon = new ImageIcon(newIcon); // load the image to a imageIcon
+        Image image = imageIcon.getImage(); // transform it
+        // scale it the smooth way
+        Image newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+        imageIcon = new ImageIcon(newimg);  // transform it back
+        return imageIcon;
+    }
 }
+

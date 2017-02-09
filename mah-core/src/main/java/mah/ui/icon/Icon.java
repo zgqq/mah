@@ -21,28 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.pane.item;
+package mah.ui.icon;
 
-import mah.ui.icon.*;
-import mah.ui.pane.Text;
+import mah.common.util.HttpUtils;
 
 import java.io.InputStream;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Created by zgq on 2017-01-11 10:57
+ * Created by zgq on 2/9/17.
  */
-public interface FullItem extends Item {
+public final class Icon {
+    private static final ConcurrentMap<String, Icon> ICON_CACHES = new ConcurrentHashMap<>();
+    private final String key;
+    private final InputStream inputStream;
 
-    @Deprecated
-    String getIconName();
+    private Icon(String path) {
+        this.key = path;
+        if (path.startsWith("http")) {
+            this.inputStream = HttpUtils.getInputStream(path);
+        } else {
+            this.inputStream = getClass().getClassLoader().getResourceAsStream(path);
+        }
+    }
 
-    Icon getIcon();
+    public InputStream getInputStream() {
+        return inputStream;
+    }
 
-    @Deprecated
-    InputStream getIconInputStream();
+    public String getKey() {
+        return key;
+    }
 
-    Text getContent();
-
-    Text getDescription();
-
+    public static Icon valueOf(String path) {
+//        Icon icon = ICON_CACHES.get(path);
+//        if (icon == null) {
+//            icon = ICON_CACHES.putIfAbsent(path, new Icon(path));
+//            if (icon != null) {
+//                return icon;
+//            }
+//        }
+        return new Icon(path);
+    }
 }
