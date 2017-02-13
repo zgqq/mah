@@ -25,9 +25,9 @@ package mah.command;
 
 import mah.action.ActionHandler;
 import mah.command.event.CommonFilterEvent;
-import mah.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.command.event.TriggerEvent;
+import mah.event.EventHandler;
 
 import java.io.InputStream;
 import java.net.URL;

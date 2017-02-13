@@ -24,7 +24,7 @@
 package mah.ui.layout;
 
 import mah.mode.Mode;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.key.KeyEvent;
 
 /**

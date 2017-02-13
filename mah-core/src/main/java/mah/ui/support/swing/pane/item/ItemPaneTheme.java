@@ -34,7 +34,6 @@ import java.awt.*;
  * Created by zgq on 2017-01-14 13:55
  */
 public final class ItemPaneTheme {
-
     private final SwingLayoutTheme theme;
     private JTextPane pane;
     private Style matchedTextStyle;

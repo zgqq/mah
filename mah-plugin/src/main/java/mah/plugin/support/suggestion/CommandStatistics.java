@@ -21,16 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.event;
+package mah.plugin.support.suggestion;
 
-import java.util.EventListener;
+import mah.command.CommandPostProcessor;
+import mah.command.ExecutionContext;
 
 /**
- * Created by zgq on 2017-01-09 09:44
+ * Created by zgq on 2/13/17.
  */
-public interface EventHandler<T> extends EventListener {
+public class CommandStatistics implements CommandPostProcessor {
+    private final CommandHistories commandHistories;
 
-    void handle(T event) throws Exception;
+    public CommandStatistics(CommandHistories commandHistories) {
+        this.commandHistories = commandHistories;
+    }
 
+    @Override
+    public void postProcessAfterExecute(ExecutionContext context) {
+        String input = context.getInput();
+        commandHistories.add(input);
+    }
 }
-

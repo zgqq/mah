@@ -24,7 +24,7 @@
 package mah.ui.pane.item;
 
 import mah.ui.UiException;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.List;

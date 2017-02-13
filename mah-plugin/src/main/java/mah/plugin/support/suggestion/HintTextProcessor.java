@@ -21,19 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.pane.input;
+package mah.plugin.support.suggestion;
 
-import mah.event.EventHandler;
-import mah.ui.input.CaretMotionEvent;
-import mah.ui.input.Input;
-import mah.ui.input.InputTextChangedEvent;
-import mah.ui.pane.Pane;
+import mah.ui.support.swing.pane.input.DocumentProvider;
+import mah.ui.support.swing.pane.input.TextContext;
+import mah.ui.support.swing.pane.input.TextProcessor;
+
+import javax.swing.text.Document;
 
 /**
- * Created by zgq on 2017-01-08 11:59
+ * Created by zgq on 2/17/17.
  */
-public interface InputPane extends Input,Pane{
-    void setOnInputTextChanged(EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler);
+public class HintTextProcessor implements TextProcessor {
 
-    void setOnCaretMotion(EventHandler<? extends CaretMotionEvent> inputTextChangedHandler);
+    public static final HintTextProcessor INSTANCE = new HintTextProcessor();
+
+    @Override
+    public String process(TextContext context) throws Exception {
+        Document document = context.getDocument();
+        if (document instanceof HintableDocument) {
+            HintableDocument hintableDocument = (HintableDocument) document;
+            return hintableDocument.getInputedText();
+        }
+        return context.getNewText();
+    }
 }

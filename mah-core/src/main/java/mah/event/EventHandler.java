@@ -23,12 +23,12 @@
  */
 package mah.event;
 
-import java.util.Comparator;
 import java.util.EventListener;
 
 /**
- * Created by zgq on 2017-01-10 10:52
+ * Created by zgq on 2017-01-09 09:44
  */
-public interface EventHandler<T> extends EventListener{
+public interface EventHandler<T> extends EventListener {
     void handle(T event) throws Exception;
 }
+

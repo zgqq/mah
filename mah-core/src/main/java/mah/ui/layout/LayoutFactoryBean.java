@@ -23,7 +23,7 @@
  */
 package mah.ui.layout;
 
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.key.KeyEvent;
 import mah.ui.key.KeyPressedHandler;
 import mah.ui.key.KeyReleasedHandler;

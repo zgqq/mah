@@ -23,7 +23,7 @@
  */
 package mah.ui.pane.item;
 
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 
 /**
  * Created by zgq on 2017-01-10 15:00

@@ -25,7 +25,6 @@ package mah.plugin.support.github.starred;
 
 
 import mah.command.CommandException;
-import mah.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.command.event.TriggerEvent;
 import mah.common.json.JsonUtils;
@@ -33,6 +32,7 @@ import mah.common.search.MatchedResult;
 import mah.common.search.SearchResult;
 import mah.common.util.IoUtils;
 import mah.common.util.StringUtils;
+import mah.event.EventHandler;
 import mah.openapi.search.CacheSearcher;
 import mah.openapi.ui.layout.OpenClassicItemListLayout;
 import mah.plugin.command.PluginCommandSupport;

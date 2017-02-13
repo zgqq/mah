@@ -21,48 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.keybind.listener;
+package mah.plugin.support.suggestion;
 
-import mah.keybind.KeybindManager;
+import mah.command.CommandManager;
 import mah.event.EventHandler;
-import mah.ui.key.KeyEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.event.InputEvent;
+import mah.openapi.plugin.PluginSupport;
+import mah.ui.input.InputPaneFactoryBean;
+import mah.ui.input.InputTextChangedEvent;
 
 /**
- * Created by zgq on 2017-01-09 09:42
+ * Created by zgq on 2/13/17.
  */
-public class KeyPressedHandler implements EventHandler<KeyEvent> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KeyPressedHandler.class);
-
+public class SuggestionPlugin extends PluginSupport {
     @Override
-    public void handle(KeyEvent event) {
-        int keyCode = event.getKeyCode();
-        int mask = 0;
-        if (event.ctrlPressed()) {
-            mask |= InputEvent.CTRL_MASK;
-        }
-
-        if (event.altPressed()) {
-            mask |= InputEvent.ALT_MASK;
-        }
-
-        if (event.shiftPressed()) {
-            mask |= InputEvent.SHIFT_MASK;
-        }
-
-        if (event.metaPressed()) {
-            mask |= InputEvent.META_MASK;
-        }
-
-        if (!event.isModifierKey()) {
-           KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, mask);
-            LOGGER.debug("try key stroke {}", keyStroke);
-            KeybindManager.getInstance().tryExecuteAction(keyStroke);
-            return;
-        }
+    public void prepare() throws Exception {
+        CommandHistories commandHistories = new CommandHistories();
+        CommandStatistics commandStatistics = new CommandStatistics(commandHistories);
+        CommandManager.getInstance().addCommandPostProcessor(commandStatistics);
+        EventHandler<? extends InputTextChangedEvent> notFoundCommandEvent
+                = new TextChangedHandler(commandHistories);
+        InputPaneFactoryBean.getInstance().setOnInputTextChanged(notFoundCommandEvent);
+        InputPaneFactoryBean.getInstance().setOnCaretMotionChanged(new CaretMotionHandler(commandHistories));
     }
 }

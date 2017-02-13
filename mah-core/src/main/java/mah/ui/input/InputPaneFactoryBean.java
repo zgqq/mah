@@ -25,26 +25,79 @@ package mah.ui.input;
 
 import mah.action.ActionHandler;
 import mah.mode.ModeManager;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.pane.input.InputPane;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
 /**
  * Created by zgq on 2017-01-09 14:36
  */
 public class InputPaneFactoryBean {
-
     private static final InputPaneFactoryBean INSTANCE = new InputPaneFactoryBean();
+    private final List<WeakReference<InputPane>> inputPanes = new ArrayList<>();
     private List<EventHandler<? extends InputTextChangedEvent>> inputTextChangedHandlers = new ArrayList<>();
+    private List<EventHandler<? extends CaretMotionEvent>> caretMotionHandlers = new ArrayList<>();
+    private final Object lock = new Object();
 
     public static InputPaneFactoryBean getInstance() {
         return INSTANCE;
     }
 
+    public void setOnCaretMotionChanged(EventHandler<? extends CaretMotionEvent> handler) {
+        synchronized (lock) {
+            caretMotionHandlers.add(handler);
+            List<InputPane> inputPanes = updateReferences(null);
+            for (InputPane inputPane : inputPanes) {
+                inputPane.setOnCaretMotion(handler);
+            }
+        }
+    }
+
     public void setOnInputTextChanged(EventHandler<? extends InputTextChangedEvent> handler) {
-        inputTextChangedHandlers.add(handler);
+        synchronized (lock) {
+            inputTextChangedHandlers.add(handler);
+            List<InputPane> inputPanes = updateReferences(null);
+            for (InputPane inputPane : inputPanes) {
+                inputPane.setOnInputTextChanged(handler);
+            }
+        }
+    }
+
+    public void initBean(InputPane inputPane) {
+        synchronized (lock) {
+            for (EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler : inputTextChangedHandlers) {
+                inputPane.setOnInputTextChanged(inputTextChangedHandler);
+            }
+            for (EventHandler<? extends CaretMotionEvent> caretMotionHandler : caretMotionHandlers) {
+                inputPane.setOnCaretMotion(caretMotionHandler);
+            }
+            updateReferences(inputPane);
+        }
+        updateActionHandler(inputPane);
+    }
+
+    private List<InputPane> updateReferences(InputPane inputPane) {
+        Iterator<WeakReference<InputPane>> iterator = inputPanes.iterator();
+        List<InputPane> validIPanes = new ArrayList<>();
+        boolean exists = false;
+        while (iterator.hasNext()) {
+            WeakReference<InputPane> next = iterator.next();
+            InputPane pane = next.get();
+            if (pane == null) {
+                iterator.remove();
+            } else {
+                if (pane.equals(inputPane)) {
+                    exists = true;
+                }
+                validIPanes.add(pane);
+            }
+        }
+        if (!exists) {
+            inputPanes.add(new WeakReference<>(inputPane));
+        }
+        return validIPanes;
     }
 
     private void updateActionHandler(InputPane inputPane) {
@@ -53,12 +106,4 @@ public class InputPaneFactoryBean {
             ModeManager.getInstance().registerOrUpdateMode(InputMode.getAndRegisterMode(), actionHandler);
         }
     }
-
-    public void initBean(InputPane inputPane) {
-        for (EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler : inputTextChangedHandlers) {
-            inputPane.setOnInputTextChanged(inputTextChangedHandler);
-        }
-        updateActionHandler(inputPane);
-    }
-
 }

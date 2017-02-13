@@ -30,4 +30,10 @@
         <description>Record global key</description>
         <class>mah.plugin.support.keyrecorder.KeyRecorderPlugin</class>
     </plugin>
+    <plugin>
+        <name>AutoSuggestion</name>
+        <author>zgq</author>
+        <description>Auto suggestion plugin</description>
+        <class>mah.plugin.support.suggestion.SuggestionPlugin</class>
+    </plugin>
 </plugins>

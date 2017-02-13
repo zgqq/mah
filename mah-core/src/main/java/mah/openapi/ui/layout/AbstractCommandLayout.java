@@ -26,7 +26,7 @@ package mah.openapi.ui.layout;
 import mah.command.Command;
 import mah.mode.Mode;
 import mah.plugin.command.CommandMode;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.key.KeyEvent;
 import mah.ui.layout.Layout;
 import mah.ui.layout.ModeListener;

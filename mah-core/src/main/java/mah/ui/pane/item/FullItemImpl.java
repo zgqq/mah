@@ -33,7 +33,6 @@ import java.util.List;
  * Created by zgq on 2017-01-08 14:18
  */
 public class FullItemImpl implements FullItem {
-
     private final Icon icon;
     private final InputStream iconInputItem;
     private final Text content;

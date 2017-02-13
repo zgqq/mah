@@ -21,19 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.pane.input;
+package mah.ui.support.swing.pane.input;
 
-import mah.event.EventHandler;
-import mah.ui.input.CaretMotionEvent;
-import mah.ui.input.Input;
-import mah.ui.input.InputTextChangedEvent;
-import mah.ui.pane.Pane;
+
+import javax.swing.text.Document;
 
 /**
- * Created by zgq on 2017-01-08 11:59
+ * Created by zgq on 2/17/17.
  */
-public interface InputPane extends Input,Pane{
-    void setOnInputTextChanged(EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler);
+public class TextContext {
+    private final String oldText;
+    private final String newText;
+    private final Document document;
 
-    void setOnCaretMotion(EventHandler<? extends CaretMotionEvent> inputTextChangedHandler);
+    public TextContext(String oldText, String newText, Document document) {
+        this.oldText = oldText;
+        this.newText = newText;
+        this.document = document;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public String getNewText() {
+        return newText;
+    }
 }

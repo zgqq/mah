@@ -23,7 +23,7 @@
  */
 package mah.ui.key;
 
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 
 /**
  * Created by zgq on 2017-01-09 10:26

@@ -31,7 +31,6 @@ import java.util.LinkedList;
 public abstract class AbstractInput implements Input {
     private final LinkedList<TextState> undoStack = new LinkedList<>();
     private final LinkedList<TextState> redoStack = new LinkedList<>();
-    private boolean fireEvent = true;
     private TextState textState;
 
     protected boolean canBackward() {
@@ -39,7 +38,7 @@ public abstract class AbstractInput implements Input {
     }
 
     private void push() {
-        pushToUndo(newTextState(getText(),getCaretPosition()));
+        pushToUndo(newTextState(getText(), getCaretPosition()));
     }
 
     private void pushToUndo(TextState textState) {
@@ -49,9 +48,12 @@ public abstract class AbstractInput implements Input {
         undoStack.push(textState);
     }
 
+    protected boolean canMotionForward() {
+        return getCaretPosition() < textLength();
+    }
 
-    protected boolean canFoward() {
-        return getCaretPosition() < getText().length();
+    protected boolean canActionForward() {
+        return getCaretPosition() < textLength();
     }
 
     @Override
@@ -61,12 +63,12 @@ public abstract class AbstractInput implements Input {
 
     @Override
     public void endOfLine() {
-        setCaretPosition(getText().length());
+        setCaretPosition(textLength());
     }
 
     @Override
     public void forwardChar() {
-        if (getCaretPosition() < getText().length()) {
+        if (canMotionForward()) {
             setCaretPosition(getCaretPosition() + 1);
         }
     }
@@ -78,17 +80,17 @@ public abstract class AbstractInput implements Input {
     }
 
     public void deleteChar() {
-        String text = getText();
         int caretPosition = getCaretPosition();
-        if (caretPosition >= text.length()) {
+        if (caretPosition >= textLength()) {
             return;
         }
         push();
-        remove(caretPosition,1);
+        remove(caretPosition, 1);
     }
 
+    @Override
     public void forwardWord() {
-        if (!canFoward()) {
+        if (!canMotionForward()) {
             return;
         }
         int caretPosition = forwardByWord();
@@ -99,7 +101,7 @@ public abstract class AbstractInput implements Input {
         String text = getText();
         int caretPosition = getCaretPosition();
         boolean hasLetter = false;
-        for (int i = caretPosition; i < text.length(); i++) {
+        for (int i = caretPosition; i < motionLength(); i++) {
             char c = text.charAt(i);
             if (hasLetter) {
                 if (!isWordLetter(c)) {
@@ -155,13 +157,13 @@ public abstract class AbstractInput implements Input {
 
 
     public void killWord() {
-        if (!canFoward()) {
+        if (!canActionForward()) {
             return;
         }
         int origin = getCaretPosition();
         int forward = forwardByWord();
         if (forward > origin) {
-            remove(origin,forward - origin);
+            remove(origin, forward - origin);
             push();
         }
     }
@@ -169,19 +171,18 @@ public abstract class AbstractInput implements Input {
     @Override
     public void killWholeLine() {
         String text = getText();
-        if (text != null && text.length() > 0) {
+        if (text != null && textLength() > 0) {
             push();
-            remove(0, text.length());
+            remove(0, textLength());
         }
     }
 
     @Override
     public void killLine() {
         int caret = getCaretPosition();
-        String text = getText();
-        if (caret < text.length()) {
+        if (caret < textLength()) {
             push();
-            remove(caret,text.length() - caret);
+            remove(caret, textLength() - caret);
         }
     }
 
@@ -196,7 +197,7 @@ public abstract class AbstractInput implements Input {
             return;
         }
         push();
-        remove(backwardWord,origin - backwardWord);
+        remove(backwardWord, origin - backwardWord);
     }
 
     @Override
@@ -206,7 +207,7 @@ public abstract class AbstractInput implements Input {
         }
         push();
         int caret = getCaretPosition();
-        remove(caret - 1,1);
+        remove(caret - 1, 1);
         setCaretPosition(caret - 1);
     }
 
@@ -220,6 +221,23 @@ public abstract class AbstractInput implements Input {
         }
     }
 
+    @Override
+    public final void redo() {
+        TextState textState = redoStack.pollFirst();
+        if (textState != null) {
+            setText(textState.getText());
+            setCaretPosition(textState.getPosition());
+            pushToUndo(textState);
+        }
+    }
+
+    @Override
+    public void clear() {
+        String text = getText();
+        if (text != null && !text.isEmpty()) {
+            remove(0, textLength());
+        }
+    }
 
     public void setTextState(TextState textState) {
         this.textState = textState;
@@ -230,6 +248,11 @@ public abstract class AbstractInput implements Input {
     public TextState getTextState() {
         return textState;
     }
+
+    protected abstract int motionLength();
+
+    protected abstract int textLength();
+
 
     private TextState newTextState(String text, int position) {
         return new TextState.Builder(text, position).build();
@@ -244,32 +267,6 @@ public abstract class AbstractInput implements Input {
             redoStack.pollLast();
         }
         redoStack.push(textState);
-    }
-
-    @Override
-    public final void redo() {
-        TextState textState = redoStack.pollFirst();
-        if (textState != null) {
-            setText(textState.getText());
-            setCaretPosition(textState.getPosition());
-            pushToUndo(textState);
-        }
-    }
-
-
-    @Override
-    public void setTextStateQuietly(TextState textState) {
-        fireEvent = false;
-        setTextState(textState);
-        fireEvent = true;
-    }
-
-    @Override
-    public void clear() {
-        String text = getText();
-        if (text != null && !text.isEmpty()) {
-            remove(0,text.length());
-        }
     }
 }
 

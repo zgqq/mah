@@ -24,7 +24,7 @@
 package mah.ui.support.swing.pane.item;
 
 import mah.ui.UiException;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemListPane;
 import mah.ui.pane.item.ItemSelectedEvent;

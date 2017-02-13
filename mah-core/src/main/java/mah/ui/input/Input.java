@@ -28,8 +28,6 @@ package mah.ui.input;
  */
 public interface Input {
 
-    void setTextStateQuietly(TextState textState);
-
     void setTextState(TextState textState);
 
     void beginningOfLine();

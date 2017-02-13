@@ -21,19 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.pane.input;
-
-import mah.event.EventHandler;
-import mah.ui.input.CaretMotionEvent;
-import mah.ui.input.Input;
-import mah.ui.input.InputTextChangedEvent;
-import mah.ui.pane.Pane;
+package mah.openapi.ui.pane;
 
 /**
- * Created by zgq on 2017-01-08 11:59
+ * Created by zgq on 2/13/17.
  */
-public interface InputPane extends Input,Pane{
-    void setOnInputTextChanged(EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler);
+public class OpenInputPane {
+    private OpenInputPane() {}
 
-    void setOnCaretMotion(EventHandler<? extends CaretMotionEvent> inputTextChangedHandler);
+    public static OpenInputPane instance() {
+        return new OpenInputPane();
+    }
 }

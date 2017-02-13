@@ -24,7 +24,7 @@
 package mah.command.listener;
 
 import mah.command.CommandManager;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.input.InputTextChangedEvent;
 
 /**

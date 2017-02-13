@@ -2,6 +2,14 @@
 Mah is a alternative to alfred,written in java.The project is currently under development.
 
 # Plugins
+## Auto suggestion
+
+    <plugs>
+            <name>AutoSuggestion</name>
+    </plugs>
+
+![suggestion](./screenshot/AutoSuggestion.gif "suggestion")
+
 ## KeyRecorder plugin
 KeyRecorder will record all key strokes with modifier such as Control+c,helping you find out those key strokes pressed most.
 

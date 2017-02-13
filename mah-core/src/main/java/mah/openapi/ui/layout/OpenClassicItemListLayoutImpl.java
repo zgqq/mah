@@ -25,7 +25,7 @@ package mah.openapi.ui.layout;
 
 import mah.command.Command;
 import mah.command.CommandManager;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.pane.input.InputPane;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemSelectedEvent;

@@ -26,7 +26,7 @@ package mah.ui.support.swing.layout;
 import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.UiException;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.layout.ModeListener;
 import mah.ui.pane.item.Item;

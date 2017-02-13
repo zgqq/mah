@@ -24,7 +24,7 @@
 package mah.ui.support.swing.layout;
 
 import mah.ui.UiException;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.key.KeyEvent;
 import mah.ui.layout.LayoutSupport;
 import mah.ui.support.swing.theme.SwingLayoutTheme;

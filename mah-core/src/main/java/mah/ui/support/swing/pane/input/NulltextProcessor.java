@@ -21,48 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.keybind.listener;
-
-import mah.keybind.KeybindManager;
-import mah.event.EventHandler;
-import mah.ui.key.KeyEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.event.InputEvent;
+package mah.ui.support.swing.pane.input;
 
 /**
- * Created by zgq on 2017-01-09 09:42
+ * Created by zgq on 2/17/17.
  */
-public class KeyPressedHandler implements EventHandler<KeyEvent> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KeyPressedHandler.class);
+public class NulltextProcessor implements TextProcessor {
 
     @Override
-    public void handle(KeyEvent event) {
-        int keyCode = event.getKeyCode();
-        int mask = 0;
-        if (event.ctrlPressed()) {
-            mask |= InputEvent.CTRL_MASK;
-        }
-
-        if (event.altPressed()) {
-            mask |= InputEvent.ALT_MASK;
-        }
-
-        if (event.shiftPressed()) {
-            mask |= InputEvent.SHIFT_MASK;
-        }
-
-        if (event.metaPressed()) {
-            mask |= InputEvent.META_MASK;
-        }
-
-        if (!event.isModifierKey()) {
-           KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, mask);
-            LOGGER.debug("try key stroke {}", keyStroke);
-            KeybindManager.getInstance().tryExecuteAction(keyStroke);
-            return;
-        }
+    public String process(TextContext context) {
+        return context.getNewText();
     }
 }

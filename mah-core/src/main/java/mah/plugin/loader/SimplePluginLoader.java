@@ -27,8 +27,8 @@ import mah.app.ApplicationManager;
 import mah.app.config.Config;
 import mah.command.Command;
 import mah.command.CommandManager;
-import mah.event.EventHandler;
 import mah.command.event.InitializeEvent;
+import mah.event.EventHandler;
 import mah.plugin.Plugin;
 import mah.plugin.PluginException;
 import mah.plugin.PluginMetainfo;
@@ -153,10 +153,12 @@ public class SimplePluginLoader {
         checkPluginDir(plugin);
         plugin.init();
         plugin.prepare();
-        for (CommandConfig commandConfig : commandConfigs) {
-            Command command = findCommand(commandConfig);
-            startCommand(plugin, command, commandConfig);
-            CommandManager.getInstance().mapCommand(commandConfig.getTriggerKey(), command);
+        if (commandConfigs != null) {
+            for (CommandConfig commandConfig : commandConfigs) {
+                Command command = findCommand(commandConfig);
+                startCommand(plugin, command, commandConfig);
+                CommandManager.getInstance().mapCommand(commandConfig.getTriggerKey(), command);
+            }
         }
     }
 

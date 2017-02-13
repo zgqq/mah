@@ -24,19 +24,21 @@
 package mah.ui.pane.input;
 
 import mah.action.ActionHandler;
-import mah.ui.event.EventHandler;
+import mah.event.EventHandler;
 import mah.ui.input.AbstractInput;
+import mah.ui.input.CaretMotionEvent;
 import mah.ui.input.InputTextChangedEvent;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by zgq on 2017-01-09 15:30
  */
 public abstract class InputPaneSupport extends AbstractInput implements InputPane,ActionHandler {
-
-    private final List<EventHandler<? extends InputTextChangedEvent>> inputTextChangedHandlers = new ArrayList<>();
+    private final List<EventHandler<? extends InputTextChangedEvent>>
+            inputTextChangedHandlers = new CopyOnWriteArrayList<>();
+    private final List<EventHandler<? extends CaretMotionEvent>> caretMotionHandlers = new CopyOnWriteArrayList<>();
 
     @Override
     public void setOnInputTextChanged(EventHandler<? extends InputTextChangedEvent> inputTextChangedHandler) {
@@ -45,5 +47,14 @@ public abstract class InputPaneSupport extends AbstractInput implements InputPan
 
     public List<EventHandler<? extends InputTextChangedEvent>> getInputTextChangedHandlers() {
         return inputTextChangedHandlers;
+    }
+
+    @Override
+    public void setOnCaretMotion(EventHandler<? extends CaretMotionEvent> caretMotionHandler) {
+        caretMotionHandlers.add(caretMotionHandler);
+    }
+
+    public List<EventHandler<? extends CaretMotionEvent>> getCaretMotionHandlers() {
+        return caretMotionHandlers;
     }
 }
