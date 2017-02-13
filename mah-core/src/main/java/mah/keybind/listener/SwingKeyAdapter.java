@@ -23,6 +23,7 @@
  */
 package mah.keybind.listener;
 
+import lombok.val;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 

@@ -25,7 +25,7 @@ package mah.command;
 
 import mah.action.ActionHandler;
 import mah.command.event.CommonFilterEvent;
-import mah.command.event.EventHandler;
+import mah.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.command.event.TriggerEvent;
 

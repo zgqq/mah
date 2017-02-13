@@ -25,7 +25,7 @@ package mah.plugin.support.keyrecorder;
 
 import com.alibaba.fastjson.JSON;
 import mah.command.CommandException;
-import mah.command.event.EventHandler;
+import mah.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.command.event.TriggerEvent;
 import mah.common.json.JsonArr;

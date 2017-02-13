@@ -23,28 +23,11 @@
  */
 package mah.command;
 
-import mah.command.event.CommonFilterEvent;
-import mah.event.EventHandler;
-import mah.command.event.InitializeEvent;
-import mah.command.event.TriggerEvent;
-
-import java.util.List;
-
 /**
- * Created by zgq on 2017-01-08 15:16
+ * Created by zgq on 2/13/17.
  */
-public interface Command {
+public interface CommandPostProcessor {
+    default void postProcessBeforeExecute(ExecutionContext context) {}
 
-    List<EventHandler<? extends InitializeEvent>> getInitializeHandlers();
-
-    List<EventHandler<? extends TriggerEvent>> getTriggerEventHandlers();
-
-    List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers();
-
-    default void idle() throws Exception {}
-
-    String getName();
-
+    default void postProcessAfterExecute(ExecutionContext context) {}
 }
-
-

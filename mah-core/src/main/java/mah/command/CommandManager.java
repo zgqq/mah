@@ -25,43 +25,34 @@ package mah.command;
 
 import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
-import mah.command.event.CommonFilterEvent;
-import mah.command.event.EventHandler;
-import mah.command.event.TriggerEvent;
 import mah.command.listener.InputTextListener;
+import mah.event.ComparableEventHandler;
 import mah.plugin.PluginException;
 import mah.ui.input.InputPaneFactoryBean;
 import mah.ui.input.InputTextChangedEvent;
-import mah.ui.input.TextState;
-import mah.ui.layout.Layout;
-import mah.ui.window.Window;
-import mah.ui.window.WindowManager;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by zgq on 2017-01-08 20:32
  */
 public class CommandManager implements ApplicationListener {
     private static final CommandManager INSTANCE = new CommandManager();
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
-    private final Map<String, Map<String, Command>> pluginCommands = new HashMap<>();
     private final Map<String, Command> commands = new HashMap<>();
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final Map<String, Map<String, Command>> pluginCommands = new HashMap<>();
+    private final CommandExecutor commandExecutor = new CommandExecutor(commands);
     private volatile Command lockedCommand;
-    private Command currentCommand;
-    private String currentTriggerKey;
-    private String currentQuery;
+    private static final int DEFAULT_HANDLER_PRIORITY = -1;
 
     private CommandManager() {}
+
+    public static CommandManager getInstance() {
+        return INSTANCE;
+    }
 
     public List<String> findCommandMaps(Command command) {
         List<String> maps = new ArrayList<>();
@@ -75,6 +66,12 @@ public class CommandManager implements ApplicationListener {
         return maps;
     }
 
+    public void addCommandPostProcessor(CommandPostProcessor postProcessor) {
+        synchronized (this) {
+            commandExecutor.addCommandPostProcessor(postProcessor);
+        }
+    }
+
     public Command getLockedCommand() {
         return lockedCommand;
     }
@@ -83,9 +80,10 @@ public class CommandManager implements ApplicationListener {
         lockedCommand = command;
     }
 
-
-    public static CommandManager getInstance() {
-        return INSTANCE;
+    public void tryTriggerCommand(InputTextChangedEvent event) {
+        synchronized (this) {
+            commandExecutor.tryTriggerCommand(event);
+        }
     }
 
     public synchronized void registerCommand(String plugin, Command command) {
@@ -108,6 +106,13 @@ public class CommandManager implements ApplicationListener {
     @Override
     public void start(ApplicationEvent event) {
         InputPaneFactoryBean.getInstance().setOnInputTextChanged(new InputTextListener());
+        addNotFoundCommandHandler(new DefaultCommandHandler(DEFAULT_HANDLER_PRIORITY));
+    }
+
+    public void addNotFoundCommandHandler(ComparableEventHandler comparableEventHandler) {
+        synchronized (this) {
+            commandExecutor.addNotFoundCommandHandler(comparableEventHandler);
+        }
     }
 
     public void mapCommand(String key, Command command) {
@@ -120,150 +125,25 @@ public class CommandManager implements ApplicationListener {
         }
     }
 
-
-    private void executeCommand(Command command, String triggerKey) {
-        executorService.submit(new TriggerCommandTask(command, triggerKey));
-    }
-
-
-    private void triggerCommand(Command command, String triggerKey, String input) throws Exception {
-        if (input.equals(triggerKey)) {
-            executeCommand(command, triggerKey);
-            currentCommand = command;
-            return;
-        } else {
-            if (input.charAt(triggerKey.length()) == ' ') {
-                filterCommand(command, triggerKey, input);
-                currentCommand = command;
-                return;
-            }
-        }
-    }
-
-    private void filterCommand(Command command, String triggerKey, String input) throws Exception {
-        String inputContent = input.substring(triggerKey.length() + 1, input.length());
-        executorService.submit(new FilterCommandTask(command, triggerKey, inputContent));
-    }
-
-    public void tryTriggerCommand(InputTextChangedEvent event) {
-        synchronized (this) {
-            TextState newState = event.getNewState();
-            String input = newState.getText();
-            try {
-                boolean triggerSucc = false;
-                for (Map.Entry<String, Command> entry : commands.entrySet()) {
-                    String key = entry.getKey();
-                    Command command = entry.getValue();
-                    if (input.startsWith(key)) {
-                        triggerCommand(command, key, input);
-                        triggerSucc = true;
-                        int index;
-                        if (input.equals(key)) {
-                            index = key.length();
-                            currentTriggerKey = key;
-                        } else {
-                            index = key.length() + 1;
-                            currentTriggerKey = key + ' ';
-                        }
-                        currentQuery = input.substring(index);
-                    }
-                }
-
-                // There is no plugin found
-                if (!triggerSucc) {
-                    if (currentCommand != null) {
-                        currentCommand.idle();
-                    }
-                    Window currentWindow = WindowManager.getInstance().getCurrentWindow();
-                    Layout currentLayout = currentWindow.getCurrentLayout();
-                    Layout defaultLayout = currentWindow.getDefaultLayout();
-                    if (currentLayout == defaultLayout) {
-                        return;
-                    }
-                    if (currentCommand != null) {
-                        currentCommand = null;
-                        setDefaultLayout();
-                    }
-                    currentTriggerKey = null;
-                    currentQuery = null;
-                }
-            } catch (Exception e) {
-                throw new CommandException(e);
-            }
-        }
+    @Nullable
+    public synchronized String getCurrentTriggerKey() {
+        return commandExecutor.getCurrentTriggerKey();
     }
 
     @Nullable
-    public synchronized String getCurrentTriggerKey() {
-        return currentTriggerKey;
-    }
-
-    private void setDefaultLayout() {
-        WindowManager.getInstance().getCurrentWindow().useDefaultLayoutAsCurrentLayout();
-    }
-
-    @Override
-    public void shutdown() throws Exception {
-        executorService.shutdownNow();
-    }
-
     public Command getCurrentCommand() {
         synchronized (this) {
-            return currentCommand;
+            return commandExecutor.getCurrentCommand();
         }
     }
 
     @Nullable
     public synchronized String getCurrentQuery() {
-        return currentQuery;
+        return commandExecutor.getCurrentQuery();
     }
 
-    static class TriggerCommandTask implements Runnable {
-        private final Command command;
-        private final String triggerKey;
-
-        TriggerCommandTask(Command command, String triggerKey) {
-            this.command = command;
-            this.triggerKey = triggerKey;
-        }
-
-        @Override
-        public void run() {
-            try {
-                List<EventHandler<? extends TriggerEvent>> triggerEventHandlers = command.getTriggerEventHandlers();
-                TriggerEvent triggerEvent = new TriggerEvent(triggerKey);
-                for (EventHandler triggerEventHandler : triggerEventHandlers) {
-                    triggerEventHandler.handle(triggerEvent);
-                }
-            } catch (Exception e) {
-                LOGGER.error("Command " + command + " failed to be executed", e);
-            }
-        }
-    }
-
-    static class FilterCommandTask implements Runnable {
-        private final Command command;
-        private final String triggerKey;
-        private final String content;
-
-        FilterCommandTask(Command command, String triggerKey, String content) {
-            this.command = command;
-            this.triggerKey = triggerKey;
-            this.content = content;
-        }
-
-        @Override
-        public void run() {
-            try {
-                CommonFilterEvent commonFilterEvent = new CommonFilterEvent(triggerKey, content);
-                List<EventHandler<? extends CommonFilterEvent>> commonFilterEventHandlers = command
-                        .getCommonFilterEventHandlers();
-                for (EventHandler commonFilterEventHandler : commonFilterEventHandlers) {
-                    commonFilterEventHandler.handle(commonFilterEvent);
-                }
-            } catch (Exception e) {
-                LOGGER.error("Command " + this.command + " failed to be filtered", e);
-            }
-        }
+    @Override
+    public void shutdown() throws Exception {
+        commandExecutor.shutdownNow();
     }
 }

@@ -21,15 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.command.event;
+package mah.event;
 
+import java.util.Comparator;
 import java.util.EventListener;
 
 /**
  * Created by zgq on 2017-01-10 10:52
  */
 public interface EventHandler<T> extends EventListener{
-
     void handle(T event) throws Exception;
-
 }

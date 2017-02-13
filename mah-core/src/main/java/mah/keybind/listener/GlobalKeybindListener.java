@@ -24,17 +24,14 @@
 package mah.keybind.listener;
 
 import mah.keybind.config.ModifierConfig;
-import mah.keybind.config.XmlModifierParser;
 import mah.ui.key.KeystateManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.lang.annotation.Native;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

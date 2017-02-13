@@ -21,30 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.command;
+package mah.event;
 
-import mah.command.event.CommonFilterEvent;
-import mah.event.EventHandler;
-import mah.command.event.InitializeEvent;
-import mah.command.event.TriggerEvent;
-
-import java.util.List;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by zgq on 2017-01-08 15:16
+ * Created by zgq on 2/13/17.
  */
-public interface Command {
+public abstract class AbstractEventHandler<T> implements ComparableEventHandler<T> {
+    private final int priority;
 
-    List<EventHandler<? extends InitializeEvent>> getInitializeHandlers();
+    public AbstractEventHandler(int priority) {
+        this.priority = priority;
+    }
 
-    List<EventHandler<? extends TriggerEvent>> getTriggerEventHandlers();
+    @Override
+    public int compareTo(@NotNull ComparableEventHandler o) {
+        val  handlerPriority = o.getPriority();
+        if (this.priority == handlerPriority) {
+            return 0;
+        }
+        return (this.priority < handlerPriority) ? 1 : -1;
+    }
 
-    List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers();
-
-    default void idle() throws Exception {}
-
-    String getName();
-
+    @Override
+    public int getPriority() {
+        return priority;
+    }
 }
-
-

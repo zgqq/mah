@@ -23,28 +23,35 @@
  */
 package mah.command;
 
-import mah.command.event.CommonFilterEvent;
-import mah.event.EventHandler;
-import mah.command.event.InitializeEvent;
-import mah.command.event.TriggerEvent;
-
-import java.util.List;
+import mah.command.event.NotFoundCommandEvent;
+import mah.event.AbstractEventHandler;
+import mah.ui.layout.Layout;
+import mah.ui.window.Window;
+import mah.ui.window.WindowManager;
 
 /**
- * Created by zgq on 2017-01-08 15:16
+ * Created by zgq on 2/13/17.
  */
-public interface Command {
+public class DefaultCommandHandler extends AbstractEventHandler<NotFoundCommandEvent> {
 
-    List<EventHandler<? extends InitializeEvent>> getInitializeHandlers();
+    public DefaultCommandHandler(int priority) {
+        super(priority);
+    }
 
-    List<EventHandler<? extends TriggerEvent>> getTriggerEventHandlers();
+    @Override
+    public void handle(NotFoundCommandEvent event) throws Exception {
+        if (!event.isHandled()) {
+            Window currentWindow = WindowManager.getInstance().getCurrentWindow();
+            Layout currentLayout = currentWindow.getCurrentLayout();
+            Layout defaultLayout = currentWindow.getDefaultLayout();
+            if (currentLayout == defaultLayout) {
+                return;
+            }
+            setDefaultLayout();
+        }
+    }
 
-    List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers();
-
-    default void idle() throws Exception {}
-
-    String getName();
-
+    private void setDefaultLayout() {
+        WindowManager.getInstance().getCurrentWindow().useDefaultLayoutAsCurrentLayout();
+    }
 }
-
-

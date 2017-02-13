@@ -21,30 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.command;
+package mah.command.event;
 
-import mah.command.event.CommonFilterEvent;
-import mah.event.EventHandler;
-import mah.command.event.InitializeEvent;
-import mah.command.event.TriggerEvent;
+import mah.command.Command;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
- * Created by zgq on 2017-01-08 15:16
+ * Created by zgq on 2/13/17.
  */
-public interface Command {
+public final class NotFoundCommandEvent {
+    private final String input;
+    private final Command lastCommand;
+    private boolean handled;
 
-    List<EventHandler<? extends InitializeEvent>> getInitializeHandlers();
+    public NotFoundCommandEvent(String input, Command lastCommand) {
+        this.input = input;
+        this.lastCommand = lastCommand;
+    }
 
-    List<EventHandler<? extends TriggerEvent>> getTriggerEventHandlers();
+    public Optional<Command> getLastCommand() {
+        return Optional.ofNullable(lastCommand);
+    }
 
-    List<EventHandler<? extends CommonFilterEvent>> getCommonFilterEventHandlers();
+    public String getInput() {
+        return input;
+    }
 
-    default void idle() throws Exception {}
+    public boolean isHandled() {
+        return handled;
+    }
 
-    String getName();
-
+    public void setHandled(boolean handled) {
+        this.handled = handled;
+    }
 }
-
-

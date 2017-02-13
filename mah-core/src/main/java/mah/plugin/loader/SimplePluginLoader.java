@@ -27,7 +27,7 @@ import mah.app.ApplicationManager;
 import mah.app.config.Config;
 import mah.command.Command;
 import mah.command.CommandManager;
-import mah.command.event.EventHandler;
+import mah.event.EventHandler;
 import mah.command.event.InitializeEvent;
 import mah.plugin.Plugin;
 import mah.plugin.PluginException;
