@@ -34,17 +34,36 @@ import java.util.*;
 public class CommandHistories {
     private final HashMap<String, Node> histories = new HashMap<>();
 
-    public void add(String input) {
+    public void access(String input) {
+        Node node = addIfAbsent(input);
+        if (node != null) {
+            node.increaseAccessCount();
+        }
+    }
+
+    public Node addIfAbsent(String input) {
+        Node node = histories.get(input);
         if (StringUtils.isNotEmpty(input)) {
-            Node node = histories.get(input);
             if (node == null) {
-                node = new Node(input);
+                Node newNode = new Node(input);
                 Node parent = getParentNode(input);
                 if (parent != null) {
-                    parent.addChild(node);
+                    parent.addChild(newNode);
                 }
-                histories.put(input, node);
+                histories.put(input, newNode);
             }
+        }
+        return node;
+    }
+
+    public Optional<Node> historyStartWith(String history) {
+        return Optional.ofNullable(getNode(history));
+    }
+
+    public void increaseAccessCount(String inputedText) {
+        Node node = histories.get(inputedText);
+        if (node != null) {
+            node.increaseAccessCount();
         }
     }
 
@@ -72,6 +91,7 @@ public class CommandHistories {
 
     private Node selectOptimalNode(Node parent) {
         HashSet<Node> nodes = new HashSet<>();
+        nodes.add(parent);
         leaveNodes(parent, nodes);
         int maxCount = -1;
         Node optimalNode = null;
@@ -87,24 +107,11 @@ public class CommandHistories {
 
     private void leaveNodes(Node node, HashSet<Node> leaveNodes) {
         for (Node child : node.getChildren()) {
-            if (child.getChildren().size() == 0) {
-                leaveNodes.add(child);
-                continue;
-            }
+            leaveNodes.add(child);
             leaveNodes(child, leaveNodes);
         }
     }
 
-    public Optional<Node> historyStartWith(String history) {
-        return Optional.ofNullable(getNode(history));
-    }
-
-    public void increaseAccessCount(String inputedText) {
-        Node node = histories.get(inputedText);
-        if (node != null) {
-            node.increaseAccessCount();
-        }
-    }
 
     public static class Node {
         private final String text;

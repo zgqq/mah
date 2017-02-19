@@ -39,6 +39,6 @@ public class CommandStatistics implements CommandPostProcessor {
     @Override
     public void postProcessAfterExecute(ExecutionContext context) {
         String input = context.getInput();
-        commandHistories.add(input);
+        commandHistories.addIfAbsent(input);
     }
 }

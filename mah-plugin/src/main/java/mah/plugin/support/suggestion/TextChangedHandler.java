@@ -25,9 +25,6 @@ package mah.plugin.support.suggestion;
 
 import mah.common.util.StringUtils;
 import mah.event.EventHandler;
-import mah.ui.UiManager;
-import mah.ui.input.CaretMotionEvent;
-import mah.ui.support.swing.pane.input.DocumentProvider;
 import mah.ui.input.InputTextChangedEvent;
 import mah.ui.input.TextState;
 import mah.ui.pane.input.InputPane;
@@ -35,20 +32,22 @@ import mah.ui.support.swing.pane.input.InputPaneImpl;
 import mah.ui.util.UiUtils;
 
 import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import java.awt.*;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zgq on 2/13/17.
  */
 public class TextChangedHandler implements EventHandler<InputTextChangedEvent> {
     private final CommandHistories commandHistories;
+    private final ScheduledExecutorService scheduledExecutor;
 
     public TextChangedHandler(CommandHistories commandHistories) {
         this.commandHistories = commandHistories;
+        this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
     }
 
     @Override
@@ -56,6 +55,14 @@ public class TextChangedHandler implements EventHandler<InputTextChangedEvent> {
         TextState newState = event.getNewState();
         final InputPane inputPane = UiUtils.getInputPane();
         final String input = newState.getText();
+        scheduledExecutor.schedule(() -> {
+                    String text = inputPane.getText();
+                    if (StringUtils.isNotEmpty(text) && text.equals(input)) {
+                        TextChangedHandler.this.commandHistories.access(input);
+                    }
+                },
+                300, TimeUnit.MILLISECONDS);
+
         if (StringUtils.isNotEmpty(input)) {
             Optional<CommandHistories.Node> command = commandHistories.historyStartWith(input);
             if (command.isPresent()) {
