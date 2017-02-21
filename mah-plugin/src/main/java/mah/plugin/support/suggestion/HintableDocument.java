@@ -65,7 +65,9 @@ public class HintableDocument extends StyledDocument {
 
     public void removeHint() throws BadLocationException {
         if (separateIndex != -1) {
+            setNotifyTextChanged(false);
             super.remove(separateIndex, super.getLength() - separateIndex);
+            setNotifyTextChanged(true);
             separateIndex = -1;
         }
     }

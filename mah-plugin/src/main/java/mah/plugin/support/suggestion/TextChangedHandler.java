@@ -55,9 +55,10 @@ public class TextChangedHandler implements EventHandler<InputTextChangedEvent> {
         TextState newState = event.getNewState();
         final InputPane inputPane = UiUtils.getInputPane();
         final String input = newState.getText();
+        this.commandHistories.addIfAbsent(input);
         scheduledExecutor.schedule(() -> {
                     String text = inputPane.getText();
-                    if (StringUtils.isNotEmpty(text) && text.equals(input)) {
+                    if (StringUtils.isNotEmpty(text) && text.equals(input) && !text.endsWith(" ")) {
                         TextChangedHandler.this.commandHistories.access(input);
                     }
                 },
@@ -67,22 +68,17 @@ public class TextChangedHandler implements EventHandler<InputTextChangedEvent> {
             Optional<CommandHistories.Node> command = commandHistories.historyStartWith(input);
             if (command.isPresent()) {
                 if (inputPane instanceof InputPaneImpl) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            final InputPaneImpl swingInputPane = (InputPaneImpl) inputPane;
-                            swingInputPane.setTextProcessor(HintTextProcessor.INSTANCE);
-                            int caretPosition = swingInputPane.getCaretPosition();
-                            HintableDocument document = UiHelper.createHightlightDocument(command.get().getText(),
-                                    input.length());
-                            swingInputPane.setDocument(document);
-                            document.setSeparateIndex(input.length());
-                            if (caretPosition > input.length()) {
-                                caretPosition = input.length();
-                            }
-                            swingInputPane.setCaretPosition(caretPosition);
-                        }
-                    });
+                    final InputPaneImpl swingInputPane = (InputPaneImpl) inputPane;
+                    swingInputPane.setTextProcessor(HintTextProcessor.INSTANCE);
+                    int caretPosition = swingInputPane.getCaretPosition();
+                    HintableDocument document = UiHelper.createHightlightDocument(command.get().getText(),
+                            input.length());
+                    swingInputPane.setDocument(document);
+                    document.setSeparateIndex(input.length());
+                    if (caretPosition > input.length()) {
+                        caretPosition = input.length();
+                    }
+                    swingInputPane.setCaretPosition(caretPosition);
                 }
             }
         }
