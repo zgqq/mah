@@ -1,5 +1,5 @@
 # Mah
-Mah is a alternative to alfred,written in java.The project is currently under development.
+Mah is an alternative to alfred,written in java.The project is currently under development.
 
 # Plugins
 ## Auto suggestion
