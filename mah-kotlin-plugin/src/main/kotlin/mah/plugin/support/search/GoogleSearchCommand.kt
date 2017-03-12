@@ -23,8 +23,14 @@ class GoogleSearchCommand : PluginCommandSupport(), XmlConfigurable {
             layout.setOnInputConfirmed {
                 val input = it.input
                 val commands = input.split(" ")
-                val query = commands[1]
-                val url = "https://www.google.com/#q=" + query + "&*"
+                var sb = StringBuilder()
+                for (i in 1..commands.size-1) {
+                    sb.append(commands[i])
+                    if (i != commands.size - 1) {
+                        sb.append('+')
+                    }
+                }
+                val url = "https://www.google.com/#q=" + sb + "&*"
                 DesktopUtils.openBrowser(url)
                 WindowManager.getInstance().currentWindow.hide()
                 Runtime.getRuntime().exec(postCommand);
