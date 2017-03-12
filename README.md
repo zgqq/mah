@@ -2,6 +2,15 @@
 Mah is an alternative to alfred,written in java.The project is currently under development.
 
 # Plugins
+## Search 
+
+    <plug name="Search">
+            <command name="GoogleSearchCommand">
+                <trigger key="g" />
+            </command>
+        </plug>
+
+![suggestion](./screenshot/Search.gif "Search")
 ## Auto suggestion
 
     <plugs>
