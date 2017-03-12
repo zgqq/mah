@@ -25,6 +25,8 @@ package mah.plugin.support.suggestion;
 
 import mah.ui.UiException;
 import mah.ui.support.swing.pane.input.InputPaneImpl;
+import mah.ui.support.swing.theme.Themes;
+import mah.ui.theme.ThemeManager;
 import mah.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -47,7 +49,14 @@ public class UiHelper {
         inputedStyle = text.addStyle("inputedStyle", null);
         StyleConstants.setForeground(inputedStyle, inputedColor);
 
-        Color hintColor = Color.decode("#24292E");
+        String currentTheme = ThemeManager.getInstance().getCurrentTheme();
+        String name = Themes.FULL_DARK.getTheme().getName();
+        Color hintColor;
+        if (name.equals(currentTheme)) {
+            hintColor = Color.gray;
+        } else {
+            hintColor = Color.decode("#24292E");
+        }
         hintStyle = text.addStyle("hintStyle", null);
         StyleConstants.setForeground(hintStyle, hintColor);
     }

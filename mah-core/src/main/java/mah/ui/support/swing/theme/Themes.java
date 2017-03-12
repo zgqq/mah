@@ -34,11 +34,12 @@ import java.util.Map;
  */
 public enum Themes {
 
-    DARK("#333333","#ffffff","#616161","#222222","#ffffff","#000000","#DAA520");
+    DARK("dark","#333333","#ffffff","#616161","#222222","#ffffff","#000000","#DAA520"),
+    FULL_DARK("full_dark","#17181A","#ffffff","#17181A","#17181A","#ffffff","#17181A","#DAA520");
 
     private Theme theme;
 
-    Themes(String backgroundColor,
+    Themes(String name,String backgroundColor,
            String cursorColor,
            String inputBackgroundColor,
            String pendingBackgroundColor,
@@ -80,7 +81,7 @@ public enum Themes {
         LayoutTheme postLayoutTheme  = new SwingLayoutTheme("classic_post_layout",postLayoutProperties);
         layoutThemes.put(postLayoutTheme.getName(), postLayoutTheme);
 
-        theme = new Theme("dark",layoutThemes);
+        theme = new Theme(name,layoutThemes);
     }
 
     public Theme getTheme() {

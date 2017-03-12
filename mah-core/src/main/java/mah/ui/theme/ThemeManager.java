@@ -48,6 +48,7 @@ public class ThemeManager {
 
     private void addThemes() {
         addTheme(Themes.DARK.getTheme());
+        addTheme(Themes.FULL_DARK.getTheme());
     }
 
     public final void start(ApplicationEvent event) {
@@ -75,6 +76,7 @@ public class ThemeManager {
         return theme.findLayoutTheme(layoutName);
     }
 
+
     public void applyTheme(Layout layout) {
         LayoutTheme layoutTheme = getLayoutTheme(layout.getName());
         if (layout instanceof Themeable) {
@@ -82,6 +84,11 @@ public class ThemeManager {
             themeable.apply(layoutTheme);
         }
     }
+
+    public String getCurrentTheme() {
+        return currentTheme;
+    }
+
 
     public void setCurrentTheme(String currentTheme) {
         this.currentTheme = currentTheme;
