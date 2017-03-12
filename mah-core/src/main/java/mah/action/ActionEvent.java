@@ -26,19 +26,15 @@ package mah.action;
 /**
  * Created by zgq on 2017-01-09 09:13
  */
-public class ActionEvent {
-    private Object source;
+public class ActionEvent<T> {
+    private T source;
 
-    public ActionEvent(Object source) {
+    public ActionEvent(T source) {
         this.source = source;
     }
 
-    public Object getSource() {
+    public T getSource() {
         return source;
-    }
-
-    public void setSource(Object source) {
-        this.source = source;
     }
 
     public static ActionEvent newActionEvent(Object source) {

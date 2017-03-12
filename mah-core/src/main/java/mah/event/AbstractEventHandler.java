@@ -38,7 +38,7 @@ public abstract class AbstractEventHandler<T> implements ComparableEventHandler<
 
     @Override
     public int compareTo(@NotNull ComparableEventHandler o) {
-        val  handlerPriority = o.getPriority();
+        int handlerPriority = o.getPriority();
         if (this.priority == handlerPriority) {
             return 0;
         }

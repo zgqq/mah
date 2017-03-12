@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by zgq on 2017-01-08 11:35
@@ -49,6 +50,28 @@ public class ApplicationManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationManager.class);
 
     static {
+        InputStream listenerStream = ApplicationManager.class.getClassLoader().getResourceAsStream("mah.listeners");
+        final List<ApplicationListener> autoListeners = new ArrayList<>();
+        if (listenerStream != null) {
+            Scanner scanner = new Scanner(listenerStream);
+            while (scanner.hasNext()) {
+                String listenerClass = scanner.nextLine();
+                try {
+                    Class<?> clazz = Class.forName(listenerClass);
+                    Object obj = clazz.newInstance();
+                    if (obj instanceof ApplicationListener) {
+                        ApplicationListener listener = (ApplicationListener) obj;
+                        autoListeners.add(listener);
+                    } else {
+                        throw new ApplicationException(listenerClass + " must be a ApplicationListener");
+                    }
+                } catch (Exception e) {
+                    throw new ApplicationException(e);
+                }
+            }
+        }
+
+        APPLICATION_LISTENER.addAll(autoListeners);
         APPLICATION_LISTENER.add(PluginManager.getInstance());
         APPLICATION_LISTENER.add(ModeManager.getInstance());
         APPLICATION_LISTENER.add(KeybindManager.getInstance());
@@ -56,7 +79,8 @@ public class ApplicationManager {
         APPLICATION_LISTENER.add(UiManager.getInstance());
     }
 
-    private ApplicationManager() {}
+    private ApplicationManager() {
+    }
 
     public void start() {
         try {
@@ -103,7 +127,7 @@ public class ApplicationManager {
         if (!file.exists()) {
             file.createNewFile();
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("conf.xml");
-            IoUtils.writeToFile(configPath,  inputStream);
+            IoUtils.writeToFile(configPath, inputStream);
         }
     }
 

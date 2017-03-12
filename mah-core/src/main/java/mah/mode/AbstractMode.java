@@ -40,12 +40,12 @@ public abstract class AbstractMode implements Mode {
     private final Lock lock = new ReentrantLock();
     private final List<Mode> children = new ArrayList<>();
 
-    public AbstractMode(String name, Mode children) {
+    public AbstractMode(String name, Mode child) {
         this.name = name;
         if (children == null) {
             throw new ModeException("Parent mode must not be null,child mode is " + getName());
         }
-        this.children.add(children);
+        this.children.add(child);
     }
 
     public AbstractMode(String name) {

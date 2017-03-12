@@ -26,12 +26,12 @@ package mah.action;
 /**
  * Created by zgq on 2017-01-09 09:52
  */
-public abstract class AbstractAction implements Action {
+public abstract class AbstractAction<T> implements Action<T> {
 
     private final String name;
-    private final Class<?> handler;
+    private final Class<T> handler;
 
-    public AbstractAction(String name, Class<?> handler) {
+    public AbstractAction(String name, Class<T> handler) {
         this.name = name;
         this.handler = handler;
     }
@@ -42,7 +42,7 @@ public abstract class AbstractAction implements Action {
     }
 
     @Override
-    public Class<?> getHandler() {
+    public Class<T> getHandler() {
         return handler;
     }
 }

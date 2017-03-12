@@ -1,5 +1,6 @@
 dependencies {
     compile project(':mah-plugin')
+    compile project(':mah-kotlin-plugin')
     compile project(':mah-core')
 }
 

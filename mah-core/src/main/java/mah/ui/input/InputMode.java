@@ -308,4 +308,6 @@ public class InputMode extends AbstractMode {
             ClipboardUtils.copy(copyText);
         }
     }
+
+
 }

@@ -156,18 +156,18 @@ public class CommandExecutor {
     }
 
     private void triggerCommand(Command command, String triggerKey, String input) throws Exception {
-        val context = buildExecutionContext(command,input);
+        ExecutionContext executionContext = buildExecutionContext(command, input);
         if (input.equals(triggerKey)) {
-            beforeExecute(context);
+            beforeExecute(executionContext);
             executeCommand(command, triggerKey);
-            afterExecute(context);
+            afterExecute(executionContext);
             currentCommand = command;
             return;
         } else {
             if (input.charAt(triggerKey.length()) == ' ') {
-                beforeExecute(context);
+                beforeExecute(executionContext);
                 filterCommand(command, triggerKey, input);
-                afterExecute(context);
+                afterExecute(executionContext);
                 currentCommand = command;
                 return;
             }

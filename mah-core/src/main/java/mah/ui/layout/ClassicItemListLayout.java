@@ -24,6 +24,8 @@
 package mah.ui.layout;
 
 import mah.action.ActionHandler;
+import mah.event.EventHandler;
+import mah.ui.input.InputConfirmedEvent;
 import mah.ui.pane.input.InputPaneProvider;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemList;
@@ -35,11 +37,15 @@ import java.util.List;
  */
 public interface ClassicItemListLayout extends ItemList,Layout,InputPaneProvider,ActionHandler{
 
+    void fireInputConfirmedEvent(InputConfirmedEvent event);
+
+    void setOnInputConfirmed(EventHandler<? extends InputConfirmedEvent> eventHandler);
+
     void updateItems(List<? extends Item> items);
 
     void updateItems(Item... items);
 
-    void updateItem(Item item);
+    void showFirstItem(Item item);
 
     void clear();
 

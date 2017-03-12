@@ -30,25 +30,36 @@ import mah.plugin.PluginMetainfo;
 import org.w3c.dom.Document;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by zgq on 2017-01-08 19:58
  */
 public class XmlConfigReader {
-    private XmlPluginMetainfoParser pluginMetainfosParser;
-    private XmlPluginConfigParser pluginConfigParser;
+    private final XmlPluginMetainfoParser pluginMetainfosParser;
+    private final XmlPluginConfigParser pluginConfigParser;
 
-    public XmlConfigReader(File pluginDir, Config config) {
+    public XmlConfigReader(File pluginDir, Config config,List<String> metainfoFiles) {
         if (!(config instanceof XmlConfig)) {
             throw new IllegalStateException("Config must be XmlConfig!Actual:" + config);
         }
         XmlConfig xmlConfig = (XmlConfig) config;
         try {
             Document document = xmlConfig.getDocument();
-            InputStream resource = getClass().getClassLoader().getResourceAsStream("META-INF/plugin.xml");
-            this.pluginMetainfosParser = new XmlPluginMetainfoParser(pluginDir,resource);
+            List<InputStream> plugins = metainfoFiles.stream()
+                    .map(getClass().getClassLoader()::getResourceAsStream)
+                    .collect(Collectors.toList());
+            this.pluginMetainfosParser = new XmlPluginMetainfoParser(pluginDir, plugins);
             this.pluginConfigParser = new XmlPluginConfigParser(document);
         } catch (Exception e) {
             throw new PluginException(e);

@@ -47,16 +47,12 @@ public class KeyReleasedHandler implements EventHandler<KeyEvent> {
         int keyCode = event.getKeyCode();
         if (keyCode == java.awt.event.KeyEvent.VK_CONTROL) {
             setCtrlPressed();
-            return;
         } else if (keyCode == java.awt.event.KeyEvent.VK_ALT) {
             setAltPressed();
-            return;
-        } else if (keyCode == java.awt.event.KeyEvent.VK_ENTER) {
-            return;
         } else if (keyCode == java.awt.event.KeyEvent.VK_META) {
             setMetaPressed();
-            return;
+        } else if (keyCode == java.awt.event.KeyEvent.VK_SHIFT) {
+            KeystateManager.getInstance().setShift(false);
         }
     }
-
 }

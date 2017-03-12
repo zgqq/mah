@@ -43,6 +43,9 @@ public class KeyPressedHandler implements EventHandler<KeyEvent> {
             case java.awt.event.KeyEvent.VK_META:
                 keyState.setMeta(true);
                 break;
+            case java.awt.event.KeyEvent.VK_SHIFT:
+                keyState.setShift(true);
+                break;
             default:
                 break;
         }

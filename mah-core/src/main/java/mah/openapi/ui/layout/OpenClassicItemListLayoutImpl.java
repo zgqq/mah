@@ -26,6 +26,7 @@ package mah.openapi.ui.layout;
 import mah.command.Command;
 import mah.command.CommandManager;
 import mah.event.EventHandler;
+import mah.ui.input.InputConfirmedEvent;
 import mah.ui.pane.input.InputPane;
 import mah.ui.pane.item.Item;
 import mah.ui.pane.item.ItemSelectedEvent;
@@ -39,11 +40,11 @@ import java.util.concurrent.Callable;
 /**
  * Created by zgq on 2017-01-08 15:11
  */
-public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout implements OpenClassicItemListLayout{
+public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout implements OpenClassicItemListLayout {
     private static final Logger LOG = LoggerFactory.getLogger(OpenClassicItemListLayoutImpl.class);
 
     public OpenClassicItemListLayoutImpl(Command command) {
-        super(new ClassicItemListLayoutImpl(),command);
+        super(new ClassicItemListLayoutImpl(), command);
     }
 
     private ClassicItemListLayoutImpl getLayout() {
@@ -100,7 +101,23 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
 
     @Override
     public void setOnItemSelected(EventHandler<? extends ItemSelectedEvent> eventHandler) {
-        runSafely(() -> { getLayout().setOnItemSelected(eventHandler); });
+        runSafely(() -> {
+            getLayout().setOnItemSelected(eventHandler);
+        });
+    }
+
+    @Override
+    public void fireInputConfirmedEvent(InputConfirmedEvent event) {
+        runSafely(() -> {
+            getLayout().fireInputConfirmedEvent(event);
+        });
+    }
+
+    @Override
+    public void setOnInputConfirmed(EventHandler<? extends InputConfirmedEvent> eventHandler) {
+        runSafely(() -> {
+            getLayout().setOnInputConfirmed(eventHandler);
+        });
     }
 
     @Override
@@ -118,16 +135,16 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
     }
 
     @Override
-    public void updateItem(Item item) {
+    public void showFirstItem(Item item) {
         updateWholeLayout(() -> {
-            getLayout().updateItem(item);
+            getLayout().showFirstItem(item);
         });
     }
 
     @Override
     public void updateItem(Item item, int num) {
         updateWholeLayout(() -> {
-            getLayout().updateItem(item,num);
+            getLayout().updateItem(item, num);
         });
     }
 

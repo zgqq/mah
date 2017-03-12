@@ -27,6 +27,7 @@ import mah.mode.Mode;
 import mah.mode.ModeManager;
 import mah.ui.UiException;
 import mah.event.EventHandler;
+import mah.ui.input.InputConfirmedEvent;
 import mah.ui.layout.ClassicItemListLayout;
 import mah.ui.layout.ModeListener;
 import mah.ui.pane.item.Item;
@@ -47,9 +48,10 @@ import java.util.List;
  * Created by zgq on 2017-01-08 13:51
  */
 public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
-        implements ClassicItemListLayout,SwingLayout, Themeable {
+        implements ClassicItemListLayout, SwingLayout, Themeable {
     private static final String NAME = "classic_item_list_layout";
     private final List<EventHandler<? extends ItemSelectedEvent>> itemSelectedEventHandlers = new ArrayList<>();
+    private final List<EventHandler<? extends InputConfirmedEvent>> inputConfirmedHandlers = new ArrayList<>();
     private final ItemListPaneFactory factory;
     private ItemListPane itemListPane;
     private final List<ModeListener> modeListeners = new ArrayList<>();
@@ -78,22 +80,41 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     }
 
     @Override
+    public void fireInputConfirmedEvent(InputConfirmedEvent event) {
+        try {
+            int size = inputConfirmedHandlers.size();
+
+            for (EventHandler inputConfirmedHandler : inputConfirmedHandlers) {
+                inputConfirmedHandler.handle(event);
+
+            }
+        } catch (Exception e) {
+            throw new UiException("Failed to handle event", e);
+        }
+    }
+
+    @Override
     public void registerMode(Mode mode, ModeListener modeListener) {
-        mode.addChild(ItemMode.getAndRegisterMode());
+        mode.addChild(ClassicItemLayoutMode.getAndRegisterMode());
         this.mode = mode;
         modeListeners.add(modeListener);
         ModeManager.getInstance().registerMode(mode);
     }
 
     @Override
-    public void updateItems(List<? extends Item> items) {
-        updateItems(items,true);
+    public void setOnInputConfirmed(EventHandler<? extends InputConfirmedEvent> eventHandler) {
+        inputConfirmedHandlers.add(eventHandler);
     }
 
-    private void updateItems(List<? extends Item> items,boolean pending) {
+    @Override
+    public void updateItems(List<? extends Item> items) {
+        updateItems(items, true);
+    }
+
+    private void updateItems(List<? extends Item> items, boolean pending) {
         triggerMode();
         SwingLayoutTheme layoutTheme = applyTheme();
-        this.itemListPane = factory.createItemListPane(items, itemSelectedEventHandlers,layoutTheme);
+        this.itemListPane = factory.createItemListPane(items, itemSelectedEventHandlers, layoutTheme);
         getLayout().updatePane(this.itemListPane);
         if (items != null && items.size() > 0 && pending) {
             this.itemListPane.setPendingItemIndex(0);
@@ -111,9 +132,13 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
 
     private void triggerMode() {
-        ItemMode itemMode = ItemMode.triggerMode();
+        ItemMode itemMode = ItemMode.getAndRegisterMode();
         itemMode.updateActionHandler(this);
-        LayoutUtils.triggerMode(mode, modeListeners);
+        ClassicItemLayoutMode layoutMode = ClassicItemLayoutMode.triggerMode();
+        layoutMode.updateActionHandler(this);
+        if (mode != null) {
+            LayoutUtils.triggerMode(mode, modeListeners);
+        }
     }
 
     @Override
@@ -141,7 +166,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     }
 
     @Override
-    public void updateItem(Item item) {
+    public void showFirstItem(Item item) {
         updateItems(Arrays.asList(item), false);
     }
 

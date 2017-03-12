@@ -26,17 +26,25 @@ import mah.app.ApplicationEvent;
 import mah.app.ApplicationListener;
 import mah.plugin.loader.SimplePluginLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by zgq on 2017-01-08 19:49
  */
-public class PluginManager implements ApplicationListener{
+public class PluginManager implements ApplicationListener {
 
     private static final PluginManager INSTANCE = new PluginManager();
+    private static final List<String> PLUGIN_METAINFO_FILES = new ArrayList<>();
 
     @Override
     public void afterStart(ApplicationEvent applicationEvent) throws Exception {
-        SimplePluginLoader pluginLoader = new SimplePluginLoader(applicationEvent.getConfig());
+        SimplePluginLoader pluginLoader = new SimplePluginLoader(applicationEvent.getConfig(),PLUGIN_METAINFO_FILES);
         pluginLoader.start();
+    }
+
+    public void addPluginMetainfoFile(String classpath) {
+        this.PLUGIN_METAINFO_FILES.add(classpath);
     }
 
     public static PluginManager getInstance() {

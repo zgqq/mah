@@ -283,7 +283,7 @@ public class TranslationCommand extends PluginCommandSupport implements XmlConfi
                     return;
                 }
 
-                layout.updateItem(createTranslationResult(word,"正在查询中..."));
+                layout.showFirstItem(createTranslationResult(word,"正在查询中..."));
 
                 Thread.sleep(300);
                 if (!currentWord()) {

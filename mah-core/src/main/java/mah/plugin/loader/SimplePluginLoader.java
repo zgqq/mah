@@ -36,6 +36,7 @@ import mah.plugin.command.PluginCommand;
 import mah.plugin.config.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,8 +54,8 @@ public class SimplePluginLoader {
     private final ScheduledExecutorService scheduledExecutor;
     private final Logger logger = LoggerFactory.getLogger(SimplePluginLoader.class);
 
-    public SimplePluginLoader(Config config) throws Exception {
-        this.reader = new XmlConfigReader(ApplicationManager.getInstance().getPluginDir(), config);
+    public SimplePluginLoader(Config config, List<String> pluginMetainfoFiles) throws Exception {
+        this.reader = new XmlConfigReader(ApplicationManager.getInstance().getPluginDir(), config,pluginMetainfoFiles);
         executorService = Executors.newCachedThreadPool();
         scheduledExecutor = Executors.newScheduledThreadPool(2);
     }
@@ -193,7 +194,10 @@ public class SimplePluginLoader {
             XmlConfigurable xmlConfigurable = (XmlConfigurable) command;
             XmlCommandConfig xmlCommandConfig = (XmlCommandConfig) commandConfig;
             try {
-                xmlConfigurable.configure(xmlCommandConfig.getCustomConfig());
+                Node customConfig = xmlCommandConfig.getCustomConfig();
+                if (customConfig != null) {
+                    xmlConfigurable.configure(xmlCommandConfig.getCustomConfig());
+                }
             } catch (Exception e) {
                 throw new PluginException(e);
             }

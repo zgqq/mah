@@ -26,12 +26,12 @@ package mah.action;
 /**
  * Created by zgq on 2017-01-09 09:12
  */
-public interface Action {
+public interface Action<T> {
 
     String getName();
 
-    Class<?> getHandler();
+    Class<T> getHandler();
 
-    void actionPerformed(ActionEvent actionEvent) throws Exception;
+    void actionPerformed(ActionEvent<T> actionEvent) throws Exception;
 
 }

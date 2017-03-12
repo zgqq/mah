@@ -21,25 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mah.ui.input;
+package mah.listener;
+
+import mah.app.ApplicationListener;
+import mah.plugin.PluginManager;
 
 /**
- * Created by zgq on 2017-01-09 09:09
+ * Created by zgq on 17-3-11.
  */
-public class InputTextChangedEvent {
-    private final TextState newState;
-    private final TextState oldState;
-
-    public InputTextChangedEvent(TextState newState, TextState oldState) {
-        this.newState = newState;
-        this.oldState = oldState;
-    }
-
-    public TextState getNewState() {
-        return newState;
-    }
-
-    public TextState getOldState() {
-        return oldState;
+public class PluginListener implements ApplicationListener{
+    static {
+        PluginManager.getInstance().addPluginMetainfoFile("META-INF/plugin.xml");
     }
 }

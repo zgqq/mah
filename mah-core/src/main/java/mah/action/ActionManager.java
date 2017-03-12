@@ -56,6 +56,11 @@ public class ActionManager {
             }
             throw new ActionException("Not found action handler for " + action);
         }
-        ExecutorServices.submit(() -> actionHandler.handle(action));
+        ExecutorServices.submit(
+                () -> {
+                    actionHandler.handle(action);
+
+                }
+        );
     }
 }

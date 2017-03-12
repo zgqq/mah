@@ -48,12 +48,12 @@ import java.util.stream.Collectors;
  */
 public class XmlPluginMetainfoParser {
     private final File pluginDir;
-    private final InputStream metainfoFile;
+    private final List<? extends InputStream> metainfoFiles;
     private static final PluginClassLoader PLUGIN_CLASSLOADER = new PluginClassLoader();
 
-    public XmlPluginMetainfoParser(File pluginDir, InputStream metainfoFile) {
+    public XmlPluginMetainfoParser(File pluginDir, List<? extends InputStream> metainfoFiles) {
         this.pluginDir = pluginDir;
-        this.metainfoFile = metainfoFile;
+        this.metainfoFiles = metainfoFiles;
     }
 
     @NotNull
@@ -91,7 +91,7 @@ public class XmlPluginMetainfoParser {
     public List<PluginMetainfo> parsePluginMetainfos(List<String> pluginNames) {
         try {
             List<PluginMetainfo> pluginMetainfos = parseBuiltinPluginMetainfos(pluginNames);
-            List<PluginMetainfo> jarPluginMetainfos = parsePluginMetainfosFromJars(pluginDir,pluginNames);
+            List<PluginMetainfo> jarPluginMetainfos = parsePluginMetainfosFromJars(pluginDir, pluginNames);
             pluginMetainfos.addAll(jarPluginMetainfos);
             return pluginMetainfos;
         } catch (Exception e) {
@@ -99,12 +99,12 @@ public class XmlPluginMetainfoParser {
         }
     }
 
-    protected List<PluginMetainfo> parsePluginMetainfos(InputStream inputStream,List<String> pluginNames) {
+    protected List<PluginMetainfo> parsePluginMetainfos(InputStream inputStream, List<String> pluginNames) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(inputStream);
-            return parseMetainfos(doc,pluginNames);
+            return parseMetainfos(doc, pluginNames);
         } catch (Exception e) {
             throw new ParserConfigException(e);
         }
@@ -112,9 +112,16 @@ public class XmlPluginMetainfoParser {
 
     @NotNull
     private List<PluginMetainfo> parseBuiltinPluginMetainfos(List<String> pluginNames) throws Exception {
-        if (metainfoFile == null) {
-            return new ArrayList<>();
+        ArrayList<PluginMetainfo> allPluginMeteInfos = new ArrayList<>();
+        for (InputStream metainfoFile : metainfoFiles) {
+            List<PluginMetainfo> pluginMetainfos = parseBuiltinPluginMetainfo(metainfoFile, pluginNames);
+            allPluginMeteInfos.addAll(pluginMetainfos);
         }
+        return allPluginMeteInfos;
+    }
+
+    private List<PluginMetainfo> parseBuiltinPluginMetainfo(InputStream metainfoFile, List<String> pluginNames)
+            throws Exception {
         Document doc = XmlUtils.getDocument(metainfoFile);
         List<PluginMetainfo> pluginMetainfos = parseMetainfos(doc, pluginNames);
         for (PluginMetainfo pluginMetainfo : pluginMetainfos) {
@@ -131,7 +138,7 @@ public class XmlPluginMetainfoParser {
         for (int j = 0; j < length; j++) {
             Node item = pluginNodes.item(j);
             PluginMetainfo metainfo = parseMetaInfo(item);
-            if (pluginNames == null  || pluginNames.contains(metainfo.getName())) {
+            if (pluginNames == null || pluginNames.contains(metainfo.getName())) {
                 metainfos.add(metainfo);
             }
         }
