@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public enum Themes {
 
-    DARK("dark","#333333","#ffffff","#616161","#222222","#ffffff","#000000","#DAA520"),
+    DARK("dark","#333333","#ffffff","#616161","#222222","#ffffff","#17181A#","#DAA520"),
     FULL_DARK("full_dark","#17181A","#ffffff","#17181A","#17181A","#ffffff","#17181A","#DAA520");
 
     private Theme theme;
