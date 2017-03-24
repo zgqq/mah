@@ -144,7 +144,8 @@ public class ModeManager implements ApplicationListener {
                 if (FindResult.ResultType.EXCLUDED == resultType) {
                     continue;
                 } else if (FindResult.ResultType.NOT_FOUND == resultType) {
-                    throw new ActionException("Not found action " + keybindConfig.getAction() + " in mode " + mode.getName());
+                    throw new ActionException("Not found action " + keybindConfig.getAction()
+                            + " in mode " + mode.getName());
                 } else {
                     keybind.setAction(findResult.getAction());
                 }

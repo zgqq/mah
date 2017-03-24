@@ -68,13 +68,13 @@ public class ItemMode extends AbstractMode {
         return defaultSelectItem;
     }
 
-    public synchronized static ItemMode triggerMode() {
+    public static synchronized ItemMode triggerMode() {
         ItemMode itemMode = getMode();
         ModeManager.getInstance().triggerMode(itemMode);
         return itemMode;
     }
 
-    public synchronized static ItemMode getMode() {
+    public static synchronized ItemMode getMode() {
         return (ItemMode) ModeManager.getInstance().getOrRegisterMode(new ItemMode(InputMode.getAndRegisterMode()));
     }
 
