@@ -2,7 +2,7 @@
 <plugins>
     <plugin>
         <name>Search</name>
-        <author>zgq</author>
+        <author>zgqq</author>
         <description>Search plugin</description>
         <class>mah.plugin.support.search.SearchPlugin</class>
     </plugin>

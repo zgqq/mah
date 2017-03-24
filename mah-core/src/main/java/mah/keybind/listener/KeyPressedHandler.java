@@ -59,7 +59,7 @@ public class KeyPressedHandler implements EventHandler<KeyEvent> {
         }
 
         if (!event.isModifierKey()) {
-           KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, mask);
+            KeyStroke keyStroke = KeyStroke.getKeyStroke(keyCode, mask);
             LOGGER.debug("try key stroke {}", keyStroke);
             KeybindManager.getInstance().tryExecuteAction(keyStroke);
             return;

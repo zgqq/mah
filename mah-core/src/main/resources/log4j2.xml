@@ -33,10 +33,7 @@
         </Appender>
     </Appenders>
     <Loggers>
-        <Logger name="mah" level="trace" additivity="false">
-            <AppenderRef ref="STDOUT"/>
-        </Logger>
-        <Logger name="mah" level="info" additivity="false">
+        <Logger name="mah" level="debug" additivity="false">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="File"/>
         </Logger>

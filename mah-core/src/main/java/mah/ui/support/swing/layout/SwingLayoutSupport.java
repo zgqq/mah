@@ -41,9 +41,7 @@ public abstract class SwingLayoutSupport extends LayoutSupport implements SwingL
     private SwingLayoutTheme currentTheme;
 
     private static KeyEvent convertEvent(java.awt.event.KeyEvent event) {
-        int keyCode = event.getKeyCode();
-        KeyEvent keyEvent = new KeyEvent();
-        keyEvent.setKeyCode(keyCode);
+        KeyEvent keyEvent = new KeyEvent(event);
         return keyEvent;
     }
 

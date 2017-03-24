@@ -27,16 +27,19 @@ package mah.ui.key;
  * Created by zgq on 2017-01-09 09:46
  */
 public class KeyEvent {
-    private int keyCode;
+    private final int keyCode;
+    private final java.awt.event.KeyEvent keyEvent;
     private KeystateManager keyState = KeystateManager.getInstance();
     private boolean modifierKey;
 
-    public int getKeyCode() {
-        return keyCode;
+    public KeyEvent(java.awt.event.KeyEvent keyEvent) {
+        this.keyEvent = keyEvent;
+        this.keyCode = keyEvent.getKeyCode();
     }
 
-    public void setKeyCode(int keyCode) {
-        this.keyCode = keyCode;
+
+    public int getKeyCode() {
+        return keyCode;
     }
 
     public boolean altPressed() {
@@ -52,7 +55,8 @@ public class KeyEvent {
     }
 
     public boolean shiftPressed() {
-        return keyState.shiftPressed();
+        return keyEvent.isShiftDown();
+//        return keyState.shiftPressed();
     }
 
 
