@@ -44,6 +44,7 @@ public class ItemMode extends AbstractMode {
     private static final String NEXT_ITEM = "NextItem";
     private static final String DEFAULT_SELECT_ITEM = "DefaultSelectItem";
     private static final String SELECT_ITEM = "SelectItem";
+    private DefaultSelectItem defaultSelectItem;
 
     public ItemMode(Mode parent) {
         super(NAME, parent);
@@ -53,7 +54,8 @@ public class ItemMode extends AbstractMode {
     public void init() {
         registerAction(new PreviousItem(PREVIOUS_ITEM));
         registerAction(new NextItem(NEXT_ITEM));
-        registerAction(new DefaultSelectItem(DEFAULT_SELECT_ITEM));
+        this.defaultSelectItem = new DefaultSelectItem(DEFAULT_SELECT_ITEM);
+        registerAction(this.defaultSelectItem);
         for (int i = 1; i < 10; i++) {
             String name = SELECT_ITEM + i;
             registerAction(new SelectItem(name, i - 1));
@@ -62,13 +64,17 @@ public class ItemMode extends AbstractMode {
         registerAction(new CopyDescription("CopyDescription"));
     }
 
-    public static ItemMode triggerMode() {
-        ItemMode itemMode = getAndRegisterMode();
+    public DefaultSelectItem getDefaultSelectItem() {
+        return defaultSelectItem;
+    }
+
+    public synchronized static ItemMode triggerMode() {
+        ItemMode itemMode = getMode();
         ModeManager.getInstance().triggerMode(itemMode);
         return itemMode;
     }
 
-    public static ItemMode getAndRegisterMode() {
+    public synchronized static ItemMode getMode() {
         return (ItemMode) ModeManager.getInstance().getOrRegisterMode(new ItemMode(InputMode.getAndRegisterMode()));
     }
 
@@ -105,7 +111,7 @@ public class ItemMode extends AbstractMode {
     }
 
 
-    static class DefaultSelectItem extends ItemAction {
+    public static class DefaultSelectItem extends ItemAction {
 
         public DefaultSelectItem(String name) {
             super(name);

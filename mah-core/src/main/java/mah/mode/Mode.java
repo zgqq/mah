@@ -39,14 +39,15 @@ public interface Mode {
 
     void addChild(Mode child);
 
-    Action findAction(String actionName);
+    FindResult findAction(String actionName);
 
-    Action lookupAction(String actionName);
+//    FindResult lookupAction(String actionName);
+
+    void excludeAction(String actionName);
 
     void updateActionHandler(ActionHandler actionHandler);
 
     String getName();
 
     void trigger();
-
 }

@@ -6,6 +6,7 @@ import mah.openapi.util.DesktopUtils
 import mah.plugin.command.PluginCommandSupport
 import mah.plugin.config.XmlConfigurable
 import mah.ui.icon.Icon
+import mah.ui.layout.ModeListener
 import mah.ui.pane.item.FullItemImpl
 import mah.ui.window.WindowManager
 import org.w3c.dom.Node
@@ -20,6 +21,7 @@ class GoogleSearchCommand : PluginCommandSupport(), XmlConfigurable {
     init {
         layout = layoutFactory.createClassicItemListLayout()
         addInitializeEventHandler {
+            layout.registerMode(SearchMode(), ModeListener {  })
             layout.setOnInputConfirmed {
                 val input = it.input
                 val commands = input.split(" ")

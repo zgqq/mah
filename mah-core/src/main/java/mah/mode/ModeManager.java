@@ -98,8 +98,9 @@ public class ModeManager implements ApplicationListener {
         Action action = null;
         for (Map.Entry<String, Mode> entry : entries) {
             Mode mode = entry.getValue();
-            action = mode.lookupAction(actionName);
-            if (action != null && action instanceof GlobalAction) {
+            FindResult findResult = mode.findAction(actionName);
+            action = findResult.getAction();
+            if (findResult.getResultType() == FindResult.ResultType.FOUND && action instanceof GlobalAction) {
                 break;
             }
         }
@@ -138,8 +139,15 @@ public class ModeManager implements ApplicationListener {
                 if (mode == null) {
                     throw new ModeException("Not found mode " + modeConfig.getName());
                 }
-                Action action = mode.findAction(keybindConfig.getAction());
-                keybind.setAction(action);
+                FindResult findResult = mode.findAction(keybindConfig.getAction());
+                FindResult.ResultType resultType = findResult.getResultType();
+                if (FindResult.ResultType.EXCLUDED == resultType) {
+                    continue;
+                } else if (FindResult.ResultType.NOT_FOUND == resultType) {
+                    throw new ActionException("Not found action " + keybindConfig.getAction() + " in mode " + mode.getName());
+                } else {
+                    keybind.setAction(findResult.getAction());
+                }
                 List<KeyStroke> keyStrokes = SimpleParser.parse(keybindConfig.getBind());
                 keybind.setKeyStrokes(keyStrokes);
                 KeybindManager.getInstance().addKeybind(modeConfig.getName(), keybind);

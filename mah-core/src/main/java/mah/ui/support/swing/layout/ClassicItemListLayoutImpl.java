@@ -82,8 +82,6 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
     @Override
     public void fireInputConfirmedEvent(InputConfirmedEvent event) {
         try {
-            int size = inputConfirmedHandlers.size();
-
             for (EventHandler inputConfirmedHandler : inputConfirmedHandlers) {
                 inputConfirmedHandler.handle(event);
 
@@ -132,7 +130,7 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
 
     private void triggerMode() {
-        ItemMode itemMode = ItemMode.getAndRegisterMode();
+        ItemMode itemMode = ItemMode.getMode();
         itemMode.updateActionHandler(this);
         ClassicItemLayoutMode layoutMode = ClassicItemLayoutMode.triggerMode();
         layoutMode.updateActionHandler(this);

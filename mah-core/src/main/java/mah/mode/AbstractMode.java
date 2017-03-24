@@ -34,11 +34,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by zgq on 2017-01-09 09:50
  */
 public abstract class AbstractMode implements Mode {
-    private final Map<String, Action> namedActios = new HashMap<>();
+    private final Map<String, Action> namedActions = new HashMap<>();
     private final Map<Class<?>, List<Action>> actionHandlers = new HashMap<>();
     private final String name;
     private final Lock lock = new ReentrantLock();
     private final List<Mode> children = new ArrayList<>();
+    private final Set<String> excludeActions = new HashSet<>();
 
     public AbstractMode(String name, Mode child) {
         this.name = name;
@@ -58,7 +59,7 @@ public abstract class AbstractMode implements Mode {
     }
 
     private void addNamedAction(Action action) {
-        namedActios.put(action.getName(), action);
+        namedActions.put(action.getName(), action);
     }
 
     public final void registerAction(Action action) {
@@ -108,27 +109,37 @@ public abstract class AbstractMode implements Mode {
     }
 
     @Override
-    public final Action findAction(String actionName) {
-        Action action = lookupAction(actionName);
-        if (action == null) {
-            throw new ActionException("Not found action " + actionName + " in mode " + getName());
+    public final FindResult findAction(String actionName) {
+        if (excludeActions.contains(actionName)) {
+            return new FindResult(null, FindResult.ResultType.EXCLUDED);
         }
-        return action;
+        Action action = dfsAction(actionName);
+        if (action == null) {
+            return new FindResult(action, FindResult.ResultType.NOT_FOUND);
+        } else {
+            return new FindResult(action, FindResult.ResultType.FOUND);
+        }
     }
 
     @Nullable
-    public final Action lookupAction(String actionName) {
-        Action action = namedActios.get(actionName);
+    private Action dfsAction(String actionName) {
+        Action action = namedActions.get(actionName);
         if (action != null) {
             return action;
         }
         for (Mode child : children) {
-            action = child.lookupAction(actionName);
+            AbstractMode abstractChild = (AbstractMode) child;
+            action = abstractChild.dfsAction(actionName);
             if (action != null) {
                 return action;
             }
         }
         return null;
+    }
+
+    @Override
+    public void excludeAction(String actionName) {
+        excludeActions.add(actionName);
     }
 
     @Override

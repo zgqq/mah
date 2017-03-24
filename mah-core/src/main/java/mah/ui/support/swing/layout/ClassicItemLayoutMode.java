@@ -54,7 +54,7 @@ public class ClassicItemLayoutMode extends AbstractMode{
 
     public static ClassicItemLayoutMode getAndRegisterMode() {
         return (ClassicItemLayoutMode) ModeManager.getInstance()
-                .getOrRegisterMode(new ClassicItemLayoutMode(ItemMode.getAndRegisterMode()));
+                .getOrRegisterMode(new ClassicItemLayoutMode(ItemMode.getMode()));
     }
 
     static class InputConfirmed extends AbstractAction<ClassicItemListLayout> {
