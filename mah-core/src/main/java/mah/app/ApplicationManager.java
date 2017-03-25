@@ -94,8 +94,9 @@ public class ApplicationManager {
             for (ApplicationListener applicationListener : APPLICATION_LISTENER) {
                 applicationListener.afterStart(applicationEvent);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOGGER.error("application failed to startup", e);
+            System.exit(-1);
         }
     }
 

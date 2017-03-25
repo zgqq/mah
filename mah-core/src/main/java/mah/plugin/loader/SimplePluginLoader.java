@@ -49,6 +49,7 @@ import java.util.concurrent.*;
  * Created by zgq on 2017-01-08 19:51
  */
 public class SimplePluginLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimplePluginLoader.class);
     private final XmlConfigReader reader;
     private final ExecutorService executorService;
     private final ScheduledExecutorService scheduledExecutor;
@@ -86,7 +87,7 @@ public class SimplePluginLoader {
                 Plugin plugin = loadPlugin(pluginMetainfo);
                 plugin.setPluginMetainfo(pluginMetainfo);
                 plugins.add(plugin);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 throw new PluginException("Unable to loadPlugins plugin " + clazz, e);
             }
         }
@@ -127,8 +128,10 @@ public class SimplePluginLoader {
                     long start = System.nanoTime();
                     startPlugin(plugin, commandConfigs);
                     long end = System.nanoTime();
-                    logger.info("Loading plugin {} took {} nanoseconds", plugin, end - start);
-                } catch (Exception e) {
+                    logger.info("Loading plugin {} took {} milliseconds", plugin,
+                            TimeUnit.MILLISECONDS.convert((end - start),
+                            TimeUnit.NANOSECONDS));
+                } catch (Throwable e) {
                     logger.error("Plugin failed to start {}",e);
                 }
             });
@@ -139,6 +142,10 @@ public class SimplePluginLoader {
                         }
                     } ,
                     50000, TimeUnit.MILLISECONDS);
+        }
+
+        if (plugins.isEmpty()) {
+            LOGGER.warn("No Found any plugin");
         }
 
         try {

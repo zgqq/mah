@@ -202,7 +202,7 @@ public class CommandExecutor {
                 for (EventHandler triggerEventHandler : triggerEventHandlers) {
                     triggerEventHandler.handle(triggerEvent);
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LOGGER.error("Command " + command + " failed to be executed", e);
             }
         }
@@ -228,7 +228,7 @@ public class CommandExecutor {
                 for (EventHandler commonFilterEventHandler : commonFilterEventHandlers) {
                     commonFilterEventHandler.handle(commonFilterEvent);
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LOGGER.error("Command " + this.command + " failed to be filtered", e);
             }
         }
