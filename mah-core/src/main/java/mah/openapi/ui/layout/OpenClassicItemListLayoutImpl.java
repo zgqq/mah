@@ -52,6 +52,11 @@ public class OpenClassicItemListLayoutImpl extends AbstractCommandLayout impleme
     }
 
     @Override
+    public <T extends Item> T getItem(int index) {
+        return getValue(() -> getLayout().getItem(index));
+    }
+
+    @Override
     public <T extends Item> T getPendingItem() {
         return getValue(new Callable<T>() {
             @Override

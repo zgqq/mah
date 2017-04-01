@@ -120,8 +120,16 @@ public abstract class ItemListPaneSupport implements ItemListPane {
 
     @Override
     public <T extends Item> T getPendingItem() {
+        if (pendingIndex < 0) {
+            return null;
+        }
         ItemPane itemPane = itemPanes.get(pendingIndex);
         return (T) itemPane.getItem();
+    }
+
+    @Override
+    public <T extends Item> T getItem(int index) {
+        return (T) itemPanes.get(index).getItem();
     }
 
     @Override

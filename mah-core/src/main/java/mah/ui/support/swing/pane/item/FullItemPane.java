@@ -121,16 +121,18 @@ public final class FullItemPane implements ItemPane<FullItem>, SwingPane, Themea
 
     private void setIcon(FullItem item) throws IOException {
         final mah.ui.icon.Icon icon = item.getIcon();
-        if (iconName != null && iconName.equals(icon.getKey())) {
-            return;
+        if (icon != null) {
+            if (iconName != null && iconName.equals(icon.getKey())) {
+                return;
+            }
+            final InputStream iconInputStream = icon.getInputStream();
+            if (iconInputStream == null) {
+                iconLabel.setIcon(null);
+                return;
+            }
+            iconLabel.setIcon(ImageUtils.scale(iconInputStream, ITEM_HEIGHT, ITEM_HEIGHT));
+            iconName = icon.getKey();
         }
-        final InputStream iconInputStream = icon.getInputStream();
-        if (iconInputStream == null) {
-            iconLabel.setIcon(null);
-            return;
-        }
-        iconLabel.setIcon(ImageUtils.scale(iconInputStream, ITEM_HEIGHT, ITEM_HEIGHT));
-        iconName = icon.getKey();
     }
 
     private void setDescription(FullItem item) {

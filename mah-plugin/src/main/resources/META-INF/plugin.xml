@@ -36,4 +36,5 @@
         <description>Auto suggestion plugin</description>
         <class>mah.plugin.support.suggestion.SuggestionPlugin</class>
     </plugin>
+
 </plugins>

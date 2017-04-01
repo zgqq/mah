@@ -39,7 +39,7 @@ import mah.ui.window.WindowManager;
  */
 public class ItemMode extends AbstractMode {
 
-    private static final String NAME = "item_mode";
+    public static final String NAME = "item_mode";
     private static final String PREVIOUS_ITEM = "PreviousItem";
     private static final String NEXT_ITEM = "NextItem";
     private static final String DEFAULT_SELECT_ITEM = "DefaultSelectItem";
@@ -180,8 +180,22 @@ public class ItemMode extends AbstractMode {
         }
 
         public void actionPerformed(ItemList layout) {
-            FullItem item = layout.getPendingItem();
-            Text content = item.getContent();
+            Item item = layout.getPendingItem();
+            if (item == null) {
+                int itemCount = layout.getItemCount();
+                if (itemCount <= 0) {
+                    return;
+                }
+                item = layout.getItem(0);
+            }
+            Text content;
+            if (item instanceof FullItem) {
+                FullItem fullItem = (FullItem) item;
+                content = fullItem.getContent();
+            } else {
+                TextItem textItem = (TextItem) item;
+                content = textItem.getText();
+            }
             ClipboardUtils.copy(content.getText());
             WindowManager.hideWindow();
         }

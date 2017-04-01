@@ -30,6 +30,8 @@ import mah.event.EventHandler;
  */
 public interface ItemList {
 
+    <T extends Item> T getItem(int index);
+
     <T extends Item> T getPendingItem();
 
     void selectItem(int index);

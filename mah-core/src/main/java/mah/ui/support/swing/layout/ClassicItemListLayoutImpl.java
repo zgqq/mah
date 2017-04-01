@@ -179,6 +179,11 @@ public class ClassicItemListLayoutImpl extends SwingAbstractClassicLayoutWrapper
 
 
     @Override
+    public <T extends Item> T getItem(int index) {
+        return itemListPane.getItem(index);
+    }
+
+    @Override
     public <T extends Item> T getPendingItem() {
         return itemListPane.getPendingItem();
     }

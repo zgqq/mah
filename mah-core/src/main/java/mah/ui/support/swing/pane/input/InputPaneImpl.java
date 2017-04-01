@@ -71,6 +71,7 @@ public class InputPaneImpl extends InputPaneSupport implements InputPane, SwingP
     public void init() {
         this.panel = new JPanel();
         this.panel.setLayout(new GridBagLayout());
+        this.panel.setOpaque(false);
         initInput();
     }
 

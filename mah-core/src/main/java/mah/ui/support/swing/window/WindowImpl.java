@@ -75,6 +75,7 @@ public class WindowImpl extends WindowSupport {
         frame.setAlwaysOnTop(true);
         frame.setBackground(Color.black);
         frame.setResizable(false);
+        frame.setTitle("Mah");
         frame.setType(java.awt.Window.Type.UTILITY);
     }
 
