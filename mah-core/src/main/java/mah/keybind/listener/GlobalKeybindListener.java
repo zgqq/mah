@@ -131,7 +131,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
 
     public void nativeKeyReleased(NativeKeyEvent e) {
         int keyCode = getRealKeycode(e);
-        if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
+        if (keyCode == NativeKeyEvent.VC_CONTROL_L || keyCode == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(false);
             return;
         }
