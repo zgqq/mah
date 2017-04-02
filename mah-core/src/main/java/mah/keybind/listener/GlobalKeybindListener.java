@@ -28,7 +28,6 @@ import mah.ui.key.KeystateManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -54,7 +53,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
         MODIFIER_CODE.put(ModifierConfig.Modifier.R_META, NativeKeyEvent.VC_META_R);
     }
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(GlobalKeybindListener.class);
+    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(GlobalKeybindListener.class);
     private final List<GlobalKeyListener> keyListeners = new CopyOnWriteArrayList<>();
     private final KeystateManager keyState = new KeystateManager();
     private final Map<Integer, Integer> modifierMap = new HashMap<>();
@@ -87,17 +86,18 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
 
     public void nativeKeyPressed(NativeKeyEvent e) {
         int keyCode = getRealKeycode(e);
-        if (keyCode == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
+        LOGGER.debug("Actual key code {},convert code {}", e.getKeyCode(), keyCode);
+        if (keyCode == NativeKeyEvent.VC_CONTROL_L || keyCode == NativeKeyEvent.VC_CONTROL_R) {
             keyState.setCtrl(true);
-            LOGGER.trace("press ctrl");
+            LOGGER.debug("press ctrl");
             return;
         } else if (keyCode == NativeKeyEvent.VC_ALT_L || keyCode == NativeKeyEvent.VC_ALT_R) {
             keyState.setAlt(true);
-            LOGGER.trace("press alt");
+            LOGGER.debug("press alt");
             return;
         } else if (keyCode == NativeKeyEvent.VC_META_L || keyCode == NativeKeyEvent.VC_META_R) {
             keyState.setMeta(true);
-            LOGGER.trace("press meta");
+            LOGGER.debug("press meta");
             return;
         }
 
@@ -119,7 +119,7 @@ public class GlobalKeybindListener extends SwingKeyAdapter {
             GlobalKeyEvent globalKeyEvent = new GlobalKeyEvent(keyStroke);
             keyListener.keyPressed(globalKeyEvent);
         }
-        LOGGER.trace("press " + keyStroke);
+        LOGGER.debug("press " + keyStroke);
     }
 
     private int getRealKeycode(NativeKeyEvent e) {

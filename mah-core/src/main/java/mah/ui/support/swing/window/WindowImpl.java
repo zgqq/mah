@@ -55,7 +55,6 @@ public class WindowImpl extends WindowSupport {
         initLayout();
     }
 
-
     private void initLayout() {
         if (properties.getLayoutType() == LayoutType.DEFAULT) {
             defaultLayout = new DefaultLayout();
