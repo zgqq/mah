@@ -1,3 +1,4 @@
+** No longer maintained(换Mac了，这个项目不再维护了) **
 # Mah
 Mah is an alternative to alfred,written in java.The project is currently under development.
 
