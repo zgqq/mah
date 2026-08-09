@@ -1,3 +1,5 @@
+
+
 ** No longer maintained(这个项目不再维护了) **
 # Mah
 Mah is an alternative to alfred,written in java.The project is currently under development.
@@ -86,7 +88,7 @@ First, go to https://github.com/settings/tokens to generate a token
         <command name="GithubStarredList">
             <trigger key="gs" />
             <config>
-                <username>{your github usename}</username>
+                <username>{your github username}</username>
                 <!-- 2 minutes -->
                 <updateRate>2</updateRate>
                 <token>{your token}</token>
